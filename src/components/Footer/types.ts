@@ -1,6 +1,7 @@
-import { TypeRootStackParamList } from './../../navigation/types';
+import { OutlineGlyphMapType } from '@ant-design/icons-react-native';
+
 export type FooterItemProps = {
-  iconName: string,
+  iconName: OutlineGlyphMapType,
   title: string,
   ru_title: string,
 }

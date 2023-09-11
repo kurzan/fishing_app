@@ -1,8 +1,7 @@
 import { FC } from "react";
-import { Text, Pressable } from "react-native";
+import { Text, Pressable, StyleSheet } from "react-native";
 import { FooterItemProps } from "./types";
 import { Icon } from '@ant-design/react-native'
-import { IconFill, IconOutline } from "@ant-design/icons-react-native";
 
 
 type NavItemProps = {
@@ -16,12 +15,20 @@ const NavItem: FC<NavItemProps> = ({ item, navigate, currentRoute }) => {
   const isActive = currentRoute === item.title
 
   return (
-    <Pressable style={{ width: '33%' }} onPress={() => navigate(item.title)}>
-      <Icon name='alibaba' />
-      <Text >{item.ru_title}</Text>
+    <Pressable style={styles.item} onPress={() => navigate(item.title)}>
+      <Icon color={isActive ? 'black' : 'grey'} name={item.iconName} />
+      <Text style={{ color: isActive ? 'black' : 'grey' }}>{item.ru_title}</Text>
     </Pressable>
   )
 };
 
 export default NavItem;
 
+const styles = StyleSheet.create({
+  item: {
+    width: '33%',
+    alignItems: 'center',
+    padding: 6
+  },
+
+});

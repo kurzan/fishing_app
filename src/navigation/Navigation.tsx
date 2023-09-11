@@ -16,7 +16,17 @@ const Navigation = () => {
     const timeout = setTimeout(() => setName(ref.getCurrentRoute()?.name), 100);
 
     return () => clearTimeout(timeout);
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const listener = ref.addListener('state', () => {
+      setName(ref.getCurrentRoute()?.name)
+    })
+
+    return () => {
+      ref.removeListener('state', listener);
+    }
+  }, []);
 
   return (
     <>

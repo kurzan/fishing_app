@@ -7,7 +7,10 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 import Navigation from './src/navigation/Navigation';
+import YaMap from 'react-native-yamap';
 
+YaMap.setLocale('en_EN');
+YaMap.init('06c72fe6-477e-42ef-86b1-4fa7f012eb6f');
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';

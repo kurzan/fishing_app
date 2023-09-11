@@ -33,5 +33,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderTopColor: '#2C2C2C',
     borderTopWidth: 1,
+    backgroundColor: 'lightgrey'
   },
 });

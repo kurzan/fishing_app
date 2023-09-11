@@ -2,17 +2,17 @@ import { FooterItemProps } from "./types";
 
 export const menu: FooterItemProps[] = [
   {
-    iconName: 'alert',
+    iconName: 'home',
     title: 'Home',
     ru_title: 'Главная'
   },
   {
-    iconName: 'alert',
+    iconName: 'check',
     title: 'Catch',
     ru_title: 'Улов'
   },
   {
-    iconName: 'alert',
+    iconName: 'plus-square',
     title: 'Places',
     ru_title: 'Водоемы'
   }
