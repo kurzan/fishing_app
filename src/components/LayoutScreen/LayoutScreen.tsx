@@ -15,13 +15,11 @@ const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true }) => {
   )
 };
 
-
 export const style = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
-    paddingTop: 16
   }
 })
 

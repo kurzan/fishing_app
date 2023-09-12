@@ -8,8 +8,8 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import Navigation from './src/navigation/Navigation';
 import YaMap from 'react-native-yamap';
+import { MapProvider } from './src/services/providers/MapProvider';
 
-YaMap.setLocale('en_EN');
 YaMap.init('06c72fe6-477e-42ef-86b1-4fa7f012eb6f');
 
 function App(): JSX.Element {
@@ -20,7 +20,10 @@ function App(): JSX.Element {
   };
 
   return (
-    <Navigation />
+    <MapProvider>
+      <Navigation />
+    </MapProvider>
+
   );
 }
 

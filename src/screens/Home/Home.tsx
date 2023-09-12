@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import Map from '../../components/Map/Map';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
+import PlacesList from '../../components/PlacesList/PlacesList';
 
 const Home = () => {
   return (
     <LayoutScreen>
-      <Map />
-      <Text>Hello</Text>
+      <Map title='Карта' />
+      <PlacesList title='Последние водоемы' />
     </LayoutScreen>
   );
 }

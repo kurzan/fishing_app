@@ -1,13 +1,12 @@
-import { FC } from "react";
+import { PropsWithChildren } from "react";
 import { View, StyleSheet } from "react-native";
 
 
 type PaddingProps = {
-  children?: React.ReactNode,
   style?: any
 };
 
-const Padding: FC<PaddingProps> = ({ children, style = {} }) => {
+const Padding = ({ children, style = {} }: PropsWithChildren<PaddingProps>) => {
   return (
     <View style={[styles.container, style]}>
       {children}
