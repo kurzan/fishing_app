@@ -1,4 +1,4 @@
-import { Marker, YaMap, CameraPosition } from 'react-native-yamap';
+import { Marker, YaMap } from 'react-native-yamap';
 import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
 import { places } from '../../services/mocks/places';
 import Title from '../Title/Title';
@@ -57,7 +57,10 @@ const Map = ({ title }: MapProps) => {
 
         <View style={MapStyles.hud}>
           <TouchableOpacity
-            onPress={() => getTarget({ lon: 47.219219, lat: 55.993178 })}
+            onPress={() => getTarget({
+              lat: 56.12,
+              lon: 47.27,
+            })}
             style={MapStyles.hudButton}>
             <Image
               style={MapStyles.hudButtonIMG}

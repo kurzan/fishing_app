@@ -4,7 +4,8 @@ import { Coords } from "../types/places";
 
 type TMapContext = {
   map: React.RefObject<YaMap>,
-  getTarget: (coords: Coords) => Promise<void>
+  getTarget: (coords: Coords) => Promise<void>,
+  getCamera: () => Promise<CameraPosition>
 }
 
 export const MapContext = createContext<TMapContext>({} as TMapContext);
@@ -43,7 +44,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <MapContext.Provider value={{ getTarget, map }}>
+    <MapContext.Provider value={{ getTarget, map, getCamera }}>
       {children}
     </MapContext.Provider>
   )

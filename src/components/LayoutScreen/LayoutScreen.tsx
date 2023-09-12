@@ -23,6 +23,4 @@ export const style = StyleSheet.create({
   }
 })
 
-
-
 export default LayoutScreen;

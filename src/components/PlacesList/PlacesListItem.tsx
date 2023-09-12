@@ -5,7 +5,7 @@ import Box from '../Box/Box';
 import { useMap } from '../../hooks/useMap';
 
 type PlacesListItemProps = {
-  place: Place
+  place: Place,
 }
 
 const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {

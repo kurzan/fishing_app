@@ -5,6 +5,7 @@ import Home from '../screens/Home/Home';
 import Catch from '../screens/Catch/Catch';
 import Places from '../screens/Places/Places';
 import Footer from '../components/Footer/Footer';
+import AddPlace from '../screens/AddPlace/AddPlace';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ const Navigation = () => {
             <Stack.Screen name='Home' component={Home} />
             <Stack.Screen name='Catch' component={Catch} />
             <Stack.Screen name='Places' component={Places} />
+            <Stack.Screen name='AddPlace' component={AddPlace} />
           </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>
