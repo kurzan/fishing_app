@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
 import { Place } from '../../services/types/places';
 import Box from '../Box/Box';
 import { useMap } from '../../hooks/useMap';
+import { useNavigation } from '@react-navigation/native';
 
 type PlacesListItemProps = {
   place: Place,
@@ -11,9 +12,12 @@ type PlacesListItemProps = {
 const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
   const { getTarget } = useMap();
+  const navigation = useNavigation<any>();
 
   return (
-    <Box onPress={() => getTarget(place.coords)}>
+    <Box onPress={() => navigation.navigate('Place', {
+      placeId: place.id
+    })}>
       <View style={styles.container} >
         <Image style={styles.placeImg} source={place.thumbnail} />
         <View>

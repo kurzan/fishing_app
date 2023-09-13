@@ -27,7 +27,7 @@ const Map = ({ title }: MapProps) => {
           initialRegion={{
             lat: 56.12,
             lon: 47.27,
-            zoom: 14,
+            zoom: 10,
             azimuth: 0,
           }}
           style={MapStyles.map}
@@ -76,8 +76,6 @@ const Map = ({ title }: MapProps) => {
 export const MapStyles = StyleSheet.create({
 
   contain: {
-    width: '100%',
-    height: 360,
     justifyContent: 'flex-end',
     borderRadius: 24
   },

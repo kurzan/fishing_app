@@ -16,8 +16,8 @@ const NavItem: FC<NavItemProps> = ({ item, navigate, currentRoute }) => {
 
   return (
     <Pressable style={styles.item} onPress={() => navigate(item.title)}>
-      <Icon color={isActive ? 'black' : 'grey'} name={item.iconName} />
-      <Text style={{ color: isActive ? 'black' : 'grey' }}>{item.ru_title}</Text>
+      <Icon color={isActive ? '#0087ff' : '#7e7e7c'} name={item.iconName} />
+      <Text style={{ color: isActive ? '#0087ff' : '#7e7e7c' }}>{item.ru_title}</Text>
     </Pressable>
   )
 };
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   item: {
     width: '33%',
     alignItems: 'center',
-    padding: 6
+    padding: 6,
   },
 
 });

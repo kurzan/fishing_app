@@ -6,8 +6,7 @@ import PlacesList from '../../components/PlacesList/PlacesList';
 const Home = () => {
   return (
     <LayoutScreen>
-      <Map title='Карта' />
-      <PlacesList title='Последние водоемы' />
+      <PlacesList title='Лента' />
     </LayoutScreen>
   );
 }

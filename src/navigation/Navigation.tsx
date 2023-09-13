@@ -6,6 +6,8 @@ import Catch from '../screens/Catch/Catch';
 import Places from '../screens/Places/Places';
 import Footer from '../components/Footer/Footer';
 import AddPlace from '../screens/AddPlace/AddPlace';
+import Place from '../screens/Place/Place';
+import GlobalMap from '../screens/GlobalMap/GlobalMap';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +40,8 @@ const Navigation = () => {
             <Stack.Screen name='Catch' component={Catch} />
             <Stack.Screen name='Places' component={Places} />
             <Stack.Screen name='AddPlace' component={AddPlace} />
+            <Stack.Screen name='Place' component={Place} />
+            <Stack.Screen name='GlobalMap' component={GlobalMap} />
           </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>

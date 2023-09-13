@@ -10,7 +10,7 @@ const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true }) => {
   return (
 
     <View style={{ ...style.container, ...{ backgroundColor: '#04010B' } }}>
-      {isScrollView ? <ScrollView>{children}</ScrollView> : children}
+      {isScrollView ? <ScrollView style={style.container}>{children}</ScrollView> : children}
     </View>
   )
 };
@@ -18,8 +18,7 @@ const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true }) => {
 export const style = StyleSheet.create({
   container: {
     height: '100%',
-    width: '100%',
-    backgroundColor: 'white',
+    width: '100%'
   }
 })
 
