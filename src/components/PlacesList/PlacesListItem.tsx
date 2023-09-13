@@ -19,7 +19,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
       placeId: place.id
     })}>
       <View style={styles.container} >
-        <Image style={styles.placeImg} source={place.thumbnail} />
+        <Image style={styles.placeImg} source={{ uri: place.thumbnail }} />
         <View>
           <Text style={[styles.text, styles.name]}>{place.name}</Text>
           <Text style={[styles.text, styles.type]}>{place.type}</Text>

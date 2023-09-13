@@ -13,8 +13,6 @@ const PlacesList = ({ title = 'Водоемы' }: PlacesListProps) => {
 
   const [places, setPlaces] = useState(placesMock);
 
-  const navigation = useNavigation<any>();
-
   return (
     <ScrollView style={styles.container}>
       <Title title={title} />
@@ -23,8 +21,6 @@ const PlacesList = ({ title = 'Водоемы' }: PlacesListProps) => {
           <PlacesListItem key={place.id} place={place} />
         ))}
         {/* <Button onPress={() => navigation.navigate('AddPlace')} title='+ Добавить водоем' /> */}
-
-        <Button onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
       </View>
     </ScrollView>
   );
@@ -35,7 +31,7 @@ export default PlacesList;
 const styles = StyleSheet.create({
   container: {
     paddingTop: 12,
-    height: '100%'
+    height: '100%',
   },
   list: {
     paddingTop: 12,

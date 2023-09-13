@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, ViewStyle, StyleProp } from 'react-native';
 import Padding from '../Padding/Padding';
 
 type BoxProps = {
-  style?: any,
+  style?: StyleProp<ViewStyle>,
   onPress?: () => void,
 }
 

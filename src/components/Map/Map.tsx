@@ -1,22 +1,24 @@
+import { useState } from 'react';
 import { Marker, YaMap } from 'react-native-yamap';
-import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
 import { places } from '../../services/mocks/places';
-import Title from '../Title/Title';
 import { useMap } from '../../hooks/useMap';
+import MapMarkerPlace from './MapMarkerPlace';
+import MapPlacePrewiev from './MapPlacePreview';
 
 type MapProps = {
   title?: string,
+  style?: StyleProp<ViewStyle>
 }
 
-const Map = ({ title }: MapProps) => {
-
+const Map = ({ title, style }: MapProps) => {
   const { getTarget, map } = useMap();
+
+  const [currentPlaceId, setCurrenPlaceId] = useState<null | number>(null);
 
   return (
     <>
-      {title && <Title title={title} />}
-      <View style={MapStyles.contain}>
-
+      <View style={[MapStyles.contain, style, { height: currentPlaceId ? `70%` : '100%' }]}>
         <YaMap
           ref={map}
           followUser={true}
@@ -30,28 +32,20 @@ const Map = ({ title }: MapProps) => {
             zoom: 10,
             azimuth: 0,
           }}
-          style={MapStyles.map}
+          style={[MapStyles.map,]}
         >
           <Marker
             children={<Image
               style={MapStyles.marker}
-              source={require('../../images/hud/float.png')} />}
+              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
             point={{
               lat: 56.12,
               lon: 47.27,
             }}
             zIndex={6}
           />
-
           {places.map(place => (
-            <Marker
-              key={place.id}
-              children={<Image
-                style={MapStyles.markerPlace}
-                source={place.thumbnail} />}
-              point={place.coords}
-              zIndex={6}
-            />
+            <MapMarkerPlace key={place.id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
           ))}
         </YaMap>
 
@@ -68,15 +62,14 @@ const Map = ({ title }: MapProps) => {
           </TouchableOpacity>
         </View>
       </View>
+      {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
     </>
-
   );
 };
 
 export const MapStyles = StyleSheet.create({
 
   contain: {
-    justifyContent: 'flex-end',
     borderRadius: 24
   },
 
@@ -122,7 +115,6 @@ export const MapStyles = StyleSheet.create({
     width: 30,
     height: 30,
   },
-
 })
 
 export default Map;
