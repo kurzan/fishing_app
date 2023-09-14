@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import { FooterItemProps } from "./types";
-import { Icon } from '@ant-design/react-native'
+import { Icon } from '@ant-design/react-native';
 
 
 type NavItemProps = {
@@ -26,7 +26,7 @@ export default NavItem;
 
 const styles = StyleSheet.create({
   item: {
-    width: '33%',
+    width: '20%',
     alignItems: 'center',
     padding: 6,
   },

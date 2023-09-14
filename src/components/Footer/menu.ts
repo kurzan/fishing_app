@@ -13,7 +13,17 @@ export const menu: FooterItemProps[] = [
   },
   {
     iconName: 'plus-square',
+    title: 'AddPlace',
+    ru_title: 'Добавить'
+  },
+  {
+    iconName: 'global',
     title: 'Places',
-    ru_title: 'Водоемы'
+    ru_title: 'Места'
+  },
+  {
+    iconName: 'holder',
+    title: 'Settings',
+    ru_title: 'Еще'
   }
 ];

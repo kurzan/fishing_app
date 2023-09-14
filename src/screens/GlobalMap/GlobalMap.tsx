@@ -12,7 +12,7 @@ const GlobalMap = () => {
   return (
     <LayoutScreen isScrollView={false}>
       <Map />
-      <Button style={styles.button} onPress={() => navigation.goBack()} title="Список"></Button>
+      <Button icon='bars' style={styles.button} onPress={() => navigation.goBack()} title="Список"></Button>
     </LayoutScreen>
   );
 };

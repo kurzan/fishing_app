@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import { Coords } from '../../services/types/places';
 import { Text } from 'react-native';
+import Input from '../../components/Input/Input';
 
 const AddPlace = () => {
 
@@ -9,7 +10,7 @@ const AddPlace = () => {
 
   return (
     <LayoutScreen>
-      <Text>Add Place</Text>
+      <Input placeholder='Название точки' />
     </LayoutScreen>
   );
 }

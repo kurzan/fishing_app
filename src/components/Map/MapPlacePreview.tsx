@@ -29,7 +29,9 @@ const MapPlacePrewiev = ({ currentPlaceId, setCurrenPlaceId }: MapPlacePreviewPr
 
 const styles = StyleSheet.create({
   container: {
-    height: '40%'
+    height: '40%',
+    backgroundColor: 'white',
+    zIndex: 1000
   },
   text: {
     color: 'white'

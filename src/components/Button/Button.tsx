@@ -1,16 +1,22 @@
 import { FC } from "react";
-import { TouchableHighlight, Text, StyleSheet, ViewStyle, StyleProp } from "react-native";
+import { TouchableHighlight, Text, StyleSheet, ViewStyle, StyleProp, View } from "react-native";
+import { OutlineGlyphMapType } from '@ant-design/icons-react-native';
+import { Icon } from '@ant-design/react-native';
 
 interface IButton {
   onPress: any,
   title: string,
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>,
+  icon?: OutlineGlyphMapType
 }
 
-const Button: FC<IButton> = ({ onPress, title, style }) => {
+const Button: FC<IButton> = ({ onPress, title, style, icon }) => {
   return (
     <TouchableHighlight onPress={onPress} style={[styles.button, style]}>
-      <Text style={styles.text}>{title}</Text>
+      <View style={styles.textContainer}>
+        {icon && <Icon style={styles.icon} name={icon} />}
+        <Text style={styles.text}>{title}</Text>
+      </View>
     </TouchableHighlight>
   )
 };
@@ -20,6 +26,16 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     margin: 3,
     backgroundColor: '#60a5fa'
+  },
+
+  textContainer: {
+    padding: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  icon: {
+    color: 'white'
   },
 
   text: {

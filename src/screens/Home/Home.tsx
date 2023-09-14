@@ -14,7 +14,7 @@ const Home = () => {
       <LayoutScreen>
         <PlacesList title='Лента рыбалок' />
       </LayoutScreen>
-      <Button style={styles.button} onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
+      <Button icon='environment' style={styles.button} onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
     </>
   );
 };

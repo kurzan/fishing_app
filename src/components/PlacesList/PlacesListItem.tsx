@@ -4,6 +4,8 @@ import { Place } from '../../services/types/places';
 import Box from '../Box/Box';
 import { useMap } from '../../hooks/useMap';
 import { useNavigation } from '@react-navigation/native';
+import Avatar from '../Avatar/Avatar';
+import moment from 'moment';
 
 type PlacesListItemProps = {
   place: Place,
@@ -11,23 +13,35 @@ type PlacesListItemProps = {
 
 const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
-  const { getTarget } = useMap();
   const navigation = useNavigation<any>();
+
+  moment.locale('ru')
+  const createDate = moment(place.createdAt).calendar()
 
   return (
     <Box onPress={() => navigation.navigate('Place', {
       placeId: place.id
     })}>
       <View style={styles.container} >
+
+        <View style={styles.header}>
+          <Avatar name={place.user} />
+          <View>
+            <Text style={[styles.text]}>{place.user}</Text>
+            <Text style={[styles.text]}>{createDate}</Text>
+          </View>
+        </View>
+
+
         <Image style={styles.placeImg} source={{ uri: place.thumbnail }} />
         <View>
           <Text style={[styles.text, styles.name]}>{place.name}</Text>
-          <Text style={[styles.text, styles.type]}>{place.type}</Text>
+          <View style={styles.coords}>
+            <Text style={[styles.text, styles.type]}>{place.coords.lat}</Text>
+            <Text style={[styles.text, styles.type]}>{place.coords.lon}</Text>
+          </View>
         </View>
-        <View style={styles.coords}>
-          <Text style={[styles.text, styles.type]}>{place.coords.lat}</Text>
-          <Text style={[styles.text, styles.type]}>{place.coords.lon}</Text>
-        </View>
+
       </View>
     </Box>
 
@@ -36,12 +50,8 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 14,
     gap: 15,
-    width: '90%',
-    height: 80,
     color: 'white',
   },
 
@@ -50,9 +60,14 @@ const styles = StyleSheet.create({
 
   },
 
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+
   placeImg: {
-    width: 50,
-    height: 50,
+    width: '100%',
+    height: 200,
     borderRadius: 18
   },
 
@@ -65,7 +80,8 @@ const styles = StyleSheet.create({
   },
 
   coords: {
-    marginLeft: 'auto',
+    gap: 14,
+    flexDirection: 'row'
   }
 })
 
