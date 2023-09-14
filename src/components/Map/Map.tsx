@@ -1,26 +1,50 @@
-import { useState } from 'react';
-import { Marker, YaMap } from 'react-native-yamap';
-import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
+import { useState, useEffect } from 'react';
+import { CameraPosition, Marker, Point, YaMap, Animation } from 'react-native-yamap';
+import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
 import { places } from '../../services/mocks/places';
 import { useMap } from '../../hooks/useMap';
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
 
 type MapProps = {
-  title?: string,
-  style?: StyleProp<ViewStyle>
+  visiblePlaces?: boolean,
+  style?: StyleProp<ViewStyle>,
+  zoom?: number,
+  height?: DimensionValue | undefined
 }
 
-const Map = ({ title, style }: MapProps) => {
-  const { getTarget, map } = useMap();
-
+const Map = ({ style, height = '100%', visiblePlaces = true, zoom = 10 }: MapProps) => {
+  const { coords, setCoords, getTarget, map, getCamera } = useMap();
   const [currentPlaceId, setCurrenPlaceId] = useState<null | number>(null);
+
+
+  const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
+    const { lat, lon } = event.nativeEvent;
+
+    setCoords({ lat: lat, lon: lon });
+
+    const camera = await getCamera();
+    if (camera) {
+      map.current?.setCenter(
+        {
+          lon: lon,
+          lat: lat
+        },
+
+        camera.zoom,
+        0,
+        0,
+        0.6,
+        Animation.SMOOTH);
+    }
+  };
 
   return (
     <>
-      <View style={[MapStyles.contain, style, { height: currentPlaceId ? `70%` : '100%' }]}>
+      <View style={[MapStyles.contain, style, { height: currentPlaceId ? `70%` : height }]}>
         <YaMap
           ref={map}
+          onMapLongPress={handleMapLongPress}
           followUser={true}
           showUserPosition={true}
           rotateGesturesEnabled={false}
@@ -29,7 +53,7 @@ const Map = ({ title, style }: MapProps) => {
           initialRegion={{
             lat: 56.12,
             lon: 47.27,
-            zoom: 10,
+            zoom: zoom,
             azimuth: 0,
           }}
           style={[MapStyles.map,]}
@@ -44,7 +68,20 @@ const Map = ({ title, style }: MapProps) => {
             }}
             zIndex={6}
           />
-          {places.map(place => (
+
+          {coords && <Marker
+            children={<Image
+              style={MapStyles.marker}
+              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
+            point={{
+              lat: coords.lat,
+              lon: coords.lon,
+            }}
+            zIndex={6}
+          />}
+
+
+          {visiblePlaces && places.map(place => (
             <MapMarkerPlace key={place.id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
           ))}
         </YaMap>
@@ -70,7 +107,6 @@ const Map = ({ title, style }: MapProps) => {
 export const MapStyles = StyleSheet.create({
 
   contain: {
-    borderRadius: 24
   },
 
   map: {

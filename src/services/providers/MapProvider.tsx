@@ -5,13 +5,16 @@ import { Coords } from "../types/places";
 type TMapContext = {
   map: React.RefObject<YaMap>,
   getTarget: (coords: Coords) => Promise<void>,
-  getCamera: () => Promise<CameraPosition>
+  getCamera: () => Promise<CameraPosition>,
+  coords: Coords | undefined,
+  setCoords: React.Dispatch<React.SetStateAction<Coords | undefined>>
 }
 
 export const MapContext = createContext<TMapContext>({} as TMapContext);
 
 export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   const map = useRef<YaMap>(null);
+  const [coords, setCoords] = useState<undefined | Coords>(undefined);
 
   const getCamera = () => {
     return new Promise<CameraPosition>((resolve, reject) => {
@@ -25,10 +28,10 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     })
   };
 
-
   const getTarget = async (coords: Coords) => {
     const camera = await getCamera();
     if (camera) {
+
       map.current?.setCenter(
         {
           lon: coords.lon,
@@ -44,7 +47,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <MapContext.Provider value={{ getTarget, map, getCamera }}>
+    <MapContext.Provider value={{ getTarget, map, coords, getCamera, setCoords }}>
       {children}
     </MapContext.Provider>
   )
