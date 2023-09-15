@@ -2,10 +2,8 @@ import React, { FC } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
 import { Place } from '../../services/types/places';
 import Box from '../Box/Box';
-import { useMap } from '../../hooks/useMap';
 import { useNavigation } from '@react-navigation/native';
 import Avatar from '../Avatar/Avatar';
-import moment from 'moment';
 
 type PlacesListItemProps = {
   place: Place,
@@ -14,9 +12,6 @@ type PlacesListItemProps = {
 const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
   const navigation = useNavigation<any>();
-
-  moment.locale('ru')
-  const createDate = moment(place.createdAt).calendar()
 
   return (
     <Box onPress={() => navigation.navigate('Place', {
@@ -28,7 +23,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
           <Avatar name={place.user} />
           <View>
             <Text style={[styles.text]}>{place.user}</Text>
-            <Text style={[styles.text]}>{createDate}</Text>
+            <Text style={[styles.text]}>Дата</Text>
           </View>
         </View>
 
