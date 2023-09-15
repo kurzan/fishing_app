@@ -12,6 +12,7 @@ import { MapProvider } from './src/services/providers/MapProvider';
 
 YaMap.init('06c72fe6-477e-42ef-86b1-4fa7f012eb6f');
 
+
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 

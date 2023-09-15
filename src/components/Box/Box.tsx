@@ -5,21 +5,28 @@ import Padding from '../Padding/Padding';
 type BoxProps = {
   style?: StyleProp<ViewStyle>,
   onPress?: () => void,
+  touchable?: boolean
 }
 
-const Box = ({ children, style, onPress }: PropsWithChildren<BoxProps>) => {
+const Box = ({ children, style, onPress, touchable = true }: PropsWithChildren<BoxProps>) => {
   return (
-    <Padding>
-      <TouchableOpacity onPress={onPress} style={[styles.container, style]}>
-        {children}
-      </TouchableOpacity>
-    </Padding>
+
+    <View style={[styles.container, style]}>
+
+      {touchable ?
+        (<TouchableOpacity onPress={onPress} >
+          {children}
+        </TouchableOpacity>)
+        :
+        (children)
+      }
+
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     backgroundColor: '#1c1c1e',
     borderRadius: 24,
   }

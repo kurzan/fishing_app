@@ -1,111 +1,113 @@
-// import React, { useState } from 'react';
-// import { View, Text, Image, StyleSheet, Platform, SafeAreaView, ScrollView, Pressable } from "react-native";
-// // import * as ImagePicker from 'react-native-image-picker';
-// import Button from '../Button/Button';
+import React, { useState, useRef } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Pressable, Button } from "react-native";
+import Box from '../Box/Box';
+import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
 
 
-// const includeExtra = true;
+const includeExtra = true;
 
-// // interface Action {
-// //   title: string;
-// //   type: 'capture' | 'library';
-// //   options: ImagePicker.CameraOptions | ImagePicker.ImageLibraryOptions;
-// // }
+const takePhotoOptions: CameraOptions = {
+  saveToPhotos: true,
+  mediaType: 'photo',
+  includeBase64: false,
+  includeExtra,
+}
 
+const selectPhotoOptions = {
+  selectionLimit: 0,
+  mediaType: 'photo',
+  includeBase64: false,
+  includeExtra,
+}
 
-// const actions: Action[] = [
-//   {
-//     title: 'Take Image',
-//     type: 'capture',
-//     options: {
-//       saveToPhotos: true,
-//       mediaType: 'photo',
-//       includeBase64: false,
-//       includeExtra,
-//     },
-//   },
-//   {
-//     title: 'Select Image',
-//     type: 'library',
-//     options: {
-//       selectionLimit: 0,
-//       mediaType: 'photo',
-//       includeBase64: false,
-//       includeExtra,
-//     },
-//   },
-//   {
-//     title: 'Take Video',
-//     type: 'capture',
-//     options: {
-//       saveToPhotos: true,
-//       formatAsMp4: true,
-//       mediaType: 'video',
-//       includeExtra,
-//     },
-//   },
-//   {
-//     title: 'Select Video',
-//     type: 'library',
-//     options: {
-//       selectionLimit: 0,
-//       mediaType: 'video',
-//       formatAsMp4: true,
-//       includeExtra,
-//     },
-//   },
-//   {
-//     title: 'Select Image or Video\n(mixed)',
-//     type: 'library',
-//     options: {
-//       selectionLimit: 0,
-//       mediaType: 'mixed',
-//       includeExtra,
-//     },
-//   },
-// ];
+const AddPhotos = () => {
 
-// if (Platform.OS === 'ios') {
-//   actions.push({
-//     title: 'Take Image or Video\n(mixed)',
-//     type: 'capture',
-//     options: {
-//       saveToPhotos: true,
-//       mediaType: 'mixed',
-//       includeExtra,
-//       presentationStyle: 'fullScreen',
-//     },
-//   });
-// }
+  const [response, setResponse] = React.useState<ImagePickerResponse[]>([]);
 
+  const takePhoto = () => {
+    launchCamera(takePhotoOptions, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('Image picker error: ', response);
+      } else {
+        let images = response;
+        setResponse(prevResponse => [...prevResponse, images]);
+      }
+    });
+  }
 
-// const AddPhotos = () => {
-//   const [response, setResponse] = React.useState<any>(null);
+  return (
+    <>
+      <Box touchable={false} style={styles.container} >
 
-//   const onButtonPress = React.useCallback((type: any, options: any) => {
-//     if (type === 'capture') {
-//       ImagePicker.launchCamera(options, setResponse);
-//     } else {
-//       ImagePicker.launchImageLibrary(options, setResponse);
-//     }
-//   }, []);
+        <TouchableOpacity onPress={takePhoto} style={styles.addPhotoButton}>
+          <Text style={styles.text}>+</Text>
+          <Text style={styles.text}>Добавить фото</Text>
+        </TouchableOpacity>
 
-//   return (
-//     <>
-//       <Button onPress={() => ImagePicker.launchCamera({
-//         mediaType: 'photo',
-//         includeBase64: false,
-//         includeExtra,
-//       }, setResponse)} title='Открыть камеру' />
-//       <Button onPress={() => ImagePicker.launchImageLibrary({
-//         selectionLimit: 0,
-//         mediaType: 'photo',
-//         includeBase64: false,
-//         includeExtra,
-//       }, setResponse)} title='Открыть галерею' />
-//     </>
-//   );
-// };
+        {response && response.map((image: ImagePickerResponse) => (
+          image.assets?.map((asset: any) => (
+            <Image
+              key={asset.uri}
+              resizeMode="cover"
+              resizeMethod="scale"
+              style={styles.image}
+              source={{ uri: asset.uri }}
+            />
+          ))
+        ))}
+      </Box>
+    </>
+
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    height: '18%',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    flexDirection: 'row',
+    gap: 8
+  },
+
+  addPhotoButton: {
+    height: '90%',
+    width: '30%',
+    borderStyle: 'dashed',
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#828284',
+    justifyContent: 'center'
+  },
+
+  text: {
+    color: '#828284',
+    fontSize: 18,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+
+  imageContainer: {
+    marginVertical: 24,
+    alignItems: 'center',
+  },
+
+  image: {
+    height: '90%',
+    width: '30%',
+    borderRadius: 16
+  },
+});
 
 
-// export default AddPhotos;
+
+
+
+export default AddPhotos;
+
+
+
+
+
