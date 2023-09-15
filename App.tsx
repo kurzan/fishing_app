@@ -9,6 +9,7 @@ import {
 import Navigation from './src/navigation/Navigation';
 import YaMap from 'react-native-yamap';
 import { MapProvider } from './src/services/providers/MapProvider';
+import { DataProvider } from './src/services/providers/DataProvider';
 
 YaMap.init('06c72fe6-477e-42ef-86b1-4fa7f012eb6f');
 
@@ -21,9 +22,11 @@ function App(): JSX.Element {
   };
 
   return (
-    <MapProvider>
-      <Navigation />
-    </MapProvider>
+    <DataProvider>
+      <MapProvider>
+        <Navigation />
+      </MapProvider>
+    </DataProvider>
 
   );
 }

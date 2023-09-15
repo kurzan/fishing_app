@@ -10,9 +10,7 @@ type BoxProps = {
 
 const Box = ({ children, style, onPress, touchable = true }: PropsWithChildren<BoxProps>) => {
   return (
-
     <View style={[styles.container, style]}>
-
       {touchable ?
         (<TouchableOpacity onPress={onPress} >
           {children}
@@ -20,7 +18,6 @@ const Box = ({ children, style, onPress, touchable = true }: PropsWithChildren<B
         :
         (children)
       }
-
     </View>
   );
 };

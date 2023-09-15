@@ -6,11 +6,11 @@ export const menu: FooterItemProps[] = [
     title: 'Home',
     ru_title: 'Главная'
   },
-  {
-    iconName: 'check',
-    title: 'Catch',
-    ru_title: 'Улов'
-  },
+  // {
+  //   iconName: 'check',
+  //   title: 'Catch',
+  //   ru_title: 'Улов'
+  // },
   {
     iconName: 'plus-square',
     title: 'AddPlace',

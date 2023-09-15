@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Pressable, Button } from "react-native";
 import Box from '../Box/Box';
 import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
+import { useData } from '../../hooks/useData';
 
 
 const includeExtra = true;
