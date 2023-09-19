@@ -4,6 +4,8 @@ import { Place } from '../../services/types/places';
 import Box from '../Box/Box';
 import { useNavigation } from '@react-navigation/native';
 import Avatar from '../Avatar/Avatar';
+import { useData } from '../../hooks/useData';
+
 
 type PlacesListItemProps = {
   place: Place,
@@ -13,27 +15,30 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
   const navigation = useNavigation<any>();
 
+  const { users } = useData();
+
+  const currentUser = users.find(user => user._id === place.ownerId);
+
   return (
     <Box onPress={() => navigation.navigate('Place', {
-      placeId: place.id
+      placeId: place._id
     })}>
       <View style={styles.container} >
 
         <View style={styles.header}>
-          <Avatar name={place.user} />
+          <Avatar name={currentUser?.name} />
           <View>
-            <Text style={[styles.text]}>{place.user}</Text>
-            <Text style={[styles.text]}>Дата</Text>
+            <Text style={[styles.text]}>{currentUser?.name}</Text>
+            <Text style={[styles.text]}>{new Date(place.createdAt.seconds).toString()}</Text>
           </View>
         </View>
-
-
-        <Image style={styles.placeImg} source={{ uri: place.thumbnail }} />
+        {place.images[0] && <Image style={styles.placeImg} source={{ uri: place.images[0] }} />}
         <View>
           <Text style={[styles.text, styles.name]}>{place.name}</Text>
+          <Text style={[styles.text]}>{place.message}</Text>
           <View style={styles.coords}>
-            <Text style={[styles.text, styles.type]}>{place.coords.lat}</Text>
-            <Text style={[styles.text, styles.type]}>{place.coords.lon}</Text>
+            <Text style={[styles.text, styles.type]}>{place.coords._lat}</Text>
+            <Text style={[styles.text, styles.type]}>{place.coords._long}</Text>
           </View>
         </View>
 

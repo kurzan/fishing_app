@@ -1,4 +1,4 @@
 import { useContext } from "react";
 import { DataContext } from "../services/providers/DataProvider";
 
-export const useData = useContext(DataContext);
+export const useData = () => useContext(DataContext);

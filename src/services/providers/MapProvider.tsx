@@ -46,8 +46,12 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const value = useMemo(() => {
+    return { getTarget, map, coords, getCamera, setCoords }
+  }, [map, coords])
+
   return (
-    <MapContext.Provider value={{ getTarget, map, coords, getCamera, setCoords }}>
+    <MapContext.Provider value={value}>
       {children}
     </MapContext.Provider>
   )

@@ -5,22 +5,22 @@ import Button from '../Button/Button';
 import { useNavigation } from '@react-navigation/native';
 
 type MapPlacePreviewProps = {
-  currentPlaceId: number,
-  setCurrenPlaceId: Dispatch<SetStateAction<null | number>>
+  currentPlaceId: string,
+  setCurrenPlaceId: Dispatch<SetStateAction<null | string>>
 }
 
 const MapPlacePrewiev = ({ currentPlaceId, setCurrenPlaceId }: MapPlacePreviewProps) => {
 
-  const currentPlace = places.find(place => place.id === currentPlaceId);
+  const currentPlace = places.find(place => place._id === currentPlaceId);
 
   const navigation = useNavigation<any>();
 
   return (
     <ScrollView style={styles.container}>
-      <Image style={styles.image} source={{ uri: currentPlace?.thumbnail }} />
+      <Image style={styles.image} source={{ uri: currentPlace?.images[0] }} />
       <Text style={styles.text}>{currentPlace?.name}</Text>
       <Button title='Подробнее' onPress={() => navigation.navigate('Place', {
-        placeId: currentPlace?.id
+        placeId: currentPlace?._id
       })} />
       <Button title='Отмена' onPress={() => setCurrenPlaceId(null)} />
     </ScrollView>

@@ -1,28 +1,28 @@
-import React, { useState, SetStateAction, Dispatch } from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import React, { SetStateAction, Dispatch } from 'react';
+import { StyleSheet, Image } from 'react-native';
 import { Place } from '../../services/types/places';
-import { Marker, YaMap } from 'react-native-yamap';
-import { useNavigation } from '@react-navigation/native';
+import { Marker } from 'react-native-yamap';
 
 type MapMarkerPlace = {
   place: Place,
-  setCurrenPlaceId: Dispatch<SetStateAction<null | number>>
+  setCurrenPlaceId: Dispatch<SetStateAction<null | string>>
 }
 
 const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
-  const navigation = useNavigation<any>();
-
   return (
     <Marker
-      onPress={() => setCurrenPlaceId(place.id)}
-      key={place.id}
+      onPress={() => setCurrenPlaceId(place._id)}
+      key={place._id}
       children={
         <Image
           style={MapStyles.markerImg}
-          source={{ uri: place.thumbnail }} />
+          source={{ uri: place.images[0] }} />
       }
-      point={place.coords}
+      point={{
+        lat: place.coords._long,
+        lon: place.coords._lat
+      }}
       zIndex={6}
     />
   );

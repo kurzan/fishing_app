@@ -18,6 +18,11 @@ const GlobalMap = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexGrow: 1,
+  },
+
   button: {
     position: 'absolute',
     zIndex: 999,

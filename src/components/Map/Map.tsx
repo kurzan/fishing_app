@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { CameraPosition, Marker, Point, YaMap, Animation } from 'react-native-yamap';
 import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
-import { places } from '../../services/mocks/places';
 import { useMap } from '../../hooks/useMap';
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
+import { useData } from '../../hooks/useData';
 
 type MapProps = {
   visiblePlaces?: boolean,
@@ -15,8 +15,11 @@ type MapProps = {
 
 const Map = ({ style, height = '100%', visiblePlaces = true, zoom = 10 }: MapProps) => {
   const { coords, setCoords, getTarget, map, getCamera } = useMap();
-  const [currentPlaceId, setCurrenPlaceId] = useState<null | number>(null);
+  const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
 
+  const { places } = useData();
+
+  console.log()
 
   const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
     const { lat, lon } = event.nativeEvent;
@@ -81,8 +84,8 @@ const Map = ({ style, height = '100%', visiblePlaces = true, zoom = 10 }: MapPro
           />}
 
 
-          {visiblePlaces && places.map(place => (
-            <MapMarkerPlace key={place.id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
+          {visiblePlaces && places && places.map(place => (
+            <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
           ))}
         </YaMap>
 

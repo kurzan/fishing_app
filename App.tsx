@@ -22,11 +22,13 @@ function App(): JSX.Element {
   };
 
   return (
-    <DataProvider>
-      <MapProvider>
+
+    <MapProvider>
+      <DataProvider>
         <Navigation />
-      </MapProvider>
-    </DataProvider>
+      </DataProvider>
+    </MapProvider>
+
 
   );
 }

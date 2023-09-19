@@ -1,11 +1,15 @@
 export type Place = {
-  id: number,
+  _id: string,
   name: string,
-  type: string,
-  coords: Coords
-  thumbnail: any,
-  user: string,
-  createdAt: any,
+  coords: {
+    _long: number,
+    _lat: number
+  }
+  images: string[],
+  ownerId: string,
+  createdAt: { seconds: number, nanoseconds: number },
+  updatedAt: { seconds: number, nanoseconds: number },
+  message: string,
   comments: [
     {
       commentId: number,
@@ -13,13 +17,16 @@ export type Place = {
       massage: string,
       createdAt: any
     }
-  ],
-  likes: [
-    { userId: number }
   ]
 }
 
 export type Coords = {
   lon: number,
   lat: number
+}
+
+
+export type User = {
+  _id: string,
+  name: string
 }
