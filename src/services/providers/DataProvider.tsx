@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext, FC, useMemo, useState, useEffect } from "react";
 import { Place, User } from "../types/places";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import DeviceInfo from 'react-native-device-info';
 
@@ -11,7 +11,8 @@ type TDataContext = {
   setPlaces: Dispatch<SetStateAction<Place[]>>,
   deviceId: string | undefined,
   currentUser: User,
-  addPlace: (formData: any) => Promise<void>
+  addPlace: (formData: any) => Promise<void>,
+  delPlace: (id: string) => Promise<void>
 }
 
 export const DataContext = createContext<TDataContext>({} as TDataContext);
@@ -91,12 +92,17 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
         ...prevState,
       ];
     });
+  };
 
+  const delPlace = async (id: string) => {
+    await deleteDoc(doc(db, "places", id));
+
+    setPlaces(prevState => prevState.filter(place => place._id !== id));
   };
 
 
   const value = useMemo(() => {
-    return { places, users, setPlaces, deviceId, currentUser, addPlace }
+    return { places, users, setPlaces, deviceId, currentUser, addPlace, delPlace }
   }, [places, users, currentUser])
 
 

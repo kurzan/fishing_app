@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Text, ScrollView, Button } from 'react-native';
 import PlacesListItem from './PlacesListItem';
 import Title from '../Title/Title';
-import { useData } from '../../hooks/useData';
+import { Place } from '../../services/types/places';
 
 type PlacesListProps = {
-  title?: string
+  title?: string,
+  places: Place[],
 };
 
-const PlacesList = ({ title = 'Водоемы' }: PlacesListProps) => {
-
-  const { places } = useData();
+const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
 
   return (
     <ScrollView style={styles.container}>
