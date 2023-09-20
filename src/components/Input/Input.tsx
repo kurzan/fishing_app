@@ -15,6 +15,7 @@ const Input = ({ ...textInputProps }: TextInputProps) => {
 const styles = StyleSheet.create({
   input: {
     color: 'white',
+
   }
 })
 

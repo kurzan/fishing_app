@@ -29,7 +29,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
           <Avatar name={currentUser?.name} />
           <View>
             <Text style={[styles.text]}>{currentUser?.name}</Text>
-            <Text style={[styles.text]}>{new Date(place.createdAt.seconds).toString()}</Text>
+            <Text style={[styles.text]}>{new Date(place.createdAt.seconds * 1000).toLocaleString('ru')}</Text>
           </View>
         </View>
         {place.images[0] && <Image style={styles.placeImg} source={{ uri: place.images[0] }} />}
