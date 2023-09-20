@@ -9,16 +9,15 @@ interface ILayout {
 const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true }) => {
   return (
 
-    <View style={{ ...style.container, ...{ backgroundColor: '#04010B' } }}>
-      {isScrollView ? <ScrollView style={style.container}>{children}</ScrollView> : children}
+    <View style={[style.container, { backgroundColor: '#04010B' }]}>
+      {isScrollView ? <ScrollView >{children}</ScrollView> : children}
     </View>
   )
 };
 
 export const style = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%'
+    flex: 1,
   }
 })
 

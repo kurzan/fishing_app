@@ -37,8 +37,18 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
           <Text style={[styles.text, styles.name]}>{place.name}</Text>
           <Text style={[styles.text]}>{place.message}</Text>
           <View style={styles.coords}>
-            <Text style={[styles.text, styles.type]}>{place.coords._lat}</Text>
-            <Text style={[styles.text, styles.type]}>{place.coords._long}</Text>
+            {place.coords.isVisible &&
+              <>
+                <Text style={[styles.text, styles.type]}>{place.coords._lat}</Text>
+                <Text style={[styles.text, styles.type]}>{place.coords._long}</Text>
+              </>}
+
+            {!place.coords.isVisible && currentUser &&
+              <>
+                <Text style={[styles.text, styles.type]}>Видите только вы</Text>
+                <Text style={[styles.text, styles.type]}>{place.coords._lat}</Text>
+                <Text style={[styles.text, styles.type]}>{place.coords._long}</Text>
+              </>}
           </View>
         </View>
 

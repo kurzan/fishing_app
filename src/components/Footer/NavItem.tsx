@@ -17,7 +17,7 @@ const NavItem: FC<NavItemProps> = ({ item, navigate, currentRoute }) => {
   return (
     <Pressable style={styles.item} onPress={() => navigate(item.title)}>
       <Icon color={isActive ? '#0087ff' : '#7e7e7c'} name={item.iconName} />
-      <Text style={{ color: isActive ? '#0087ff' : '#7e7e7c' }}>{item.ru_title}</Text>
+      <Text style={[styles.title, isActive && styles.active]}>{item.ru_title}</Text>
     </Pressable>
   )
 };
@@ -31,4 +31,12 @@ const styles = StyleSheet.create({
     padding: 6,
   },
 
+  title: {
+    color: '#7e7e7c',
+    fontSize: 12
+  },
+
+  active: {
+    color: '#0087ff'
+  }
 });

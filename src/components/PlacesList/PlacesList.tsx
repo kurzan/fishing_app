@@ -11,8 +11,6 @@ type PlacesListProps = {
 
 const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
 
-
-
   return (
     <ScrollView style={styles.container}>
       <Title title={title} />

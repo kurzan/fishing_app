@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Pressable, Button } from "react-native";
+import React from 'react';
+import { Text, Image, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 import Box from '../Box/Box';
 import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
-import { useData } from '../../hooks/useData';
 
+type AddPhotosProps = {
+  style?: StyleProp<ViewStyle>,
+}
 
 const includeExtra = true;
 
@@ -21,7 +23,7 @@ const selectPhotoOptions = {
   includeExtra,
 }
 
-const AddPhotos = () => {
+const AddPhotos = ({ style }: AddPhotosProps) => {
 
   const [response, setResponse] = React.useState<ImagePickerResponse[]>([]);
 
@@ -39,34 +41,31 @@ const AddPhotos = () => {
   }
 
   return (
-    <>
-      <Box touchable={false} style={styles.container} >
 
-        <TouchableOpacity onPress={takePhoto} style={styles.addPhotoButton}>
-          <Text style={styles.text}>+</Text>
-          <Text style={styles.text}>Добавить фото</Text>
-        </TouchableOpacity>
+    <Box touchable={false} style={[styles.container, style]} >
+      <TouchableOpacity onPress={takePhoto} style={styles.addPhotoButton}>
+        <Text style={styles.text}>+</Text>
+        <Text style={styles.text}>Добавить фото</Text>
+      </TouchableOpacity>
 
-        {response && response.map((image: ImagePickerResponse) => (
-          image.assets?.map((asset: any) => (
-            <Image
-              key={asset.uri}
-              resizeMode="cover"
-              resizeMethod="scale"
-              style={styles.image}
-              source={{ uri: asset.uri }}
-            />
-          ))
-        ))}
-      </Box>
-    </>
-
+      {response && response.map((image: ImagePickerResponse) => (
+        image.assets?.map((asset: any) => (
+          <Image
+            key={asset.uri}
+            resizeMode="cover"
+            resizeMethod="scale"
+            style={styles.image}
+            source={{ uri: asset.uri }}
+          />
+        ))
+      ))}
+    </Box>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: '18%',
+    flex: 1,
     alignItems: 'center',
     paddingHorizontal: 8,
     flexDirection: 'row',

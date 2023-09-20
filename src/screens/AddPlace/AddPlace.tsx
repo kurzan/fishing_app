@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
-import { Text, StyleSheet, Pressable, Switch } from 'react-native';
+import { Text, StyleSheet, Pressable, Switch, ScrollView } from 'react-native';
 import Input from '../../components/Input/Input';
 import Map from '../../components/Map/Map';
 import { useMap } from '../../hooks/useMap';
@@ -56,7 +56,7 @@ const AddPlace = () => {
   };
 
   return (
-    <LayoutScreen isScrollView={false}>
+    <LayoutScreen isScrollView={true}>
 
       <Formik
         initialValues={initialState}
@@ -81,11 +81,11 @@ const AddPlace = () => {
           <View style={styles.container}>
             <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} />
             {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-            <Map height={'30%'} zoom={12} visiblePlaces={false} style={styles.map} />
+            <Map style={styles.map} zoom={12} visiblePlaces={false} />
             <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} />
             <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} />
             {touched.coords && errors.coords && <Text style={styles.errorText}>{errors.coords._lat}</Text>}
-            <AddPhotos />
+            <AddPhotos style={styles.addPhoto} />
             <DatePicker
               modal
               locale='ru_RU'
@@ -100,7 +100,7 @@ const AddPlace = () => {
               }}
             />
             <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{date.toLocaleString('ru')}</Text></Pressable>
-            <Box><Input placeholder='Сообщение' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} /></Box>
+            <Box style={styles.messageBox}><Input placeholder='Сообщение' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} /></Box>
 
             <View style={styles.fieldWithToggle}>
               <Text style={styles.text}>Показать в ленте</Text>
@@ -127,22 +127,29 @@ const AddPlace = () => {
           </View>
         )}
       </Formik>
-
-
     </LayoutScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  map: {},
   container: {
-    gap: 8
+    gap: 8,
+    paddingVertical: 8
+  },
+  map: {
+    height: 260
+  },
+  addPhoto: {
+    height: 140
   },
   errorText: {
     color: '#ff6f45'
   },
   text: {
     color: 'white'
+  },
+  messageBox: {
+    height: 80
   },
   fieldWithToggle: {
     flexDirection: 'row',

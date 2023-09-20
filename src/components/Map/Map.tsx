@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { CameraPosition, Marker, Point, YaMap, Animation } from 'react-native-yamap';
+import { useState } from 'react';
+import { Marker, Point, YaMap, Animation } from 'react-native-yamap';
 import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
 import { useMap } from '../../hooks/useMap';
 import MapMarkerPlace from './MapMarkerPlace';
@@ -13,13 +13,11 @@ type MapProps = {
   height?: DimensionValue | undefined
 }
 
-const Map = ({ style, height = '100%', visiblePlaces = true, zoom = 10 }: MapProps) => {
+const Map = ({ style, visiblePlaces = true, zoom = 10 }: MapProps) => {
   const { coords, setCoords, getTarget, map, getCamera } = useMap();
   const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
 
   const { places } = useData();
-
-  console.log()
 
   const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
     const { lat, lon } = event.nativeEvent;
@@ -43,78 +41,72 @@ const Map = ({ style, height = '100%', visiblePlaces = true, zoom = 10 }: MapPro
   };
 
   return (
-    <>
-      <View style={[MapStyles.contain, style, { height: currentPlaceId ? `70%` : height }]}>
-        <YaMap
-          ref={map}
-          onMapLongPress={handleMapLongPress}
-          followUser={true}
-          showUserPosition={true}
-          rotateGesturesEnabled={false}
-          nightMode={true}
-          mapType={'vector'}
-          initialRegion={{
+    <View style={[style]}>
+      <YaMap
+        ref={map}
+        onMapLongPress={handleMapLongPress}
+        followUser={true}
+        showUserPosition={true}
+        rotateGesturesEnabled={false}
+        nightMode={true}
+        mapType={'vector'}
+        initialRegion={{
+          lat: 56.12,
+          lon: 47.27,
+          zoom: zoom,
+          azimuth: 0,
+        }}
+        style={[MapStyles.map,]}
+      >
+        <Marker
+          children={<Image
+            style={MapStyles.marker}
+            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
+          point={{
             lat: 56.12,
             lon: 47.27,
-            zoom: zoom,
-            azimuth: 0,
           }}
-          style={[MapStyles.map,]}
-        >
-          <Marker
-            children={<Image
-              style={MapStyles.marker}
-              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
-            point={{
-              lat: 56.12,
-              lon: 47.27,
-            }}
-            zIndex={6}
-          />
+          zIndex={6}
+        />
 
-          {coords && <Marker
-            children={<Image
-              style={MapStyles.marker}
-              source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
-            point={{
-              lat: coords.lat,
-              lon: coords.lon,
-            }}
-            zIndex={6}
-          />}
+        {coords && <Marker
+          children={<Image
+            style={MapStyles.marker}
+            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
+          point={{
+            lat: coords.lat,
+            lon: coords.lon,
+          }}
+          zIndex={6}
+        />}
 
 
-          {visiblePlaces && places && places.map(place => (
-            <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
-          ))}
-        </YaMap>
+        {visiblePlaces && places && places.map(place => (
+          <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
+        ))}
+      </YaMap>
 
-        <View style={MapStyles.hud}>
-          <TouchableOpacity
-            onPress={() => getTarget({
-              lat: 56.12,
-              lon: 47.27,
-            })}
-            style={MapStyles.hudButton}>
-            <Image
-              style={MapStyles.hudButtonIMG}
-              source={require('../../images/hud/current-possition.png')} />
-          </TouchableOpacity>
-        </View>
+      <View style={MapStyles.hud}>
+        <TouchableOpacity
+          onPress={() => getTarget({
+            lat: 56.12,
+            lon: 47.27,
+          })}
+          style={MapStyles.hudButton}>
+          <Image
+            style={MapStyles.hudButtonIMG}
+            source={require('../../images/hud/current-possition.png')} />
+        </TouchableOpacity>
       </View>
       {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
-    </>
+    </View>
   );
 };
 
 export const MapStyles = StyleSheet.create({
 
-  contain: {
-  },
-
   map: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     zIndex: 1,
   },
 

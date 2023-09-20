@@ -11,7 +11,7 @@ const GlobalMap = () => {
 
   return (
     <LayoutScreen isScrollView={false}>
-      <Map />
+      <Map style={styles.map} />
       <Button icon='bars' style={styles.button} onPress={() => navigation.goBack()} title="Список"></Button>
     </LayoutScreen>
   );
@@ -21,6 +21,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexGrow: 1,
+  },
+
+  map: {
+    height: "100%"
   },
 
   button: {

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     bottom: 32,
     right: 18
   },
-})
+});
 
 
 export default Home;

@@ -14,11 +14,9 @@ const Footer: FC<IFooter> = ({ navigate, currentRoute }) => {
 
   return (
     <Padding style={styles.footer}>
-
       {menu.map(item => (
         <NavItem key={item.title} item={item} navigate={navigate} currentRoute={currentRoute} />
       ))}
-
     </Padding>
   )
 };
