@@ -11,10 +11,12 @@ const Home = () => {
   const navigation = useNavigation<any>();
   const { places } = useData();
 
+  const onlyVisibleInList = places.filter(place => place.isVisible);
+
   return (
     <>
       <LayoutScreen>
-        <PlacesList title='Лента рыбалок' places={places} />
+        <PlacesList title='Лента рыбалок' places={onlyVisibleInList} />
       </LayoutScreen>
       <Button icon='environment' style={styles.button} onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
     </>

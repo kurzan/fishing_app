@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
-import { Text, StyleSheet, Button, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, Switch } from 'react-native';
 import Input from '../../components/Input/Input';
 import Map from '../../components/Map/Map';
 import { useMap } from '../../hooks/useMap';
@@ -10,27 +10,17 @@ import { useData } from '../../hooks/useData';
 import * as yup from 'yup'
 import { useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker'
-
-type InitialState = {
-  values: {
-    name: string;
-    coords: {
-      _long: string;
-      _lat: string;
-    };
-    images: never[];
-    ownerId: string;
-    createdAt: Date;
-    updatedAt: string;
-    message: string;
-  }
-}
+import Box from '../../components/Box/Box';
+import { View } from '@ant-design/react-native';
+import Button from '../../components/Button/Button';
 
 
 const AddPlace = () => {
 
-  const [date, setDate] = useState(new Date())
-  const [openDate, setOpenDate] = useState(false)
+  const [date, setDate] = useState(new Date());
+  const [openDate, setOpenDate] = useState(false);
+  const [isVisibleInList, setIsVisibleInList] = useState(true);
+  const [isVisibleCoordiantsInList, setIsVisibleCoordinatsInList] = useState(true);
 
   const { coords } = useMap();
   const { currentUser, addPlace } = useData();
@@ -40,14 +30,24 @@ const AddPlace = () => {
     addPlace(values)
       .then(() => navigation.navigate('Places'));
     console.log(values);
-  }
+  };
+
+  const toggleVisibleInList = () => {
+    setIsVisibleInList((prev) => !prev);
+  };
+
+  const toggleVisibleCoordinats = () => {
+    setIsVisibleCoordinatsInList((prev) => !prev);
+  };
 
   const initialState = {
     name: '',
     coords: {
       _long: coords?.lon.toString() || '',
-      _lat: coords?.lat.toString() || ''
+      _lat: coords?.lat.toString() || '',
+      isVisible: isVisibleCoordiantsInList
     },
+    isVisible: isVisibleInList,
     images: [],
     ownerId: currentUser._id,
     createdAt: date,
@@ -60,25 +60,25 @@ const AddPlace = () => {
 
       <Formik
         initialValues={initialState}
-        // validationSchema={yup.object().shape({
-        //   name: yup
-        //     .string()
-        //     .required('Введите название точки'),
-        //   coords: yup
-        //     .object({
-        //       _long: yup
-        //         .string()
-        //         .required('Укажите координаты или выберите точку на карту'),
-        //       _lat: yup
-        //         .string()
-        //         .required('Укажите координаты или выберите точку на карту'),
-        //     })
-        // })}
+        validationSchema={yup.object().shape({
+          name: yup
+            .string()
+            .required('Введите название точки'),
+          coords: yup
+            .object({
+              _long: yup
+                .string()
+                .required('Укажите координаты или выберите точку на карту'),
+              _lat: yup
+                .string()
+                .required('Укажите координаты или выберите точку на карту'),
+            })
+        })}
         onSubmit={values => handleSubmit(values)}
         enableReinitialize
       >
         {({ handleChange, handleBlur, handleSubmit, touched, errors, values }) => (
-          <>
+          <View style={styles.container}>
             <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} />
             {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
             <Map height={'30%'} zoom={12} visiblePlaces={false} style={styles.map} />
@@ -88,7 +88,6 @@ const AddPlace = () => {
             <AddPhotos />
             <DatePicker
               modal
-              is24hourSource
               locale='ru_RU'
               open={openDate}
               date={date}
@@ -101,9 +100,31 @@ const AddPlace = () => {
               }}
             />
             <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{date.toLocaleString('ru')}</Text></Pressable>
-            <Input placeholder='Сообщение' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} />
-            <Button onPress={handleSubmit} title="Submit"></Button>
-          </>
+            <Box><Input placeholder='Сообщение' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} /></Box>
+
+            <View style={styles.fieldWithToggle}>
+              <Text style={styles.text}>Показать в ленте</Text>
+              <Switch
+                trackColor={{ false: '#767577', true: '#81b0ff' }}
+                thumbColor={isVisibleInList ? '#f4f3f4' : '#81b0ff'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleVisibleInList}
+                value={isVisibleInList}
+              />
+            </View>
+
+            <View style={styles.fieldWithToggle}>
+              <Text style={styles.text}>Показывать координты в ленте</Text>
+              <Switch
+                trackColor={{ false: '#767577', true: '#81b0ff' }}
+                thumbColor={isVisibleCoordiantsInList ? '#f4f3f4' : '#81b0ff'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleVisibleCoordinats}
+                value={isVisibleCoordiantsInList}
+              />
+            </View>
+            <Button onPress={handleSubmit} title="Добавить"></Button>
+          </View>
         )}
       </Formik>
 
@@ -114,11 +135,18 @@ const AddPlace = () => {
 
 const styles = StyleSheet.create({
   map: {},
+  container: {
+    gap: 8
+  },
   errorText: {
-    color: 'red'
+    color: '#ff6f45'
   },
   text: {
     color: 'white'
+  },
+  fieldWithToggle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 })
 

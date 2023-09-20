@@ -3,8 +3,10 @@ export type Place = {
   name: string,
   coords: {
     _long: number,
-    _lat: number
-  }
+    _lat: number,
+    isVisible: boolean
+  },
+  isVisible: boolean,
   images: string[],
   ownerId: string,
   createdAt: { seconds: number, nanoseconds: number },

@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import Button from '../../components/Button/Button';
 import { useData } from '../../hooks/useData';
 
@@ -13,8 +13,20 @@ const Place = () => {
   const { placeId } = route.params;
 
   const handleDelete = (id: string) => {
-    delPlace(id);
-    navigate.goBack()
+    Alert.alert('Подтвердите удаление', 'Вы дейсвтильно хотите удалить?', [
+      {
+        text: 'Отмена',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Удалить', onPress: () => {
+          delPlace(id);
+          navigate.goBack();
+        }
+      },
+    ]);
+
   }
 
   return (
