@@ -3,7 +3,7 @@ import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import Input from '../../components/Input/Input';
 import Map from '../../components/Map/Map';
-import AddPhotos from '../../components/AddPhotos/AddPhotos';
+import AddPhotos, { uploadImage } from '../../components/AddPhotos/AddPhotos';
 import { Formik } from 'formik';
 import { useData } from '../../hooks/useData';
 import * as yup from 'yup'
@@ -13,17 +13,51 @@ import Box from '../../components/Box/Box';
 import { View } from '@ant-design/react-native';
 import Button from '../../components/Button/Button';
 import Toggle from '../../components/Toggle/Toggle';
+import { storage } from '../../services/firebase';
+import { ref, uploadBytes } from "firebase/storage";
 
 const AddPlace = () => {
   const { currentUser, addPlace } = useData();
   const [openDate, setOpenDate] = useState(false);
+  const [images, setImages] = useState<uploadImage[]>([]);
 
   const navigation = useNavigation<any>();
 
-  const handleSubmit = (values: any) => {
-    // addPlace(values)
-    //   .then(() => navigation.navigate('Places'));
-    console.log(values);
+  const uploadImages = (images: uploadImage[], placeId: string) => {
+    if (!images) return;
+
+    const uploadImagesPromises = images.map(async (image) => {
+      try {
+        const imageRef = ref(storage, `images/places/${placeId}/users/${currentUser._id}/${image.fileName}`);
+        const response = await fetch(image.uri as RequestInfo);
+        const blob = await response.blob()
+        const res = await uploadBytes(imageRef, blob);
+
+        return res
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
+    return Promise.all(uploadImagesPromises)
+  }
+
+  const handleSubmit = async (values: any) => {
+    try {
+      const place = await addPlace(values);
+
+      if (!place.id) {
+        throw new Error('error');
+      }
+
+      uploadImages(images, place.id)?.then(() => setImages([])).then(() => navigation.navigate('Places'));
+
+
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const initialState = {
@@ -79,7 +113,7 @@ const AddPlace = () => {
             <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
             <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
 
-            <AddPhotos style={styles.addPhoto} />
+            <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />
             <DatePicker
               modal
               locale='ru_RU'

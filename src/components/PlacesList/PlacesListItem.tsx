@@ -1,10 +1,12 @@
-import React, { FC } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
+import { StyleSheet, View, Image, Text } from 'react-native';
 import { Place } from '../../services/types/places';
 import Box from '../Box/Box';
 import { useNavigation } from '@react-navigation/native';
 import Avatar from '../Avatar/Avatar';
 import { useData } from '../../hooks/useData';
+import { getDownloadURL, listAll, ref } from 'firebase/storage';
+import { storage } from '../../services/firebase';
 
 
 type PlacesListItemProps = {
@@ -16,8 +18,21 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
   const navigation = useNavigation<any>();
 
   const { users } = useData();
+  const [images, setImages] = useState<string[]>([]);
 
   const currentUser = users.find(user => user._id === place.ownerId);
+
+  const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
+
+  useEffect(() => {
+    listAll(imageListRef).then(res => {
+      res.items.forEach(item => {
+        getDownloadURL(item).then(item => {
+          setImages((prevState) => [...prevState, item])
+        })
+      })
+    })
+  }, [users])
 
   return (
     <Box onPress={() => navigation.navigate('Place', {
@@ -32,7 +47,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
             <Text style={[styles.text]}>{new Date(place.createdAt.seconds * 1000).toLocaleString('ru')}</Text>
           </View>
         </View>
-        {place.images[0] && <Image style={styles.placeImg} source={{ uri: place.images[0] }} />}
+        {images && <Image style={styles.placeImg} source={{ uri: images[0] }} />}
         <View>
           <Text style={[styles.text, styles.name]}>{place.name}</Text>
           <Text style={[styles.text]}>{place.message}</Text>

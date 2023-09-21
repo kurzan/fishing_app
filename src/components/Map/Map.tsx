@@ -80,7 +80,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
 
     setCoords(undefined)
 
-    getCoords({
+    getCoords && getCoords({
       lat: 56.12,
       lon: 47.27,
     })

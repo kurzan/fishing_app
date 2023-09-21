@@ -1,11 +1,18 @@
-import React from 'react';
-import { Text, Image, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image } from "react-native";
 import Box from '../Box/Box';
 import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
 
 type AddPhotosProps = {
   style?: StyleProp<ViewStyle>,
-}
+  images: uploadImage[],
+  setImages: Dispatch<SetStateAction<uploadImage[]>>
+};
+
+export type uploadImage = {
+  fileName: string | undefined,
+  uri: string | undefined
+};
 
 const includeExtra = true;
 
@@ -23,9 +30,7 @@ const selectPhotoOptions = {
   includeExtra,
 }
 
-const AddPhotos = ({ style }: AddPhotosProps) => {
-
-  const [response, setResponse] = React.useState<ImagePickerResponse[]>([]);
+const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
 
   const takePhoto = () => {
     launchCamera(takePhotoOptions, (response) => {
@@ -34,8 +39,14 @@ const AddPhotos = ({ style }: AddPhotosProps) => {
       } else if (response.errorMessage) {
         console.log('Image picker error: ', response);
       } else {
-        let images = response;
-        setResponse(prevResponse => [...prevResponse, images]);
+        let items: uploadImage[] = []
+        response.assets?.forEach(asset => {
+          items.push({
+            fileName: asset.fileName,
+            uri: asset.uri
+          })
+        });
+        setImages(prevImages => [...prevImages, ...items]);
       }
     });
   }
@@ -48,16 +59,14 @@ const AddPhotos = ({ style }: AddPhotosProps) => {
         <Text style={styles.text}>Добавить фото</Text>
       </TouchableOpacity>
 
-      {response && response.map((image: ImagePickerResponse) => (
-        image.assets?.map((asset: any) => (
-          <Image
-            key={asset.uri}
-            resizeMode="cover"
-            resizeMethod="scale"
-            style={styles.image}
-            source={{ uri: asset.uri }}
-          />
-        ))
+      {images && images.map((image: uploadImage) => (
+        <Image
+          key={image.uri}
+          resizeMode="cover"
+          resizeMethod="scale"
+          style={styles.image}
+          source={{ uri: image.uri }}
+        />
       ))}
     </Box>
   );
