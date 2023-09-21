@@ -13,7 +13,7 @@ const Input = ({ error, ...textInputProps }: InputProps) => {
         style={[styles.input, textInputProps.style]}
         {...textInputProps}
       />
-      {error && <Text style={styles.errorText}>Ошибка</Text>}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </>
 
   );

@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
-import { Text, StyleSheet, Pressable, Switch, ScrollView } from 'react-native';
+import { Text, StyleSheet, Pressable } from 'react-native';
 import Input from '../../components/Input/Input';
 import Map from '../../components/Map/Map';
-import { useMap } from '../../hooks/useMap';
 import AddPhotos from '../../components/AddPhotos/AddPhotos';
 import { Formik } from 'formik';
 import { useData } from '../../hooks/useData';
@@ -16,31 +15,25 @@ import Button from '../../components/Button/Button';
 import Toggle from '../../components/Toggle/Toggle';
 
 const AddPlace = () => {
-
-  const { coords } = useMap();
   const { currentUser, addPlace } = useData();
-
   const [openDate, setOpenDate] = useState(false);
-  const [isVisibleInList, setIsVisibleInList] = useState(true);
-  const [isVisibleCoordiantsInList, setIsVisibleCoordinatsInList] = useState(true);
-
 
   const navigation = useNavigation<any>();
 
   const handleSubmit = (values: any) => {
-    addPlace(values)
-      .then(() => navigation.navigate('Places'));
+    // addPlace(values)
+    //   .then(() => navigation.navigate('Places'));
     console.log(values);
   };
 
   const initialState = {
     name: '',
     coords: {
-      _long: coords?.lon.toString() || '',
-      _lat: coords?.lat.toString() || '',
-      isVisible: isVisibleCoordiantsInList
+      _long: '',
+      _lat: '',
+      isVisible: true
     },
-    isVisible: isVisibleInList,
+    isVisible: true,
     images: [],
     ownerId: currentUser._id,
     createdAt: new Date(),
@@ -72,10 +65,19 @@ const AddPlace = () => {
           <View style={styles.container}>
             <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
 
-            <Map style={styles.map} zoom={12} />
+            <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
+              setValues((prevValues) => ({
+                ...prevValues,
+                coords: {
+                  ...prevValues.coords,
+                  _lat: coords.lat.toString(),
+                  _long: coords.lon.toString(),
+                }
+              }))
+            }} />
 
-            <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords} />
-            <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords} />
+            <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
+            <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
 
             <AddPhotos style={styles.addPhoto} />
             <DatePicker

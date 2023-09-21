@@ -1,26 +1,60 @@
-import { useState } from 'react';
-import { Marker, Point, YaMap, Animation } from 'react-native-yamap';
+import { useRef, useState } from 'react';
+import { Marker, Point, YaMap, Animation, CameraPosition } from 'react-native-yamap';
 import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
-import { useMap } from '../../hooks/useMap';
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
-import { Place } from '../../services/types/places';
+import { Coords, Place } from '../../services/types/places';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
   zoom?: number,
-  places?: Place[]
+  places?: Place[],
+  getCoords?: any
 }
 
-const Map = ({ places, style, zoom = 10 }: MapProps) => {
-  const { coords, setCoords, getTarget, map, getCamera } = useMap();
+const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
+
+  const map = useRef<YaMap>(null);
+
+  const [coords, setCoords] = useState<undefined | Coords>(undefined);
   const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
-  const [placesList, setPlacesList] = useState(places);
+
+  const getCamera = () => {
+    return new Promise<CameraPosition>((resolve, reject) => {
+      if (map.current) {
+        map.current.getCameraPosition((position) => {
+          resolve(position);
+        });
+      } else {
+        reject('ERROR');
+      }
+    })
+  };
+
+  const getTarget = async (coords: Coords) => {
+    const camera = await getCamera();
+    if (camera) {
+
+      map.current?.setCenter(
+        {
+          lon: coords.lon,
+          lat: coords.lat
+        },
+
+        camera.zoom,
+        0,
+        0,
+        0.6,
+        Animation.SMOOTH);
+    }
+  };
+
 
   const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
     const { lat, lon } = event.nativeEvent;
 
     setCoords({ lat: lat, lon: lon });
+    getCoords({ lat: lat, lon: lon })
 
     const camera = await getCamera();
     if (camera) {
@@ -36,6 +70,20 @@ const Map = ({ places, style, zoom = 10 }: MapProps) => {
         0.6,
         Animation.SMOOTH);
     }
+  };
+
+  const handleMyPositionPlace = () => {
+    getTarget({
+      lat: 56.12,
+      lon: 47.27,
+    });
+
+    setCoords(undefined)
+
+    getCoords({
+      lat: 56.12,
+      lon: 47.27,
+    })
   };
 
   return (
@@ -79,17 +127,14 @@ const Map = ({ places, style, zoom = 10 }: MapProps) => {
         />}
 
 
-        {placesList && placesList.map(place => (
+        {places && places.map(place => (
           <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
         ))}
       </YaMap>
 
       <View style={MapStyles.hud}>
         <TouchableOpacity
-          onPress={() => getTarget({
-            lat: 56.12,
-            lon: 47.27,
-          })}
+          onPress={handleMyPositionPlace}
           style={MapStyles.hudButton}>
           <Image
             style={MapStyles.hudButtonIMG}
