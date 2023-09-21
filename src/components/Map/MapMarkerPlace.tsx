@@ -1,7 +1,10 @@
-import React, { SetStateAction, Dispatch } from 'react';
+import React, { SetStateAction, Dispatch, useState, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Place } from '../../services/types/places';
 import { Marker } from 'react-native-yamap';
+import { getDownloadURL, listAll, ref } from 'firebase/storage';
+import { useData } from '../../hooks/useData';
+import { storage } from '../../services/firebase';
 
 type MapMarkerPlace = {
   place: Place,
@@ -10,7 +13,27 @@ type MapMarkerPlace = {
 
 const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
-  const imageUri = place.images.length < 0 ? place.images[0] : 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f';
+  const [images, setImages] = useState<string[]>([]);
+
+
+  const { users } = useData();
+
+  const currentUser = users.find(user => user._id === place.ownerId);
+  const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
+
+  useEffect(() => {
+    listAll(imageListRef).then(res => {
+      res.items.forEach(item => {
+        getDownloadURL(item).then(item => {
+          setImages((prevState) => [...prevState, item])
+        })
+      })
+    })
+  }, [users])
+
+
+  const imageUri = 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f';
+
 
   return (
     <Marker
@@ -19,7 +42,7 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
       children={
         <Image
           style={MapStyles.markerImg}
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f' }} />
+          source={{ uri: imageUri }} />
       }
       point={{
         lat: Number(place.coords._lat),
