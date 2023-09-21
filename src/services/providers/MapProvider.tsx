@@ -13,6 +13,7 @@ type TMapContext = {
 export const MapContext = createContext<TMapContext>({} as TMapContext);
 
 export const MapProvider = ({ children }: { children: React.ReactNode }) => {
+
   const map = useRef<YaMap>(null);
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
 
@@ -48,7 +49,7 @@ export const MapProvider = ({ children }: { children: React.ReactNode }) => {
 
   const value = useMemo(() => {
     return { getTarget, map, coords, getCamera, setCoords }
-  }, [map, coords])
+  }, [map])
 
   return (
     <MapContext.Provider value={value}>

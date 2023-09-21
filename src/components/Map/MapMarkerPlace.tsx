@@ -10,7 +10,7 @@ type MapMarkerPlace = {
 
 const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
-  const imageUri = place.images.length ? place.images[0] : 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f';
+  const imageUri = place.images.length < 0 ? place.images[0] : 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f';
 
   return (
     <Marker
@@ -19,7 +19,7 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
       children={
         <Image
           style={MapStyles.markerImg}
-          source={{ uri: imageUri }} />
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f' }} />
       }
       point={{
         lat: Number(place.coords._lat),

@@ -4,20 +4,18 @@ import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, Dimens
 import { useMap } from '../../hooks/useMap';
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
-import { useData } from '../../hooks/useData';
+import { Place } from '../../services/types/places';
 
 type MapProps = {
-  visiblePlaces?: boolean,
   style?: StyleProp<ViewStyle>,
   zoom?: number,
-  height?: DimensionValue | undefined
+  places?: Place[]
 }
 
-const Map = ({ style, visiblePlaces = true, zoom = 10 }: MapProps) => {
+const Map = ({ places, style, zoom = 10 }: MapProps) => {
   const { coords, setCoords, getTarget, map, getCamera } = useMap();
   const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
-
-  const { places } = useData();
+  const [placesList, setPlacesList] = useState(places);
 
   const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
     const { lat, lon } = event.nativeEvent;
@@ -81,7 +79,7 @@ const Map = ({ style, visiblePlaces = true, zoom = 10 }: MapProps) => {
         />}
 
 
-        {visiblePlaces && places && places.map(place => (
+        {placesList && placesList.map(place => (
           <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
         ))}
       </YaMap>

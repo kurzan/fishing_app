@@ -4,14 +4,18 @@ import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button/Button';
 import { StyleSheet, Text } from 'react-native';
+import { useData } from '../../hooks/useData';
 
 const GlobalMap = () => {
 
   const navigation = useNavigation<any>();
+  const { places } = useData();
+
+  console.log(places)
 
   return (
     <LayoutScreen isScrollView={false}>
-      <Map style={styles.map} />
+      <Map places={places} style={styles.map} />
       <Button icon='bars' style={styles.button} onPress={() => navigation.goBack()} title="Список"></Button>
     </LayoutScreen>
   );

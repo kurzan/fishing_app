@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, memo } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, ViewStyle, StyleProp } from 'react-native';
 import Padding from '../Padding/Padding';
 
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Box;
+export default memo(Box);

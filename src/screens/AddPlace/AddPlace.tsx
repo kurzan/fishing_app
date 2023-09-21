@@ -13,31 +13,24 @@ import DatePicker from 'react-native-date-picker'
 import Box from '../../components/Box/Box';
 import { View } from '@ant-design/react-native';
 import Button from '../../components/Button/Button';
-
+import Toggle from '../../components/Toggle/Toggle';
 
 const AddPlace = () => {
 
-  const [date, setDate] = useState(new Date());
+  const { coords } = useMap();
+  const { currentUser, addPlace } = useData();
+
   const [openDate, setOpenDate] = useState(false);
   const [isVisibleInList, setIsVisibleInList] = useState(true);
   const [isVisibleCoordiantsInList, setIsVisibleCoordinatsInList] = useState(true);
 
-  const { coords } = useMap();
-  const { currentUser, addPlace } = useData();
+
   const navigation = useNavigation<any>();
 
   const handleSubmit = (values: any) => {
     addPlace(values)
       .then(() => navigation.navigate('Places'));
     console.log(values);
-  };
-
-  const toggleVisibleInList = () => {
-    setIsVisibleInList((prev) => !prev);
-  };
-
-  const toggleVisibleCoordinats = () => {
-    setIsVisibleCoordinatsInList((prev) => !prev);
   };
 
   const initialState = {
@@ -50,8 +43,7 @@ const AddPlace = () => {
     isVisible: isVisibleInList,
     images: [],
     ownerId: currentUser._id,
-    createdAt: date,
-    updatedAt: '',
+    createdAt: new Date(),
     message: '',
   };
 
@@ -75,54 +67,39 @@ const AddPlace = () => {
             })
         })}
         onSubmit={values => handleSubmit(values)}
-        enableReinitialize
       >
-        {({ handleChange, handleBlur, handleSubmit, touched, errors, values }) => (
+        {({ handleChange, handleBlur, handleSubmit, touched, errors, values, setValues }) => (
           <View style={styles.container}>
-            <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} />
-            {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-            <Map style={styles.map} zoom={12} visiblePlaces={false} />
-            <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} />
-            <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} />
-            {touched.coords && errors.coords && <Text style={styles.errorText}>{errors.coords._lat}</Text>}
+            <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
+
+            <Map style={styles.map} zoom={12} />
+
+            <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords} />
+            <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords} />
+
             <AddPhotos style={styles.addPhoto} />
             <DatePicker
               modal
               locale='ru_RU'
               open={openDate}
-              date={date}
+              date={values.createdAt}
               onConfirm={(date) => {
                 setOpenDate(false)
-                setDate(date)
+                setValues((prevValues) => ({
+                  ...prevValues,
+                  createdAt: date
+                }))
               }}
               onCancel={() => {
                 setOpenDate(false)
               }}
             />
-            <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{date.toLocaleString('ru')}</Text></Pressable>
+            <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{values.createdAt.toLocaleString('ru')}</Text></Pressable>
             <Box style={styles.messageBox}><Input placeholder='Сообщение' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} /></Box>
 
-            <View style={styles.fieldWithToggle}>
-              <Text style={styles.text}>Показать в ленте</Text>
-              <Switch
-                trackColor={{ false: '#767577', true: '#81b0ff' }}
-                thumbColor={isVisibleInList ? '#f4f3f4' : '#81b0ff'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleVisibleInList}
-                value={isVisibleInList}
-              />
-            </View>
+            <Toggle title='Показать в ленте' value={values.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, isVisible: !values.isVisible }))} />
+            <Toggle title='Показывать координты в ленте' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
 
-            <View style={styles.fieldWithToggle}>
-              <Text style={styles.text}>Показывать координты в ленте</Text>
-              <Switch
-                trackColor={{ false: '#767577', true: '#81b0ff' }}
-                thumbColor={isVisibleCoordiantsInList ? '#f4f3f4' : '#81b0ff'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleVisibleCoordinats}
-                value={isVisibleCoordiantsInList}
-              />
-            </View>
             <Button onPress={handleSubmit} title="Добавить"></Button>
           </View>
         )}
