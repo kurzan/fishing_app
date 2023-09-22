@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 import Padding from '../Padding/Padding';
+import { useTheme } from '../../hooks/useTheme';
 
 type TitleProps = {
   style?: any,
@@ -8,16 +9,19 @@ type TitleProps = {
 }
 
 const Title = ({ style, title }: TitleProps) => {
+
+  const { themeStyles } = useTheme();
+
   return (
     <Padding>
-      <Text style={[styles.title, style]}>{title}</Text>
+      <Text style={[themeStyles.color, styles.title, style]}>{title}</Text>
     </Padding>
   );
 };
 
 const styles = StyleSheet.create({
   title: {
-    color: 'white',
+
     fontSize: 24
   }
 });

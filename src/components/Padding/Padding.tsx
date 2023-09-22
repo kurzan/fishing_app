@@ -18,6 +18,6 @@ export default Padding;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 8
+    paddingHorizontal: 14
   }
 });

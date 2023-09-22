@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image } from "react-native";
 import Box from '../Box/Box';
 import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
+import { useTheme } from '../../hooks/useTheme';
 
 type AddPhotosProps = {
   style?: StyleProp<ViewStyle>,
@@ -32,6 +33,8 @@ const selectPhotoOptions = {
 
 const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
 
+  const { themeStyles } = useTheme();
+
   const takePhoto = () => {
     launchCamera(takePhotoOptions, (response) => {
       if (response.didCancel) {
@@ -54,8 +57,8 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
   return (
 
     <Box touchable={false} style={[styles.container, style]} >
-      <TouchableOpacity onPress={takePhoto} style={styles.addPhotoButton}>
-        <Text style={styles.text}>+</Text>
+      <TouchableOpacity onPress={takePhoto} style={[themeStyles.input, styles.addPhotoButton]}>
+        <Text style={[styles.text, styles.plus]}>+</Text>
         <Text style={styles.text}>Добавить фото</Text>
       </TouchableOpacity>
 
@@ -76,7 +79,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 8,
     flexDirection: 'row',
     gap: 8
   },
@@ -84,22 +86,18 @@ const styles = StyleSheet.create({
   addPhotoButton: {
     height: '90%',
     width: '30%',
-    borderStyle: 'dashed',
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#828284',
     justifyContent: 'center'
   },
 
   text: {
-    color: '#828284',
-    fontSize: 18,
     textAlign: 'center',
-    fontWeight: 'bold'
+    color: 'black'
   },
 
+  plus: {},
+
   imageContainer: {
-    marginVertical: 24,
+    marginVertical: 18,
     alignItems: 'center',
   },
 

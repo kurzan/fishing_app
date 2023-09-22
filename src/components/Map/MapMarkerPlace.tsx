@@ -31,18 +31,21 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
     })
   }, [users])
 
+  console.log(`images: ${images}`)
 
-  const imageUri = 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2FPond-001.jpg?alt=media&token=25f2db52-e2db-4b5d-8a3d-63f737bc927f';
+
+  const imageUri = 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2F2151296.png?alt=media&token=327cced7-dcef-4a15-82fe-66f792df8188';
 
 
   return (
     <Marker
       onPress={() => setCurrenPlaceId(place._id)}
       key={place._id}
+
       children={
         <Image
           style={MapStyles.markerImg}
-          source={{ uri: imageUri }} />
+          source={{ uri: images[0] }} />
       }
       point={{
         lat: Number(place.coords._lat),

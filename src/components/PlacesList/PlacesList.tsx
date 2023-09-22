@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Text, ScrollView, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, RefreshControl, ScrollView } from 'react-native';
 import PlacesListItem from './PlacesListItem';
 import Title from '../Title/Title';
 import { Place } from '../../services/types/places';
+import { useData } from '../../hooks/useData';
 
 type PlacesListProps = {
   title?: string,
@@ -11,8 +12,19 @@ type PlacesListProps = {
 
 const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const { getData } = useData();
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getData().then(() => setRefreshing(false))
+  }, []);
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <Title title={title} />
       <View style={styles.list}>
         {places && places.map(place => (
@@ -32,6 +44,6 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingTop: 12,
-    gap: 8
+    gap: 24
   },
 })

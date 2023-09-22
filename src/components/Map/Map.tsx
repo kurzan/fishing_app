@@ -91,10 +91,6 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
       <YaMap
         ref={map}
         onMapLongPress={handleMapLongPress}
-        followUser={true}
-        showUserPosition={true}
-        rotateGesturesEnabled={false}
-        nightMode={true}
         mapType={'vector'}
         initialRegion={{
           lat: 56.12,
@@ -138,7 +134,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
           style={MapStyles.hudButton}>
           <Image
             style={MapStyles.hudButtonIMG}
-            source={require('../../images/hud/current-possition.png')} />
+            source={require('../../images/hud/Location.png')} />
         </TouchableOpacity>
       </View>
       {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
@@ -179,7 +175,6 @@ export const MapStyles = StyleSheet.create({
   hudButton: {
     width: 60,
     height: 60,
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

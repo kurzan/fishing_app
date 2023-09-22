@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
+import { useTheme } from '../../hooks/useTheme';
 
 type ToggleProps = {
   title: string,
@@ -8,12 +9,15 @@ type ToggleProps = {
 }
 
 const Toggle = ({ value, setValue, title }: ToggleProps) => {
+
+  const { themeStyles } = useTheme();
+
   return (
     <View style={styles.fieldWithToggle}>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[themeStyles.color, styles.text]}>{title}</Text>
       <Switch
-        trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={value ? '#f4f3f4' : '#81b0ff'}
+        trackColor={{ false: '#767577', true: '#24A2DF' }}
+        thumbColor={value ? '#f4f3f4' : '#24A2DF'}
         ios_backgroundColor="#3e3e3e"
         onValueChange={setValue}
         value={value}
@@ -25,7 +29,6 @@ const Toggle = ({ value, setValue, title }: ToggleProps) => {
 const styles = StyleSheet.create({
 
   text: {
-    color: 'white'
   },
 
   fieldWithToggle: {

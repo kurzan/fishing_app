@@ -12,7 +12,8 @@ type TDataContext = {
   deviceId: string | undefined,
   currentUser: User,
   addPlace: (formData: any) => Promise<void>,
-  delPlace: (id: string) => Promise<DocumentReference<any, DocumentData>>
+  delPlace: (id: string) => Promise<DocumentReference<any, DocumentData>>,
+  getData: () => Promise<[void, void]>
 }
 
 export const DataContext = createContext<TDataContext>({} as TDataContext);
@@ -24,7 +25,7 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
   const [deviceId, setDeviceId] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<User>({} as User);
 
-  useEffect(() => {
+  const getData = () => {
 
     let devId: string;
     DeviceInfo.getUniqueId().then((uniqueId) => {
@@ -76,7 +77,12 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
       setCurrentUser(currentUser);
     };
 
-    Promise.all([getPlaces(), getUsers()]);
+    return Promise.all([getPlaces(), getUsers()]);
+  }
+
+
+  useEffect(() => {
+    getData()
   }, []);
 
 
@@ -104,7 +110,7 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
 
 
   const value = useMemo(() => {
-    return { places, users, setPlaces, deviceId, currentUser, addPlace, delPlace }
+    return { places, users, setPlaces, deviceId, currentUser, addPlace, delPlace, getData }
   }, [places, users, currentUser])
 
 

@@ -3,6 +3,7 @@ import Padding from "../Padding/Padding";
 import { menu } from "./menu";
 import NavItem from "./NavItem";
 import { StyleSheet, ImageBackground } from "react-native";
+import { useTheme } from "../../hooks/useTheme";
 
 
 interface IFooter {
@@ -12,8 +13,10 @@ interface IFooter {
 
 const Footer: FC<IFooter> = ({ navigate, currentRoute }) => {
 
+  const { themeStyles } = useTheme();
+
   return (
-    <Padding style={styles.footer}>
+    <Padding style={[styles.footer, themeStyles.backgroundColor]}>
       {menu.map(item => (
         <NavItem key={item.title} item={item} navigate={navigate} currentRoute={currentRoute} />
       ))}
@@ -29,8 +32,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTopColor: '#2C2C2C',
-    borderTopWidth: 1,
-    backgroundColor: '#1c1c1e',
+    paddingBottom: 16
   },
 });

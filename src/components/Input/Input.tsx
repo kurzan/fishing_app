@@ -1,27 +1,29 @@
 import React, { memo } from 'react';
 import { StyleSheet, TextInput, TextInputProps, Text } from 'react-native';
+import { useTheme } from '../../hooks/useTheme';
 
 type InputProps = TextInputProps & {
   error?: any
 }
 
 const Input = ({ error, ...textInputProps }: InputProps) => {
+
+  const { themeStyles } = useTheme();
+
   return (
     <>
       <TextInput
-        placeholderTextColor='#828284'
-        style={[styles.input, textInputProps.style]}
+        placeholderTextColor='black'
+        style={[themeStyles.input, styles.input, textInputProps.style]}
         {...textInputProps}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
     </>
-
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    color: 'white',
   },
 
   errorText: {

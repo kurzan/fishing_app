@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
+import LayoutScreen, { style } from '../../components/LayoutScreen/LayoutScreen';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import Input from '../../components/Input/Input';
 import Map from '../../components/Map/Map';
@@ -15,13 +15,18 @@ import Button from '../../components/Button/Button';
 import Toggle from '../../components/Toggle/Toggle';
 import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
+import { useTheme } from '../../hooks/useTheme';
 
 const AddPlace = () => {
   const { currentUser, addPlace } = useData();
   const [openDate, setOpenDate] = useState(false);
   const [images, setImages] = useState<uploadImage[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const navigation = useNavigation<any>();
+  const { themeStyles } = useTheme();
 
   const uploadImages = (images: uploadImage[], placeId: string) => {
     if (!images) return;
@@ -44,18 +49,25 @@ const AddPlace = () => {
 
   const handleSubmit = async (values: any) => {
     try {
+      setIsError(false);
+      setIsLoading(true);
+
       const place = await addPlace(values);
 
       if (!place.id) {
         throw new Error('error');
       }
 
-      uploadImages(images, place.id)?.then(() => setImages([])).then(() => navigation.navigate('Places'));
+      uploadImages(images, place.id)
+        ?.then(() => setImages([]))
+        .then(() => navigation.navigate('Places'));
 
+      setIsLoading(false);
 
     } catch (error) {
       console.log(error);
-
+      setIsLoading(false);
+      setIsError(true);
     }
 
   };
@@ -97,7 +109,7 @@ const AddPlace = () => {
       >
         {({ handleChange, handleBlur, handleSubmit, touched, errors, values, setValues }) => (
           <View style={styles.container}>
-            <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
+
 
             <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
               setValues((prevValues) => ({
@@ -110,6 +122,7 @@ const AddPlace = () => {
               }))
             }} />
 
+            <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
             <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
             <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
 
@@ -131,12 +144,16 @@ const AddPlace = () => {
               }}
             />
             <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{values.createdAt.toLocaleString('ru')}</Text></Pressable>
-            <Box style={styles.messageBox}><Input placeholder='Сообщение' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} /></Box>
+            <Input placeholder='Описание' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} />
 
             <Toggle title='Показать в ленте' value={values.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, isVisible: !values.isVisible }))} />
-            <Toggle title='Показывать координты в ленте' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
+            <Toggle title='Делиться координатами с другими' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
 
-            <Button onPress={handleSubmit} title="Добавить"></Button>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title="Поделиться" isLoading={isLoading}></Button>
+            </View>
+
+            {isError && <Text style={styles.errorText}>Произошла ошибка. Попробуйте еще раз</Text>}
           </View>
         )}
       </Formik>
@@ -146,24 +163,22 @@ const AddPlace = () => {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 8,
-    paddingVertical: 8
+    gap: 14,
   },
   map: {
     height: 260
   },
   addPhoto: {
-    height: 140
+    height: 120
   },
   errorText: {
     color: '#ff6f45'
   },
   text: {
-    color: 'white'
   },
-  messageBox: {
-    height: 80
-  },
+  // messageBox: {
+  //   height: 80
+  // },
   fieldWithToggle: {
     flexDirection: 'row',
     justifyContent: 'space-between'

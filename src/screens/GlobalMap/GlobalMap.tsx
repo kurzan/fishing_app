@@ -11,13 +11,11 @@ const GlobalMap = () => {
   const navigation = useNavigation<any>();
   const { places } = useData();
 
-  console.log(places)
-
   return (
-    <LayoutScreen isScrollView={false}>
+    <>
       <Map places={places} style={styles.map} />
       <Button icon='bars' style={styles.button} onPress={() => navigation.goBack()} title="Список"></Button>
-    </LayoutScreen>
+    </ >
   );
 };
 
