@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, RefreshControl, ScrollView } from 'react-native';
+import { StyleSheet, View, RefreshControl, ScrollView, FlatList } from 'react-native';
 import PlacesListItem from './PlacesListItem';
 import Title from '../Title/Title';
 import { Place } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
+import Padding from '../Padding/Padding';
 
 type PlacesListProps = {
   title?: string,
@@ -21,16 +22,19 @@ const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
     getData().then(() => setRefreshing(false))
   }, []);
 
+
   return (
     <ScrollView style={styles.container} refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
     }>
-      <Title title={title} />
-      <View style={styles.list}>
-        {places && places.map(place => (
-          <PlacesListItem key={place._id} place={place} />
-        ))}
-      </View>
+      <Padding>
+        <Title title={title} />
+        <View style={styles.list}>
+          {places && places.map(place => (
+            <PlacesListItem key={place._id} place={place} />
+          ))}
+        </View>
+      </Padding>
     </ScrollView>
   );
 }

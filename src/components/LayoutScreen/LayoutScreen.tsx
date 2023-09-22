@@ -5,35 +5,31 @@ import Padding from "../Padding/Padding";
 
 interface ILayout {
   isScrollView?: boolean,
-  children?: any
+  children?: any,
+  style?: any
 }
 
-const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true }) => {
+const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true, style }) => {
 
   const { themeStyles } = useTheme();
 
   return (
 
-    <View style={[style.container, themeStyles.backgroundColor]}>
+    <View style={[styles.container, themeStyles.backgroundColor, style]}>
 
       {isScrollView ? (
         <ScrollView>
           <Padding>
             {children}
           </Padding>
-        </ScrollView>
-      )
+        </ScrollView>)
         :
-        (
-          <Padding>
-            children
-          </Padding>
-        )}
+        (children)}
     </View>
   )
 };
 
-export const style = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
   }

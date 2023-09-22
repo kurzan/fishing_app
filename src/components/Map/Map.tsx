@@ -124,7 +124,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
 
 
         {places && places.map(place => (
-          <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
+          <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} imageURI='https://www.salmo.ru/upload/iblock/fd1/prud_b.jpg' />
         ))}
       </YaMap>
 

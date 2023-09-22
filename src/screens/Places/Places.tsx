@@ -10,7 +10,7 @@ const Places = () => {
   const currentPlaces = places.filter(place => place.ownerId === currentUser._id);
 
   return (
-    <LayoutScreen>
+    <LayoutScreen isScrollView={false}>
       <PlacesList title='Мои места' places={currentPlaces} />
     </LayoutScreen>
   );

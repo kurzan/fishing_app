@@ -8,14 +8,13 @@ import { storage } from '../../services/firebase';
 
 type MapMarkerPlace = {
   place: Place,
-  setCurrenPlaceId: Dispatch<SetStateAction<null | string>>
+  setCurrenPlaceId: Dispatch<SetStateAction<null | string>>,
+  imageURI?: string
 }
 
-const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
+const MapMarkerPlace = ({ place, setCurrenPlaceId, imageURI }: MapMarkerPlace) => {
 
   const [images, setImages] = useState<string[]>([]);
-
-
   const { users } = useData();
 
   const currentUser = users.find(user => user._id === place.ownerId);
@@ -45,7 +44,7 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
       children={
         <Image
           style={MapStyles.markerImg}
-          source={{ uri: images[0] }} />
+          source={{ uri: imageURI }} />
       }
       point={{
         lat: Number(place.coords._lat),
@@ -66,7 +65,7 @@ export const MapStyles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 6,
-    borderWidth: 4,
+    borderWidth: 3,
     borderColor: 'black',
   },
 

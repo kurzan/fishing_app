@@ -22,8 +22,6 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
   const { users } = useData();
   const [images, setImages] = useState<string[]>([]);
 
-  const sfdsf = Number(place.coords._lat).toFixed(3)
-
   const currentUser = users.find(user => user._id === place.ownerId);
 
   const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
