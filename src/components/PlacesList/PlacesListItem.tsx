@@ -11,6 +11,9 @@ import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '@ant-design/react-native';
 import Padding from '../Padding/Padding';
 import moment from 'moment';
+import 'moment/locale/ru';
+
+moment.locale('ru')
 
 
 type PlacesListItemProps = {
