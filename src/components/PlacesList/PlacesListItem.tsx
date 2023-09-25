@@ -10,6 +10,7 @@ import { storage } from '../../services/firebase';
 import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '@ant-design/react-native';
 import Padding from '../Padding/Padding';
+import moment from 'moment';
 
 
 type PlacesListItemProps = {
@@ -101,7 +102,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
           {place.message && <Text style={[themeStyles.color, styles.text]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
 
-          <Text style={[themeStyles.color, styles.text]}>{new Date(place.createdAt.seconds * 1000).toLocaleString('ru')}</Text>
+          <Text style={[themeStyles.color, styles.text]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
         </Padding>
       </View>
     </Box >
