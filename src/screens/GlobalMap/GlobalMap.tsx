@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Map from '../../components/Map/Map';
-import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button/Button';
 import { StyleSheet, Text } from 'react-native';

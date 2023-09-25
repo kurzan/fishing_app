@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 24,
     margin: 3,
-    backgroundColor: '#24A2DF'
+    backgroundColor: '#24A2DF',
   },
 
   disabled: {

@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, RefreshControl, ScrollView, FlatList } from 'react-native';
 import PlacesListItem from './PlacesListItem';
-import Title from '../Title/Title';
 import { Place } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
-import Padding from '../Padding/Padding';
 
 type PlacesListProps = {
   title?: string,
@@ -22,20 +20,19 @@ const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
     getData().then(() => setRefreshing(false))
   }, []);
 
+  const filteredPlaces = places.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
+
 
   return (
-    <ScrollView style={styles.container} refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
-      <Padding>
-        <Title title={title} />
-        <View style={styles.list}>
-          {places && places.map(place => (
-            <PlacesListItem key={place._id} place={place} />
-          ))}
-        </View>
-      </Padding>
-    </ScrollView>
+
+    <FlatList
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      style={styles.container}
+      data={filteredPlaces}
+      renderItem={({ item }) => <PlacesListItem place={item} />}
+      keyExtractor={filteredPlaces => filteredPlaces._id}
+    />
+
   );
 }
 
@@ -44,10 +41,5 @@ export default PlacesList;
 const styles = StyleSheet.create({
   container: {
     paddingTop: 12,
-    height: '100%',
-  },
-  list: {
-    paddingTop: 12,
-    gap: 24
-  },
+  }
 })

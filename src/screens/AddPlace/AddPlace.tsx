@@ -60,9 +60,10 @@ const AddPlace = () => {
 
       uploadImages(images, place.id)
         ?.then(() => setImages([]))
-        .then(() => navigation.navigate('Places'));
-
-      setIsLoading(false);
+        .then(() => {
+          navigation.navigate('Places');
+          setIsLoading(false);
+        });
 
     } catch (error) {
       console.log(error);

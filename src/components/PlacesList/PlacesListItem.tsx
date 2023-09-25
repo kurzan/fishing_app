@@ -9,6 +9,7 @@ import { getDownloadURL, listAll, ref } from 'firebase/storage';
 import { storage } from '../../services/firebase';
 import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '@ant-design/react-native';
+import Padding from '../Padding/Padding';
 
 
 type PlacesListItemProps = {
@@ -29,8 +30,10 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
   useEffect(() => {
     listAll(imageListRef).then(res => {
       res.items.forEach(item => {
+        console.log(item)
         getDownloadURL(item).then(item => {
           setImages((prevState) => [...prevState, item])
+          console.log(item)
         })
       })
     })
@@ -40,55 +43,68 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
     <Box onPress={() => navigation.navigate('Place', {
       placeId: place._id
     })}>
+
       <View style={styles.container} >
-
-        <View style={styles.header}>
-          <Avatar name={currentUser?.name} />
-          <View>
-            <Text style={[themeStyles.color, styles.text]}>{currentUser?.name}</Text>
-            <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
+        <Padding>
+          <View style={styles.header}>
+            <Avatar name={currentUser?.name} />
+            <View>
+              <Text style={[themeStyles.color, styles.text]}>{currentUser?.name}</Text>
+              <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
+            </View>
           </View>
-        </View>
+        </Padding>
+        {images.length > 0 ? (
+          <View style={styles.imagContainer}>
+            <Image style={styles.placeImg} source={{ uri: images[0] }} resizeMode="cover"
+              resizeMethod="resize" />
+          </View>
+        ) : (
+          <View style={styles.noPhoto} >
+            <Text>Нет фото</Text>
+          </View>
+        )}
 
-        {images && <Image style={styles.placeImg} source={{ uri: images[0] }} />}
-        <View style={styles.bottom}>
+        <Padding>
+          <View style={styles.bottom}>
 
-          <View style={styles.usersInteract}>
+            <View style={styles.usersInteract}>
 
-            <View style={styles.likes}>
-              <Icon size='md' name='heart' color='black' />
-              <Text style={[themeStyles.color]}>15</Text>
+              <View style={styles.likes}>
+                <Icon size='md' name='heart' color='black' />
+                <Text style={[themeStyles.color]}>15</Text>
+              </View>
+
+              <View style={styles.comments}>
+                <Icon size='md' name='message' color='black' />
+                <Text style={[themeStyles.color]}>32</Text>
+              </View>
+
             </View>
 
-            <View style={styles.comments}>
-              <Icon size='md' name='message' color='black' />
-              <Text style={[themeStyles.color]}>32</Text>
+            <View style={styles.coords}>
+              {place.coords.isVisible &&
+                <>
+                  <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._lat).toFixed(6)}</Text>
+                  <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._long).toFixed(6)}</Text>
+                </>}
+
+              {!place.coords.isVisible && currentUser &&
+                <>
+                  <Text style={[themeStyles.color, styles.text, styles.type]}>Видите только вы</Text>
+                  <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._lat.toFixed(2)}</Text>
+                  <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._long}</Text>
+                </>}
             </View>
 
           </View>
 
-          <View style={styles.coords}>
-            {place.coords.isVisible &&
-              <>
-                <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._lat).toFixed(6)}</Text>
-                <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._long).toFixed(6)}</Text>
-              </>}
+          {place.message && <Text style={[themeStyles.color, styles.text]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
 
-            {!place.coords.isVisible && currentUser &&
-              <>
-                <Text style={[themeStyles.color, styles.text, styles.type]}>Видите только вы</Text>
-                <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._lat.toFixed(2)}</Text>
-                <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._long}</Text>
-              </>}
-          </View>
-
-        </View>
-
-        {place.message && <Text style={[themeStyles.color, styles.text]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
-
-        <Text style={[themeStyles.color, styles.text]}>{new Date(place.createdAt.seconds * 1000).toLocaleString('ru')}</Text>
+          <Text style={[themeStyles.color, styles.text]}>{new Date(place.createdAt.seconds * 1000).toLocaleString('ru')}</Text>
+        </Padding>
       </View>
-    </Box>
+    </Box >
 
   );
 };
@@ -96,6 +112,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 const styles = StyleSheet.create({
   container: {
     gap: 6,
+    paddingBottom: 18
   },
 
   text: {
@@ -107,10 +124,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
+  noPhoto: {
+    alignItems: 'center'
+  },
+
+  imagContainer: {
+    height: 400
+  },
+
   placeImg: {
-    width: '100%',
-    minHeight: 200,
-    maxHeight: 500
+    flex: 1,
   },
 
   name: {

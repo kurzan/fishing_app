@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Marker, Point, YaMap, Animation, CameraPosition } from 'react-native-yamap';
 import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
 import MapMarkerPlace from './MapMarkerPlace';
@@ -12,8 +12,7 @@ type MapProps = {
   getCoords?: any
 }
 
-const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
-
+const Map = ({ places, style, zoom = 12, getCoords }: MapProps) => {
   const map = useRef<YaMap>(null);
 
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
@@ -30,6 +29,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
       }
     })
   };
+
 
   const getTarget = async (coords: Coords) => {
     const camera = await getCamera();
@@ -49,6 +49,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
     }
   };
 
+  console.log(YaMap.getLocale())
 
   const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
     const { lat, lon } = event.nativeEvent;
@@ -91,7 +92,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
       <YaMap
         ref={map}
         onMapLongPress={handleMapLongPress}
-        mapType={'vector'}
+        mapType='raster'
         initialRegion={{
           lat: 56.12,
           lon: 47.27,
@@ -103,7 +104,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
         <Marker
           children={<Image
             style={MapStyles.marker}
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
+            source={require('../../images/hud/float.png')} />}
           point={{
             lat: 56.12,
             lon: 47.27,
@@ -114,7 +115,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
         {coords && <Marker
           children={<Image
             style={MapStyles.marker}
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/fishing-9684f.appspot.com/o/images%2Fmap-markers%2Ffloat.png?alt=media&token=e9594a03-1940-4fee-a105-87f0337277ca' }} />}
+            source={require('../../images/hud/float.png')} />}
           point={{
             lat: coords.lat,
             lon: coords.lon,
@@ -124,7 +125,7 @@ const Map = ({ places, style, zoom = 10, getCoords }: MapProps) => {
 
 
         {places && places.map(place => (
-          <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} imageURI='https://www.salmo.ru/upload/iblock/fd1/prud_b.jpg' />
+          <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
         ))}
       </YaMap>
 

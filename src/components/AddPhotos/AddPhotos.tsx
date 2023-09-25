@@ -65,7 +65,7 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
       {images && images.map((image: uploadImage) => (
         <Image
           key={image.uri}
-          resizeMode="cover"
+          resizeMode="contain"
           resizeMethod="scale"
           style={styles.image}
           source={{ uri: image.uri }}
