@@ -86,7 +86,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
             </View>
 
-            <View style={styles.coords}>
+            {/* <View style={styles.coords}>
               {place.coords.isVisible &&
                 <>
                   <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._lat).toFixed(6)}</Text>
@@ -99,7 +99,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
                   <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._lat.toFixed(2)}</Text>
                   <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._long}</Text>
                 </>}
-            </View>
+            </View> */}
 
           </View>
 

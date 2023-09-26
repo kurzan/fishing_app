@@ -5,6 +5,7 @@ import Button from '../../components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useData } from '../../hooks/useData';
+import Heading from '../../components/Heading/Heading';
 
 const Home = () => {
 
@@ -21,6 +22,7 @@ const Home = () => {
 
   return (
     <>
+      <Heading withLogo />
       <LayoutScreen isScrollView={false}>
         <PlacesList title='Лента рыбалок' places={onlyVisibleInList} />
       </LayoutScreen>

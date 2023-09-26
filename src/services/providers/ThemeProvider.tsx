@@ -23,6 +23,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     backgroundColor: {
       backgroundColor: isDarkMode ? Colors.darker : 'white'
     },
+
     color: {
       color: isDarkMode ? Colors.lighter : Colors.darker
     },

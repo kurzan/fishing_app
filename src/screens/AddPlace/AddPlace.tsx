@@ -17,6 +17,7 @@ import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import Heading from '../../components/Heading/Heading';
 
 const AddPlace = () => {
 
@@ -98,92 +99,95 @@ const AddPlace = () => {
   };
 
   return (
-    <LayoutScreen isScrollView={true}>
+    <>
+      <Heading title='Добавить место' />
+      <LayoutScreen isScrollView={true}>
 
-      <Formik
-        initialValues={initialState}
-        validationSchema={yup.object().shape({
-          name: yup
-            .string()
-            .required('Введите название точки'),
-          coords: yup
-            .object({
-              _long: yup
-                .string()
-                .required('Укажите координаты или выберите точку на карту'),
-              _lat: yup
-                .string()
-                .required('Укажите координаты или выберите точку на карту'),
-            })
-        })}
-        onSubmit={values => handleSubmit(values)}
-      >
-        {({ handleChange, handleBlur, handleSubmit, touched, errors, values, setValues }) => (
-          <View style={styles.container}>
+        <Formik
+          initialValues={initialState}
+          validationSchema={yup.object().shape({
+            name: yup
+              .string()
+              .required('Введите название точки'),
+            coords: yup
+              .object({
+                _long: yup
+                  .string()
+                  .required('Укажите координаты или выберите точку на карту'),
+                _lat: yup
+                  .string()
+                  .required('Укажите координаты или выберите точку на карту'),
+              })
+          })}
+          onSubmit={values => handleSubmit(values)}
+        >
+          {({ handleChange, handleBlur, handleSubmit, touched, errors, values, setValues }) => (
+            <View style={styles.container}>
 
 
-            <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
-              setValues((prevValues) => ({
-                ...prevValues,
-                coords: {
-                  ...prevValues.coords,
-                  _lat: coords.lat.toString(),
-                  _long: coords.lon.toString(),
-                }
-              }))
-            }} />
-
-            <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
-            <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
-            <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
-
-            <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />
-            <DatePicker
-              modal
-              locale='ru_RU'
-              open={openDate}
-              date={values.createdAt}
-              onConfirm={(date) => {
-                setOpenDate(false)
+              <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
                 setValues((prevValues) => ({
                   ...prevValues,
-                  createdAt: date
+                  coords: {
+                    ...prevValues.coords,
+                    _lat: coords.lat.toString(),
+                    _long: coords.lon.toString(),
+                  }
                 }))
-              }}
-              onCancel={() => {
-                setOpenDate(false)
-              }}
-            />
-            <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{values.createdAt.toLocaleString('ru')}</Text></Pressable>
-            <Input placeholder='Описание' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} />
+              }} />
 
-            <Toggle title='Показать в ленте' value={values.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, isVisible: !values.isVisible }))} />
-            <Toggle title='Делиться координатами с другими' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
+              <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
+              <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
+              <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
 
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title="Поделиться" isLoading={isLoading}></Button>
+              <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />
+              <DatePicker
+                modal
+                locale='ru_RU'
+                open={openDate}
+                date={values.createdAt}
+                onConfirm={(date) => {
+                  setOpenDate(false)
+                  setValues((prevValues) => ({
+                    ...prevValues,
+                    createdAt: date
+                  }))
+                }}
+                onCancel={() => {
+                  setOpenDate(false)
+                }}
+              />
+              <Pressable onPress={() => setOpenDate(true)}><Text style={styles.text}>{values.createdAt.toLocaleString('ru')}</Text></Pressable>
+              <Input placeholder='Описание' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} />
+
+              <Toggle title='Показать в ленте' value={values.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, isVisible: !values.isVisible }))} />
+              <Toggle title='Делиться координатами с другими' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
+
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title="Поделиться" isLoading={isLoading}></Button>
+              </View>
+
+              {isError && <Text style={styles.errorText}>Произошла ошибка. Попробуйте еще раз</Text>}
+
+              {/* <BottomSheet
+
+              ref={sheetRef}
+              snapPoints={snapPoints}
+              onChange={handleSheetChange}
+              enablePanDownToClose
+              animateOnMount={true}
+            >
+              <BottomSheetView>
+                <Text>Awesome 🔥</Text>
+              </BottomSheetView>
+            </BottomSheet> */}
+
             </View>
+          )}
+        </Formik>
+      </LayoutScreen>
+    </>
 
-            {isError && <Text style={styles.errorText}>Произошла ошибка. Попробуйте еще раз</Text>}
-
-          </View>
-        )}
-      </Formik>
-
-      {/* <BottomSheet
-
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
-        enablePanDownToClose
-        animateOnMount={true}
-      >
-        <BottomSheetView>
-          <Text>Awesome 🔥</Text>
-        </BottomSheetView>
-      </BottomSheet> */}
-
-    </LayoutScreen>
   );
 };
 

@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { ScrollView, Text, StyleSheet, Image } from 'react-native';
-import { places } from '../../services/mocks/places';
 import Button from '../Button/Button';
 import { useNavigation } from '@react-navigation/native';
+import { useData } from '../../hooks/useData';
 
 type MapPlacePreviewProps = {
   currentPlaceId: string,
@@ -10,6 +10,8 @@ type MapPlacePreviewProps = {
 }
 
 const MapPlacePrewiev = ({ currentPlaceId, setCurrenPlaceId }: MapPlacePreviewProps) => {
+
+  const { places } = useData();
 
   const currentPlace = places.find(place => place._id === currentPlaceId);
 
