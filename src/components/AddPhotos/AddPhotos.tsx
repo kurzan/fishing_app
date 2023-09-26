@@ -1,13 +1,17 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
-import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image } from "react-native";
+import React, { Dispatch, SetStateAction, useState, useRef, useMemo, useCallback } from 'react';
+import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image, View } from "react-native";
 import Box from '../Box/Box';
-import { launchCamera, CameraOptions, ImagePickerResponse } from 'react-native-image-picker';
+import { launchCamera, CameraOptions, ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
 import { useTheme } from '../../hooks/useTheme';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { Portal } from 'react-native-portalize';
+import Button from '../Button/Button';
+
 
 type AddPhotosProps = {
   style?: StyleProp<ViewStyle>,
   images: uploadImage[],
-  setImages: Dispatch<SetStateAction<uploadImage[]>>
+  setImages: Dispatch<SetStateAction<uploadImage[]>>,
 };
 
 export type uploadImage = {
@@ -25,17 +29,36 @@ const takePhotoOptions: CameraOptions = {
 }
 
 const selectPhotoOptions = {
-  selectionLimit: 0,
+  selectionLimit: 5,
   mediaType: 'photo',
   includeBase64: false,
   includeExtra,
 }
 
 const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
-
   const { themeStyles } = useTheme();
 
+  const sheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["30%"], []);
+
+  const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
+
+  const handleSheetChange = useCallback((index) => {
+    console.log("handleSheetChange", index);
+    setBottimSheetIndex(index)
+  }, []);
+
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
+
+  const addPhotos = () => {
+    setBottimSheetIndex(0)
+  }
+
+
   const takePhoto = () => {
+    handleClosePress();
     launchCamera(takePhotoOptions, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -54,28 +77,74 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
     });
   }
 
+  const choosePhoto = () => {
+    handleClosePress();
+
+    launchImageLibrary(selectPhotoOptions, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('Image picker error: ', response);
+      } else {
+        let items: uploadImage[] = []
+        response.assets?.forEach(asset => {
+          items.push({
+            fileName: asset.fileName,
+            uri: asset.uri
+          })
+        });
+        setImages(prevImages => [...prevImages, ...items]);
+      }
+    });
+  };
+
   return (
+    <>
+      <Box touchable={false} style={[styles.container, style]} >
+        <TouchableOpacity onPress={addPhotos} style={[themeStyles.input, styles.addPhotoButton]}>
+          <Text style={[styles.text, styles.plus]}>+</Text>
+          <Text style={styles.text}>Добавить фото</Text>
+        </TouchableOpacity>
 
-    <Box touchable={false} style={[styles.container, style]} >
-      <TouchableOpacity onPress={takePhoto} style={[themeStyles.input, styles.addPhotoButton]}>
-        <Text style={[styles.text, styles.plus]}>+</Text>
-        <Text style={styles.text}>Добавить фото</Text>
-      </TouchableOpacity>
+        {images && images.map((image: uploadImage) => (
+          <Image
+            key={image.uri}
+            resizeMode="contain"
+            resizeMethod="scale"
+            style={styles.image}
+            source={{ uri: image.uri }}
+          />
+        ))}
+      </Box>
 
-      {images && images.map((image: uploadImage) => (
-        <Image
-          key={image.uri}
-          resizeMode="contain"
-          resizeMethod="scale"
-          style={styles.image}
-          source={{ uri: image.uri }}
-        />
-      ))}
-    </Box>
+      <Portal>
+        <BottomSheet
+          index={bottomSheetIndex}
+          ref={sheetRef}
+          snapPoints={snapPoints}
+          onChange={handleSheetChange}
+          enablePanDownToClose
+        >
+          <BottomSheetView>
+            <Button title='Сделать фото' onPress={takePhoto} />
+            <Button title='Выбрать фото' onPress={choosePhoto} />
+            <Button title='Отмена' onPress={handleClosePress} />
+          </BottomSheetView>
+        </BottomSheet>
+      </Portal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+
+  bottomContainer: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    bottom: 0
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -107,9 +176,6 @@ const styles = StyleSheet.create({
     borderRadius: 16
   },
 });
-
-
-
 
 
 export default AddPhotos;
