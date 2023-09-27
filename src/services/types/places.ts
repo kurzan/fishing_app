@@ -12,6 +12,7 @@ export type Place = {
   createdAt: { seconds: number, nanoseconds: number },
   updatedAt: { seconds: number, nanoseconds: number },
   message: string,
+  likes: string[],
   comments: [
     {
       commentId: number,

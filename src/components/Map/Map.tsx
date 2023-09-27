@@ -137,10 +137,8 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
     <View style={[style]}>
       {location && <YaMap
         ref={map}
-        followUser
-        onMapLoaded={getLocation}
         nightMode={isDarkMode}
-        userLocationIcon={require('../../images/hud/float.png')}
+        showUserPosition={false}
         onMapLongPress={handleMapLongPress}
         mapType='vector'
         initialRegion={{
@@ -151,16 +149,16 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
         }}
         style={[MapStyles.map,]}
       >
-        {/* <Marker
+        <Marker
           children={<Image
             style={MapStyles.marker}
             source={require('../../images/hud/float.png')} />}
           point={{
-            lat: 56.12,
-            lon: 47.27,
+            lat: location.coords.latitude,
+            lon: location.coords.longitude,
           }}
           zIndex={6}
-        /> */}
+        />
 
         {coords && <Marker
           children={<Image

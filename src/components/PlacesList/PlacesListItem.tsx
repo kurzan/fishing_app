@@ -12,6 +12,7 @@ import { Icon } from '@ant-design/react-native';
 import Padding from '../Padding/Padding';
 import moment from 'moment';
 import 'moment/locale/ru';
+import UserInteractElements from './UserInteractElements';
 
 moment.locale('ru')
 
@@ -44,49 +45,37 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
   }, [users])
 
   return (
-    <Box onPress={() => navigation.navigate('Place', {
-      placeId: place._id
-    })}>
+    // <Box onPress={() => navigation.navigate('Place', {
+    //   placeId: place._id
+    // })}>
 
-      <View style={styles.container} >
-        <Padding>
-          <View style={styles.header}>
-            <Avatar name={currentUser?.name} />
-            <View>
-              <Text style={[themeStyles.color, styles.text]}>{currentUser?.name}</Text>
-              <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
-            </View>
+    <View style={styles.container} >
+      <Padding>
+        <View style={styles.header}>
+          <Avatar name={currentUser?.name} />
+          <View>
+            <Text style={[themeStyles.color, styles.text]}>{currentUser?.name}</Text>
+            <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
           </View>
-        </Padding>
-        {images.length > 0 ? (
-          <View style={styles.imagContainer}>
-            <Image style={styles.placeImg} source={{ uri: images[0] }} resizeMode="cover"
-              resizeMethod="resize" />
-          </View>
-        ) : (
-          <View style={styles.noPhoto} >
-            <Text>Нет фото</Text>
-          </View>
-        )}
+        </View>
+      </Padding>
+      {images.length > 0 ? (
+        <View style={styles.imagContainer}>
+          <Image style={styles.placeImg} source={{ uri: images[0] }} resizeMode="cover"
+            resizeMethod="resize" />
+        </View>
+      ) : (
+        <View style={styles.noPhoto} >
+          <Text>Нет фото</Text>
+        </View>
+      )}
 
-        <Padding>
-          <View style={styles.bottom}>
+      <Padding>
+        <View style={styles.bottom}>
 
-            <View style={styles.usersInteract}>
+          <UserInteractElements place={place} />
 
-              <View style={styles.likes}>
-                <Icon size='md' name='heart' color='black' />
-                <Text style={[themeStyles.color]}>15</Text>
-              </View>
-
-              <View style={styles.comments}>
-                <Icon size='md' name='message' color='black' />
-                <Text style={[themeStyles.color]}>32</Text>
-              </View>
-
-            </View>
-
-            {/* <View style={styles.coords}>
+          {/* <View style={styles.coords}>
               {place.coords.isVisible &&
                 <>
                   <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._lat).toFixed(6)}</Text>
@@ -101,14 +90,14 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
                 </>}
             </View> */}
 
-          </View>
+        </View>
 
-          {place.message && <Text style={[themeStyles.color, styles.text]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
+        {place.message && <Text style={[themeStyles.color, styles.text]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
 
-          <Text style={[themeStyles.color, styles.text]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
-        </Padding>
-      </View>
-    </Box >
+        <Text style={[themeStyles.color, styles.text]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
+      </Padding>
+    </View>
+    // </Box >
 
   );
 };
@@ -152,24 +141,6 @@ const styles = StyleSheet.create({
   coords: {
     gap: 14,
     flexDirection: 'row'
-  },
-
-  usersInteract: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16
-  },
-
-  likes: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4
-  },
-
-  comments: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4
   },
 
   bottom: {

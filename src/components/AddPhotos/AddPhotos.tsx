@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 
   text: {
     textAlign: 'center',
-    color: 'black'
+    color: '#828284',
   },
 
   plus: {},

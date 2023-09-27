@@ -37,21 +37,13 @@ const styles = StyleSheet.create({
   },
 
   minus: {
-    width: 16,
-    height: 4,
-    left: 8,
-    top: 14,
-    position: 'absolute',
-    backgroundColor: '#24A2DF'
+    flex: 1
   },
 
   plus: {
-    width: 16,
-    height: 16,
-    left: 8,
-    top: 40,
-    position: 'absolute',
-    backgroundColor: '#24A2DF'
+    flex: 1,
+    borderBottomColor: 'red',
+    borderBottomWidth: 0.3
   }
 
 })

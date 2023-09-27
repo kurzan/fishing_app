@@ -13,7 +13,7 @@ const Input = ({ error, ...textInputProps }: InputProps) => {
   return (
     <>
       <TextInput
-        placeholderTextColor='black'
+        placeholderTextColor='#828284'
         style={[themeStyles.input, styles.input, textInputProps.style]}
         {...textInputProps}
       />
