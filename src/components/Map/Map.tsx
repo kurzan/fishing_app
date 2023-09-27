@@ -4,6 +4,8 @@ import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, Dimens
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
 import { Coords, Place } from '../../services/types/places';
+import Geolocation from 'react-native-geolocation-service';
+import { requestLocationPermission } from '../../services/geoutils';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
@@ -13,11 +15,39 @@ type MapProps = {
   hud?: boolean
 }
 
-const Map = ({ places, style, zoom = 12, getCoords, hud }: MapProps) => {
+const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
   const map = useRef<YaMap>(null);
+
+  const [location, setLocation] = useState(false);
 
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
   const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
+
+  const getLocation = () => {
+    const result = requestLocationPermission();
+    result.then(res => {
+      console.log('res is:', res);
+      if (res) {
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log(position);
+            setLocation(position);
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+            setLocation(false);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
+      }
+    });
+    console.log(location);
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, [])
 
   const getCamera = () => {
     return new Promise<CameraPosition>((resolve, reject) => {
@@ -50,8 +80,6 @@ const Map = ({ places, style, zoom = 12, getCoords, hud }: MapProps) => {
     }
   };
 
-  console.log(YaMap.getLocale())
-
   const handleMapLongPress = async (event: NativeSyntheticEvent<Point>) => {
     const { lat, lon } = event.nativeEvent;
 
@@ -76,8 +104,8 @@ const Map = ({ places, style, zoom = 12, getCoords, hud }: MapProps) => {
 
   const handleMyPositionPlace = () => {
     getTarget({
-      lat: 56.12,
-      lon: 47.27,
+      lat: location.coords.latitude,
+      lon: location.coords.longitude,
     });
 
     setCoords(undefined)
