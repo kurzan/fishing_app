@@ -1,4 +1,5 @@
 package com.fishing_app;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
