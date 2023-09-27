@@ -9,27 +9,17 @@ import { useData } from '../../hooks/useData';
 import * as yup from 'yup'
 import { useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker'
-import Box from '../../components/Box/Box';
 import { View } from '@ant-design/react-native';
 import Button from '../../components/Button/Button';
 import Toggle from '../../components/Toggle/Toggle';
 import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Heading from '../../components/Heading/Heading';
 
 const AddPlace = () => {
 
   const [isCanCancelContentTouches, setCanCancelContentTouches] = React.useState(true);
-
-  const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["10%", "50%"], []);
-
-  const handleSheetChange = useCallback((index) => {
-    console.log("handleSheetChange", index);
-  }, []);
-
   const { currentUser, addPlace } = useData();
   const [openDate, setOpenDate] = useState(false);
   const [images, setImages] = useState<uploadImage[]>([]);
@@ -171,19 +161,6 @@ const AddPlace = () => {
 
               {isError && <Text style={styles.errorText}>Произошла ошибка. Попробуйте еще раз</Text>}
 
-              {/* <BottomSheet
-
-              ref={sheetRef}
-              snapPoints={snapPoints}
-              onChange={handleSheetChange}
-              enablePanDownToClose
-              animateOnMount={true}
-            >
-              <BottomSheetView>
-                <Text>Awesome 🔥</Text>
-              </BottomSheetView>
-            </BottomSheet> */}
-
             </View>
           )}
         </Formik>
@@ -213,9 +190,6 @@ const styles = StyleSheet.create({
   },
   text: {
   },
-  // messageBox: {
-  //   height: 80
-  // },
   fieldWithToggle: {
     flexDirection: 'row',
     justifyContent: 'space-between'

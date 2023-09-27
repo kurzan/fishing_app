@@ -26,8 +26,8 @@ const ZoomButtons = ({ zoomIn, zoomOut }: ZoomButtonsProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 64,
-    width: 32,
+    height: 80,
+    width: 40,
     borderRadius: 8,
     position: 'relative'
   },

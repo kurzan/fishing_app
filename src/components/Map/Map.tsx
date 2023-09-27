@@ -64,13 +64,20 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
     })
   };
 
-  const zoomIn = () => {
-
+  const zoomIn = async () => {
+    const position = await getCamera();
+    if (map.current) {
+      map.current.setZoom(position.zoom * 1.1, 0.3);
+    }
   }
 
-  const zoomOut = () => {
+  const zoomOut = async () => {
+    const position = await getCamera();
+    if (map.current) {
+      map.current.setZoom(position.zoom * 0.9, 0.3);
+    }
+  };
 
-  }
 
   const getTarget = async (coords: Coords) => {
     const camera = await getCamera();
@@ -121,29 +128,30 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
     setCoords(undefined)
 
     getCoords && getCoords({
-      lat: 56.12,
-      lon: 47.27,
+      lat: location.coords.latitude,
+      lon: location.coords.longitude,
     })
   };
 
   return (
     <View style={[style]}>
-      <YaMap
+      {location && <YaMap
         ref={map}
         followUser
+        onMapLoaded={getLocation}
         nightMode={isDarkMode}
         userLocationIcon={require('../../images/hud/float.png')}
         onMapLongPress={handleMapLongPress}
         mapType='vector'
         initialRegion={{
-          lat: 56.12,
-          lon: 47.27,
+          lat: location.coords.latitude,
+          lon: location.coords.longitude,
           zoom: zoom,
           azimuth: 0,
         }}
         style={[MapStyles.map,]}
       >
-        <Marker
+        {/* <Marker
           children={<Image
             style={MapStyles.marker}
             source={require('../../images/hud/float.png')} />}
@@ -152,7 +160,7 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
             lon: 47.27,
           }}
           zIndex={6}
-        />
+        /> */}
 
         {coords && <Marker
           children={<Image
@@ -169,20 +177,23 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
         {places && places.map(place => (
           <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
         ))}
-      </YaMap>
+      </YaMap>}
 
-      {hud && <View style={MapStyles.hud}>
-        <TouchableOpacity
-          onPress={handleMyPositionPlace}
-          style={MapStyles.hudButton}>
-          <Image
-            style={MapStyles.hudButtonIMG}
-            source={require('../../images/hud/Location.png')} />
-        </TouchableOpacity>
-        <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
-      </View>}
+      {
+        hud && <View style={MapStyles.hud}>
+          <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
+          <TouchableOpacity
+            onPress={handleMyPositionPlace}
+            style={MapStyles.hudButton}>
+            <Image
+              style={MapStyles.hudButtonIMG}
+              source={require('../../images/hud/Location.png')} />
+          </TouchableOpacity>
+
+        </View>
+      }
       {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
-    </View>
+    </View >
   );
 };
 
@@ -208,10 +219,9 @@ export const MapStyles = StyleSheet.create({
 
   hud: {
     position: 'absolute',
+    gap: 12,
     zIndex: 2,
-    flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
     bottom: 8,
     left: 8
   },
