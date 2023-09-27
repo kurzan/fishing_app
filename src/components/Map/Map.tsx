@@ -6,6 +6,10 @@ import MapPlacePrewiev from './MapPlacePreview';
 import { Coords, Place } from '../../services/types/places';
 import Geolocation from 'react-native-geolocation-service';
 import { requestLocationPermission } from '../../services/geoutils';
+import {
+  useColorScheme,
+} from 'react-native';
+import ZoomButtons from './ZoomButtons';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
@@ -18,6 +22,8 @@ type MapProps = {
 const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
   const map = useRef<YaMap>(null);
 
+  const isDarkMode = useColorScheme() === 'dark';
+
   const [location, setLocation] = useState(false);
 
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
@@ -26,11 +32,9 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
   const getLocation = () => {
     const result = requestLocationPermission();
     result.then(res => {
-      console.log('res is:', res);
       if (res) {
         Geolocation.getCurrentPosition(
           position => {
-            console.log(position);
             setLocation(position);
           },
           error => {
@@ -42,7 +46,6 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
         );
       }
     });
-    console.log(location);
   };
 
   useEffect(() => {
@@ -61,6 +64,13 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
     })
   };
 
+  const zoomIn = () => {
+
+  }
+
+  const zoomOut = () => {
+
+  }
 
   const getTarget = async (coords: Coords) => {
     const camera = await getCamera();
@@ -120,8 +130,11 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
     <View style={[style]}>
       <YaMap
         ref={map}
+        followUser
+        nightMode={isDarkMode}
+        userLocationIcon={require('../../images/hud/float.png')}
         onMapLongPress={handleMapLongPress}
-        mapType='raster'
+        mapType='vector'
         initialRegion={{
           lat: 56.12,
           lon: 47.27,
@@ -166,6 +179,7 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
             style={MapStyles.hudButtonIMG}
             source={require('../../images/hud/Location.png')} />
         </TouchableOpacity>
+        <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
       </View>}
       {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
     </View>
@@ -205,9 +219,10 @@ export const MapStyles = StyleSheet.create({
   hudButton: {
     width: 60,
     height: 60,
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 100,
   },
 
   hudButtonIMG: {

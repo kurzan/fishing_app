@@ -21,6 +21,8 @@ import Heading from '../../components/Heading/Heading';
 
 const AddPlace = () => {
 
+  const [isCanCancelContentTouches, setCanCancelContentTouches] = React.useState(true);
+
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["10%", "50%"], []);
 
@@ -100,7 +102,7 @@ const AddPlace = () => {
   return (
     <>
       <Heading title='Добавить место' />
-      <LayoutScreen isScrollView={true}>
+      <LayoutScreen isScrollView={true} canCancelContentTouches={isCanCancelContentTouches} scrollEnabled={isCanCancelContentTouches}>
 
         <Formik
           initialValues={initialState}
@@ -123,17 +125,18 @@ const AddPlace = () => {
           {({ handleChange, handleBlur, handleSubmit, touched, errors, values, setValues }) => (
             <View style={styles.container}>
 
-
-              <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
-                setValues((prevValues) => ({
-                  ...prevValues,
-                  coords: {
-                    ...prevValues.coords,
-                    _lat: coords.lat.toString(),
-                    _long: coords.lon.toString(),
-                  }
-                }))
-              }} />
+              <View onTouchStart={() => setCanCancelContentTouches(false)} onTouchEnd={() => setCanCancelContentTouches(true)}>
+                <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
+                  setValues((prevValues) => ({
+                    ...prevValues,
+                    coords: {
+                      ...prevValues.coords,
+                      _lat: coords.lat.toString(),
+                      _long: coords.lon.toString(),
+                    }
+                  }))
+                }} />
+              </View>
 
               <Input placeholder='Название точки' onChangeText={handleChange('name')} onBlur={handleBlur('name')} value={values.name} error={touched.name && errors.name} />
               <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
@@ -184,7 +187,7 @@ const AddPlace = () => {
             </View>
           )}
         </Formik>
-      </LayoutScreen>
+      </LayoutScreen >
     </>
 
   );

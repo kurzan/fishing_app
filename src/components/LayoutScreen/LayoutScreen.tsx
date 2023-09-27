@@ -1,15 +1,15 @@
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, ScrollViewProps } from "react-native";
 import { FC } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 import Padding from "../Padding/Padding";
 
-interface ILayout {
+type LayoutProps = {
   isScrollView?: boolean,
   children?: any,
   style?: any
-}
+} & ScrollViewProps;
 
-const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true, style }) => {
+const LayoutScreen = ({ children, isScrollView = true, style, ...props }: LayoutProps) => {
 
   const { themeStyles } = useTheme();
 
@@ -18,7 +18,7 @@ const LayoutScreen: FC<ILayout> = ({ children, isScrollView = true, style }) => 
     <View style={[styles.container, themeStyles.backgroundColor, style]}>
 
       {isScrollView ? (
-        <ScrollView>
+        <ScrollView {...props}>
           <Padding>
             {children}
           </Padding>
