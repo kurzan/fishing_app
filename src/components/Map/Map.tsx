@@ -9,10 +9,11 @@ type MapProps = {
   style?: StyleProp<ViewStyle>,
   zoom?: number,
   places?: Place[],
-  getCoords?: any
+  getCoords?: any,
+  hud?: boolean
 }
 
-const Map = ({ places, style, zoom = 12, getCoords }: MapProps) => {
+const Map = ({ places, style, zoom = 12, getCoords, hud }: MapProps) => {
   const map = useRef<YaMap>(null);
 
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
@@ -129,7 +130,7 @@ const Map = ({ places, style, zoom = 12, getCoords }: MapProps) => {
         ))}
       </YaMap>
 
-      <View style={MapStyles.hud}>
+      {hud && <View style={MapStyles.hud}>
         <TouchableOpacity
           onPress={handleMyPositionPlace}
           style={MapStyles.hudButton}>
@@ -137,7 +138,7 @@ const Map = ({ places, style, zoom = 12, getCoords }: MapProps) => {
             style={MapStyles.hudButtonIMG}
             source={require('../../images/hud/Location.png')} />
         </TouchableOpacity>
-      </View>
+      </View>}
       {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
     </View>
   );

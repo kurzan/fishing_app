@@ -22,7 +22,6 @@ import Heading from '../../components/Heading/Heading';
 const AddPlace = () => {
 
   const sheetRef = useRef<BottomSheet>(null);
-
   const snapPoints = useMemo(() => ["10%", "50%"], []);
 
   const handleSheetChange = useCallback((index) => {

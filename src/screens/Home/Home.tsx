@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useData } from '../../hooks/useData';
 import Heading from '../../components/Heading/Heading';
+import Map from '../../components/Map/Map';
 
 const Home = () => {
 
@@ -25,6 +26,7 @@ const Home = () => {
       <Heading withLogo />
       <LayoutScreen isScrollView={false}>
         <PlacesList title='Лента рыбалок' places={onlyVisibleInList} />
+        <Map places={places} hud={false} />
       </LayoutScreen>
       <Button icon='environment' style={styles.button} onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
     </>
