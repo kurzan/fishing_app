@@ -4,12 +4,12 @@ import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, Dimens
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
 import { Coords, Place } from '../../services/types/places';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation, { GeoPosition } from 'react-native-geolocation-service';
 import { requestLocationPermission } from '../../services/geoutils';
-import {
-  useColorScheme,
-} from 'react-native';
+import { useColorScheme } from 'react-native';
 import ZoomButtons from './ZoomButtons';
+import { LocationIcon } from '../Icons';
+import { useTheme } from '../../hooks/useTheme';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
@@ -23,8 +23,9 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
   const map = useRef<YaMap>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
+  const { themeStyles } = useTheme();
 
-  const [location, setLocation] = useState(false);
+  const [location, setLocation] = useState<GeoPosition | false>(false);
 
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
   const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
@@ -182,10 +183,8 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
           <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
           <TouchableOpacity
             onPress={handleMyPositionPlace}
-            style={MapStyles.hudButton}>
-            <Image
-              style={MapStyles.hudButtonIMG}
-              source={require('../../images/hud/Location.png')} />
+            style={[themeStyles.input, MapStyles.hudButton]}>
+            <LocationIcon />
           </TouchableOpacity>
 
         </View>
@@ -227,7 +226,6 @@ export const MapStyles = StyleSheet.create({
   hudButton: {
     width: 60,
     height: 60,
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,

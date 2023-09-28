@@ -7,9 +7,10 @@ import { Place, User } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
-import Button from '../Button/Button';
 import Input from '../Input/Input';
 import Padding from '../Padding/Padding';
+import { CommentIcon, HeartIcon } from '../Icons';
+
 
 type UserInteractElementsProps = {
   place: Place,
@@ -59,14 +60,14 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
 
         <View style={styles.likes}>
           <TouchableHighlight onPress={onLikeHandler}>
-            <Icon size='md' name='heart' color='black' />
+            <HeartIcon fill={themeStyles.color.color} />
           </TouchableHighlight>
           <Text style={[themeStyles.color]}>{likesCount}</Text>
         </View>
 
         <View style={styles.comments}>
           <TouchableHighlight onPress={onCommentsHandler}>
-            <Icon size='md' name='message' color='black' />
+            <CommentIcon fill={themeStyles.color.color} />
           </TouchableHighlight>
           <Text style={[themeStyles.color]}>{commentsCount}</Text>
         </View>

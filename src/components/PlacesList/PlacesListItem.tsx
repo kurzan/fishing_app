@@ -1,18 +1,17 @@
 import React, { FC, useEffect, useState } from 'react';
-import { StyleSheet, View, Image, Text } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { Place } from '../../services/types/places';
-import Box from '../Box/Box';
 import { useNavigation } from '@react-navigation/native';
 import Avatar from '../Avatar/Avatar';
 import { useData } from '../../hooks/useData';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
 import { storage } from '../../services/firebase';
 import { useTheme } from '../../hooks/useTheme';
-import { Icon } from '@ant-design/react-native';
 import Padding from '../Padding/Padding';
 import moment from 'moment';
 import 'moment/locale/ru';
 import UserInteractElements from './UserInteractElements';
+import { MoreIcon } from '../Icons';
 
 moment.locale('ru')
 
@@ -57,6 +56,10 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
             <Text style={[themeStyles.color, styles.text]}>{currentUser?.name}</Text>
             <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
           </View>
+          <TouchableOpacity style={styles.options}>
+            <MoreIcon fill={themeStyles.color.color} />
+          </TouchableOpacity>
+
         </View>
       </Padding>
       {images.length > 0 ? (
@@ -115,6 +118,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+
+  options: {
+    marginLeft: 'auto'
   },
 
   noPhoto: {

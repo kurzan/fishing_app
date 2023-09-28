@@ -21,15 +21,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const themeStyles = StyleSheet.create({
     backgroundColor: {
-      backgroundColor: isDarkMode ? Colors.darker : 'white'
+      backgroundColor: isDarkMode ? 'black' : 'white'
     },
-
     color: {
-      color: isDarkMode ? Colors.lighter : Colors.darker
+      color: isDarkMode ? 'white' : 'black'
     },
 
     input: {
-      backgroundColor: '#EDEDED',
+      backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
       borderRadius: 16,
       paddingHorizontal: 14
     },
@@ -44,3 +43,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     {children}
   </ThemeContext.Provider>
 };
+
+
+// color: isDarkMode ? Colors.lighter : Colors.darker

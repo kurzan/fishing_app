@@ -1,23 +1,25 @@
 import { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import { FooterItemProps } from "./types";
-import { Icon } from '@ant-design/react-native';
-
+import { useTheme } from "../../hooks/useTheme";
 
 type NavItemProps = {
   item: FooterItemProps,
   navigate: (screenName: string) => void,
   currentRoute?: string,
+  Icon?: any
 }
 
 
-const NavItem: FC<NavItemProps> = ({ item, navigate, currentRoute }) => {
+const NavItem: FC<NavItemProps> = ({ item, navigate, currentRoute, Icon }) => {
   const isActive = currentRoute === item.title
+
+  const { themeStyles } = useTheme();
 
   return (
     <Pressable style={styles.item} onPress={() => navigate(item.title)}>
-      <Icon color={isActive ? '#0087ff' : '#7e7e7c'} name={item.iconName} />
-      <Text style={[styles.title, isActive && styles.active]}>{item.ru_title}</Text>
+      <Icon fill={isActive ? '#0087ff' : themeStyles.color.color} />
+      {/* <Text style={[styles.title, isActive && styles.active]}>{item.ru_title}</Text> */}
     </Pressable>
   )
 };

@@ -1,29 +1,20 @@
+import { AddIcon, HomeIcon, PlacesIcon } from "../Icons";
 import { FooterItemProps } from "./types";
 
 export const menu: FooterItemProps[] = [
   {
-    iconName: 'home',
+    icon: HomeIcon,
     title: 'Home',
     ru_title: 'Главная'
   },
-  // {
-  //   iconName: 'check',
-  //   title: 'Catch',
-  //   ru_title: 'Улов'
-  // },
   {
-    iconName: 'plus-square',
+    icon: AddIcon,
     title: 'AddPlace',
     ru_title: 'Добавить'
   },
   {
-    iconName: 'global',
+    icon: PlacesIcon,
     title: 'Places',
     ru_title: 'Места'
   },
-  {
-    iconName: 'holder',
-    title: 'Settings',
-    ru_title: 'Еще'
-  }
 ];
