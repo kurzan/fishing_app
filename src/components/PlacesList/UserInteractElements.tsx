@@ -26,7 +26,7 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
 
-  const handleSheetChange = useCallback((index) => {
+  const handleSheetChange = useCallback((index: number) => {
     console.log("handleSheetChange", index);
     setBottimSheetIndex(index)
   }, []);
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     gap: 4
   },
 
-})
+});
 
 
 export default UserInteractElements;

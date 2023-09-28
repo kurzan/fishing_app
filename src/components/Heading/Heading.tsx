@@ -2,6 +2,8 @@ import { Text, StyleSheet, Image } from "react-native";
 import Padding from "../Padding/Padding";
 import { View } from "@ant-design/react-native";
 import { useTheme } from "../../hooks/useTheme";
+import Logo from '../../images/logo.svg';
+
 
 type HeadingProps = {
   title?: string,
@@ -10,14 +12,17 @@ type HeadingProps = {
 }
 
 
-const Heading = ({ title, isCenter = false, withLogo }: HeadingProps) => {
+const Heading = ({ title, isCenter = false, withLogo = false }: HeadingProps) => {
 
   const { themeStyles } = useTheme();
 
   return (
     <View style={[themeStyles.backgroundColor, styles.container]}>
       <Padding>
-        {withLogo && <Image source={require('../../images/logo.png')} />}
+        {withLogo &&
+
+          <Logo fill={themeStyles.color.color} />
+        }
         {title && <Text style={[themeStyles.color, styles.text]}>{title}</Text>}
       </Padding>
     </View>
