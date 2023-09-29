@@ -7,6 +7,10 @@ import Map from '../../images/icons/location.svg';
 import Comment from '../../images/icons/comment_icon.svg';
 import Heart from '../../images/icons/heart.svg';
 import More from '../../images/icons/more.svg';
+import Logo from '../../images/logo.svg';
+import Account from '../../images/icons/acount.svg';
+import Plus from '../../images/icons/plus.svg';
+import Minus from '../../images/icons/minus.svg';
 
 const createIcon = (Icon: FC<SvgProps>): FC<SvgProps> => (props: SvgProps) => (
   <Icon {...props} />
@@ -20,3 +24,7 @@ export const LocationIcon = createIcon(Map);
 export const CommentIcon = createIcon(Comment);
 export const HeartIcon = createIcon(Heart);
 export const MoreIcon = createIcon(More);
+export const AccountIcon = createIcon(Account);
+export const LogoIcon = createIcon(Logo);
+export const PlusIcon = createIcon(Plus);
+export const MinusIcon = createIcon(Minus);

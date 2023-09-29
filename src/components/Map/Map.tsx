@@ -10,6 +10,7 @@ import { useColorScheme } from 'react-native';
 import ZoomButtons from './ZoomButtons';
 import { LocationIcon } from '../Icons';
 import { useTheme } from '../../hooks/useTheme';
+import HUD from './HUD';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
@@ -20,6 +21,8 @@ type MapProps = {
 }
 
 const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
+
+
   const map = useRef<YaMap>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -178,17 +181,8 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
         ))}
       </YaMap>}
 
-      {
-        hud && <View style={MapStyles.hud}>
-          <ZoomButtons zoomIn={zoomIn} zoomOut={zoomOut} />
-          <TouchableOpacity
-            onPress={handleMyPositionPlace}
-            style={[themeStyles.input, MapStyles.hudButton]}>
-            <LocationIcon />
-          </TouchableOpacity>
+      {hud && <HUD zoomIn={zoomIn} zoomOut={zoomOut} handleMyPositionPlace={handleMyPositionPlace} />}
 
-        </View>
-      }
       {currentPlaceId && <MapPlacePrewiev setCurrenPlaceId={setCurrenPlaceId} currentPlaceId={currentPlaceId} />}
     </View >
   );

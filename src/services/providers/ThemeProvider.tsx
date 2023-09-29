@@ -30,8 +30,13 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     input: {
       backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
       borderRadius: 16,
-      paddingHorizontal: 14
+      paddingHorizontal: 14,
+      color: isDarkMode ? 'white' : 'black'
     },
+
+    hud: {
+      backgroundColor: isDarkMode ? Colors.darker : "white",
+    }
 
   });
 

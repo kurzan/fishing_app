@@ -1,8 +1,6 @@
-import { Text, StyleSheet, Image } from "react-native";
-import { View } from "@ant-design/react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
-import Logo from '../../images/logo.svg';
-import Account from '../../images/icons/acount.svg';
+import { AccountIcon, LogoIcon } from "../Icons";
 
 type HeadingProps = {
   title?: string,
@@ -19,14 +17,12 @@ const Heading = ({ title, isCenter = false, withLogo = false }: HeadingProps) =>
     <View style={[themeStyles.backgroundColor, styles.container]}>
 
       {withLogo &&
-        <Logo fill={themeStyles.color.color} />
+        <LogoIcon fill={themeStyles.color.color} />
       }
-
-
       {title && <Text style={[themeStyles.color, styles.text]}>{title}</Text>}
 
       <View style={styles.account}>
-        <Account fill={themeStyles.color.color} />
+        <AccountIcon fill={themeStyles.color.color} />
       </View>
 
     </View>

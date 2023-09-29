@@ -1,6 +1,7 @@
 import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
 import React from 'react';
 import { useTheme } from '../../hooks/useTheme';
+import { MinusIcon, PlusIcon } from '../Icons';
 
 type ZoomButtonsProps = {
   zoomIn: any,
@@ -12,12 +13,14 @@ const ZoomButtons = ({ zoomIn, zoomOut }: ZoomButtonsProps) => {
   const { themeStyles } = useTheme();
 
   return (
-    <View style={[styles.container, themeStyles.backgroundColor]}>
+    <View style={[styles.container, themeStyles.hud]}>
 
-      <TouchableOpacity onPress={zoomIn} style={[styles.button, styles.plus]}>
+      <TouchableOpacity onPress={zoomIn} style={[styles.button]}>
+        <PlusIcon />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={zoomOut} style={[styles.button, styles.minus]}>
+      <TouchableOpacity onPress={zoomOut} style={[styles.button]}>
+        <MinusIcon />
       </TouchableOpacity>
 
     </View>
@@ -29,19 +32,21 @@ const styles = StyleSheet.create({
     height: 80,
     width: 40,
     borderRadius: 8,
-    position: 'relative'
   },
 
   button: {
-
+    height: '50%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   minus: {
-    flex: 1
+
   },
 
   plus: {
-    flex: 1,
+
     borderBottomColor: 'red',
     borderBottomWidth: 0.3
   }
