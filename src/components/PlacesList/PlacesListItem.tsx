@@ -53,7 +53,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
         <View style={styles.header}>
           <Avatar name={currentUser?.name} />
           <View>
-            <Text style={[themeStyles.color, styles.text]}>{currentUser?.name}</Text>
+            <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>
             <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
           </View>
           <TouchableOpacity style={styles.options}>
@@ -69,7 +69,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
         </View>
       ) : (
         <View style={styles.noPhoto} >
-          <Text>Нет фото</Text>
+          <Text style={themeStyles.greyText}>Нет фото</Text>
         </View>
       )}
 
@@ -92,12 +92,12 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
                   <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._long}</Text>
                 </>}
             </View> */}
+          {place.message && <Text style={[themeStyles.color, styles.message]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
 
+          <Text style={[themeStyles.greyText]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
         </View>
 
-        {place.message && <Text style={[themeStyles.color, styles.text]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
 
-        <Text style={[themeStyles.color, styles.text]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
       </Padding>
     </View>
     // </Box >
@@ -111,8 +111,9 @@ const styles = StyleSheet.create({
     paddingBottom: 18
   },
 
-  text: {
-
+  userName: {
+    fontSize: 24,
+    fontWeight: '500'
   },
 
   header: {
@@ -138,7 +139,6 @@ const styles = StyleSheet.create({
 
   name: {
     fontSize: 16,
-    fontWeight: '700'
   },
 
   type: {
@@ -151,13 +151,17 @@ const styles = StyleSheet.create({
   },
 
   bottom: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    paddingTop: 8,
+    gap: 6,
+  },
+
+  message: {
+    fontSize: 16
   },
 
   currentName: {
-    fontWeight: '700'
+    fontWeight: '700',
+    fontSize: 16
   }
 })
 

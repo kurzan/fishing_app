@@ -36,6 +36,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
     hud: {
       backgroundColor: isDarkMode ? Colors.darker : "white",
+    },
+
+    greyText: {
+      color: '#828284'
     }
 
   });

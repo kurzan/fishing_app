@@ -24,14 +24,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'grey',
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     marginRight: 6
   },
 
   text: {
-    color: 'white',
-
+    color: 'black',
+    fontSize: 24,
+    fontWeight: '500',
   }
 })
 

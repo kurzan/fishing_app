@@ -9,7 +9,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
 import Input from '../Input/Input';
 import Padding from '../Padding/Padding';
-import { CommentIcon, HeartIcon } from '../Icons';
+import { CommentIcon, FullfiledHeartIcon, HeartIcon } from '../Icons';
 
 
 type UserInteractElementsProps = {
@@ -40,9 +40,11 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   const likesCount = place.likes?.length || 0;
   const commentsCount = place.comments?.length || 0;
 
+  const alredyLike = place.likes && place.likes.includes(currentUser._id);
+
   const onLikeHandler = () => {
 
-    if (place.likes && place.likes.includes(currentUser._id)) {
+    if (alredyLike) {
       postLikesHandler('delete', place._id, currentUser._id);
     } else {
       postLikesHandler('add', place._id, currentUser._id);
@@ -58,18 +60,18 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
     <>
       <View style={styles.usersInteract}>
 
-        <View style={styles.likes}>
+        <View style={styles.icon}>
           <TouchableHighlight onPress={onLikeHandler}>
-            <HeartIcon fill={themeStyles.color.color} />
+            {alredyLike ? <FullfiledHeartIcon fill='red' /> : <HeartIcon fill={themeStyles.color.color} />}
           </TouchableHighlight>
-          <Text style={[themeStyles.color]}>{likesCount}</Text>
+          {likesCount > 0 && <Text style={[themeStyles.color, styles.countText]}>{likesCount}</Text>}
         </View>
 
-        <View style={styles.comments}>
+        <View style={styles.icon}>
           <TouchableHighlight onPress={onCommentsHandler}>
             <CommentIcon fill={themeStyles.color.color} />
           </TouchableHighlight>
-          <Text style={[themeStyles.color]}>{commentsCount}</Text>
+          {commentsCount > 0 && <Text style={[themeStyles.color, styles.countText]}>{commentsCount}</Text>}
         </View>
 
       </View>
@@ -105,19 +107,17 @@ const styles = StyleSheet.create({
   usersInteract: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16
+    gap: 22
   },
 
-  likes: {
+  icon: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4
+    gap: 8
   },
 
-  comments: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4
+  countText: {
+    fontSize: 18
   },
 
 });
