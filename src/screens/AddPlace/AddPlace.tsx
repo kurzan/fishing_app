@@ -91,7 +91,7 @@ const AddPlace = () => {
 
   return (
     <>
-      <Heading title='Добавить место' />
+      <Heading title='Добавить рыбалку' />
       <LayoutScreen isScrollView={true} canCancelContentTouches={isCanCancelContentTouches} scrollEnabled={isCanCancelContentTouches}>
 
         <Formik

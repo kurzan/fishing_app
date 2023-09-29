@@ -17,7 +17,7 @@ const Places = () => {
 
   return (
     <>
-      <Heading title='Мои места' />
+      <Heading title='Мои рыбалки' />
       <LayoutScreen isScrollView={false}>
         {currentPlaces.length ? <PlacesList title='Мои места' places={currentPlaces} /> : (
           <View style={styles.noPlaces}>

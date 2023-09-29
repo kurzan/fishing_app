@@ -10,11 +10,11 @@ export const menu: FooterItemProps[] = [
   {
     icon: AddIcon,
     title: 'AddPlace',
-    ru_title: 'Добавить'
+    ru_title: ''
   },
   {
     icon: PlacesIcon,
     title: 'Places',
-    ru_title: 'Места'
+    ru_title: 'Рыбалки'
   },
 ];
