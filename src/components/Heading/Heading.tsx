@@ -1,17 +1,24 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, Pressable } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { AccountIcon, LogoIcon } from "../Icons";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../hooks/useAuth";
 
 type HeadingProps = {
   title?: string,
   isCenter?: boolean,
-  withLogo?: boolean
+  withLogo?: boolean,
+  account?: boolean
 }
 
 
-const Heading = ({ title, isCenter = false, withLogo = false }: HeadingProps) => {
+const Heading = ({ title, isCenter = false, withLogo = false, account = true }: HeadingProps) => {
 
   const { themeStyles } = useTheme();
+  const { user } = useAuth();
+  const navigation = useNavigation<any>();
+
+  const route = !user?.uid ? 'Auth' : 'Profile';
 
   return (
     <View style={[themeStyles.backgroundColor, styles.container]}>
@@ -21,9 +28,9 @@ const Heading = ({ title, isCenter = false, withLogo = false }: HeadingProps) =>
       }
       {title && <Text style={[themeStyles.color, styles.text]}>{title}</Text>}
 
-      <View style={styles.account}>
+      {account && <Pressable onPress={() => navigation.navigate(route)} style={styles.account}>
         <AccountIcon fill={themeStyles.color.color} />
-      </View>
+      </Pressable>}
 
     </View>
 

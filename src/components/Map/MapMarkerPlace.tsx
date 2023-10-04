@@ -3,8 +3,8 @@ import { StyleSheet, Image } from 'react-native';
 import { Place } from '../../services/types/places';
 import { Marker } from 'react-native-yamap';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import { useData } from '../../hooks/useData';
 import { storage } from '../../services/firebase';
+import { useAuth } from '../../hooks/useAuth';
 
 type MapMarkerPlace = {
   place: Place,
@@ -15,7 +15,7 @@ type MapMarkerPlace = {
 const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
   const [images, setImages] = useState<string[]>([]);
-  const { users } = useData();
+  const { users } = useAuth();
 
   const currentUser = users.find(user => user._id === place.ownerId);
   const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);

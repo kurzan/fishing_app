@@ -16,11 +16,13 @@ import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
 import Heading from '../../components/Heading/Heading';
+import { useAuth } from '../../hooks/useAuth';
 
 const AddPlace = () => {
 
   const [isCanCancelContentTouches, setCanCancelContentTouches] = React.useState(true);
-  const { currentUser, addPlace } = useData();
+  const { addPlace } = useData();
+  const { currentUser } = useAuth();
   const [openDate, setOpenDate] = useState(false);
   const [images, setImages] = useState<uploadImage[]>([]);
 
@@ -88,6 +90,9 @@ const AddPlace = () => {
     createdAt: new Date(),
     message: '',
   };
+
+  console.log(currentUser);
+
 
   return (
     <>

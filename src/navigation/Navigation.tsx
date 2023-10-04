@@ -2,12 +2,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import Home from '../screens/Home/Home';
-import Catch from '../screens/Catch/Catch';
+import Auth from '../screens/Auth/Auth';
 import Places from '../screens/Places/Places';
 import Footer from '../components/Footer/Footer';
 import AddPlace from '../screens/AddPlace/AddPlace';
 import Place from '../screens/Place/Place';
 import GlobalMap from '../screens/GlobalMap/GlobalMap';
+import Profile from '../screens/Profile/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,7 +38,8 @@ const Navigation = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Group>
             <Stack.Screen name='Home' component={Home} />
-            <Stack.Screen name='Catch' component={Catch} />
+            <Stack.Screen name='Auth' component={Auth} />
+            <Stack.Screen name='Profile' component={Profile} />
             <Stack.Screen name='Places' component={Places} />
             <Stack.Screen name='AddPlace' component={AddPlace} />
             <Stack.Screen name='Place' component={Place} />

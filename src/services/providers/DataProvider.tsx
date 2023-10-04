@@ -2,15 +2,12 @@ import { Dispatch, SetStateAction, createContext, FC, useMemo, useState, useEffe
 import { Place, User } from "../types/places";
 import { collection, getDocs, addDoc, doc, deleteDoc, DocumentReference, DocumentData, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase";
-import DeviceInfo from 'react-native-device-info';
+import { useAuth } from "../../hooks/useAuth";
 
 
 type TDataContext = {
   places: Place[],
-  users: User[],
   setPlaces: Dispatch<SetStateAction<Place[]>>,
-  deviceId: string | undefined,
-  currentUser: User,
   addPlace: (formData: any) => Promise<void>,
   delPlace: (id: string) => Promise<DocumentReference<any, DocumentData>>,
   getData: () => Promise<[void, void]>,
@@ -23,17 +20,11 @@ export const DataContext = createContext<TDataContext>({} as TDataContext);
 export const DataProvider: FC<{ children: any }> = ({ children }: { children: React.ReactNode }) => {
 
   const [places, setPlaces] = useState<Place[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [deviceId, setDeviceId] = useState<string>('');
-  const [currentUser, setCurrentUser] = useState<User>({} as User);
-
   const [placesIsLoading, setPlacesIsLoading] = useState(false);
 
+  const { getUsers } = useAuth();
+
   const getData = () => {
-    let devId: string;
-    DeviceInfo.getUniqueId().then((uniqueId) => {
-      devId = uniqueId;
-    });
 
     const getPlaces = async () => {
       const querySnapshot = await getDocs(collection(db, "places"));
@@ -46,43 +37,11 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
         } as Place);
       });
       setPlaces(items);
-    };
+    }
 
-    const getUsers = async () => {
-      const querySnapshot = await getDocs(collection(db, "users"));
-      const items: User[] = []
-      querySnapshot.forEach((doc) => {
-        items.push({
-          _id: doc.id,
-          ...doc.data()
-        } as User);
-      });
-      setUsers(items);
 
-      console.log(items)
-
-      let currentUser = items.find(user => user.deviceId === devId);
-
-      if (!currentUser) {
-
-        const userRef = await addDoc(collection(db, "users"), {
-          deviceId: devId,
-          name: 'Рыбак'
-        });
-
-        currentUser = {
-          _id: userRef.id,
-          deviceId: devId,
-          name: 'Рыбак'
-        }
-      };
-
-      setCurrentUser(currentUser);
-    };
-
-    return Promise.all([getPlaces(), getUsers()]);
-  }
-
+    return Promise.all([getPlaces(), getUsers()])
+  };
 
   useEffect(() => {
     setPlacesIsLoading(true);
@@ -106,6 +65,20 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
     getData();
   };
 
+  const addComment = async (message: string, userId: string, placeId: string) => {
+    const commentsRef = doc(db, "places", placeId);
+
+    await updateDoc(commentsRef, {
+      comments: arrayUnion({
+        byUser: userId,
+        message: message,
+        createdAt: new Date()
+      })
+    });
+
+    getData();
+  };
+
   const addPlace = async (formData: any) => {
     const placeRef = await addDoc(collection(db, "places"), formData);
 
@@ -121,8 +94,8 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
 
 
   const value = useMemo(() => {
-    return { places, users, setPlaces, deviceId, currentUser, addPlace, delPlace, getData, placesIsLoading, postLikesHandler }
-  }, [places, users, currentUser, placesIsLoading])
+    return { places, setPlaces, addPlace, delPlace, getData, placesIsLoading, postLikesHandler }
+  }, [places, placesIsLoading])
 
 
   return <DataContext.Provider value={value}>

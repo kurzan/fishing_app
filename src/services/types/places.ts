@@ -31,6 +31,8 @@ export type Coords = {
 
 export type User = {
   _id: string,
+  authId: string | null,
   name: string,
-  deviceId: string
+  deviceId: string,
+  avatarColor: string
 }

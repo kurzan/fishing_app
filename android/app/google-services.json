@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "27463600815",
+    "project_id": "fishing-9684f",
+    "storage_bucket": "fishing-9684f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27463600815:android:6ef864a3777800d29e625a",
+        "android_client_info": {
+          "package_name": "com.fishing_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSKwJbXscs23wE012tF_Cl29H1Tav4YHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

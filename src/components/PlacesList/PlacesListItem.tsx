@@ -12,6 +12,8 @@ import moment from 'moment';
 import 'moment/locale/ru';
 import UserInteractElements from './UserInteractElements';
 import { MoreIcon } from '../Icons';
+import { Icon } from '@ant-design/react-native';
+import { useAuth } from '../../hooks/useAuth';
 
 moment.locale('ru')
 
@@ -24,7 +26,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
   const navigation = useNavigation<any>();
   const { themeStyles } = useTheme();
-  const { users } = useData();
+  const { users } = useAuth();
   const [images, setImages] = useState<string[]>([]);
 
   const currentUser = users.find(user => user._id === place.ownerId);
@@ -51,7 +53,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
     <View style={styles.container} >
       <Padding>
         <View style={styles.header}>
-          <Avatar name={currentUser?.name} />
+          <Avatar name={currentUser?.name} backgroundColor={currentUser?.avatarColor} />
           <View>
             <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>
             <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
@@ -59,8 +61,8 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
           <TouchableOpacity style={styles.options}>
             <MoreIcon fill={themeStyles.color.color} />
           </TouchableOpacity>
-
         </View>
+
       </Padding>
       {images.length > 0 ? (
         <View style={styles.imagContainer}>
@@ -114,6 +116,11 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: '500'
+  },
+
+  placeInfo: {
+    paddingTop: 6,
+    flexDirection: 'row'
   },
 
   header: {

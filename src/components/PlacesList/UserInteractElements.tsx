@@ -10,6 +10,7 @@ import { Portal } from 'react-native-portalize';
 import Input from '../Input/Input';
 import Padding from '../Padding/Padding';
 import { CommentIcon, FullfiledHeartIcon, HeartIcon } from '../Icons';
+import { useAuth } from '../../hooks/useAuth';
 
 
 type UserInteractElementsProps = {
@@ -20,7 +21,9 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
 
   const { themeStyles } = useTheme();
 
-  const { postLikesHandler, currentUser } = useData();
+  const { postLikesHandler } = useData();
+
+  const { currentUser } = useAuth();
 
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["50%"], []);

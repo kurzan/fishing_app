@@ -3,6 +3,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import auth from '@react-native-firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, setPersistence, inMemoryPersistence } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,4 +27,16 @@ const analytics = getAnalytics(app);
 
 export const db = getFirestore(app);
 
-export const storage = getStorage(); 
+export const storage = getStorage();
+
+
+export const register = (email: string, password: string) =>
+  auth().createUserWithEmailAndPassword(email, password);
+
+export const login = (email: string, password: string) =>
+  auth().signInWithEmailAndPassword(email, password);
+
+export const logout = () => auth().signOut();
+
+export const anonimousRegister = () =>
+  auth().signInAnonymously();

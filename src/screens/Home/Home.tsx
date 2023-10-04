@@ -26,7 +26,7 @@ const Home = () => {
       <Heading withLogo />
       <LayoutScreen isScrollView={false}>
         <PlacesList title='Лента рыбалок' places={onlyVisibleInList} />
-        <Map places={places} hud={false} />
+        {places && <Map places={places} hud={false} />}
       </LayoutScreen>
       <Button icon='environment' style={styles.button} onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
     </>
