@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 import { logout } from "../../services/firebase";
+import { useData } from "../../hooks/useData";
 
 type Values = {
   email: string,
@@ -31,6 +32,7 @@ const AuthForm = () => {
   const { isLoading, login, register, user } = useAuth();
 
   const { themeStyles } = useTheme();
+  const { currentUser } = useData();
 
   const [isReg, setIsReg] = useState(true);
 
@@ -40,7 +42,7 @@ const AuthForm = () => {
   const authHandler = async (values: Values, actions: any) => {
     const { email, password } = values;
     try {
-      if (isReg) await register(email, password)
+      if (isReg) await register(currentUser._id, email, password)
       else await login(email, password)
 
       actions.resetForm()

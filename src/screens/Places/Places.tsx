@@ -6,17 +6,12 @@ import { useData } from '../../hooks/useData';
 import Heading from '../../components/Heading/Heading';
 import { PlacesIcon } from '../../components/Icons';
 import { useTheme } from '../../hooks/useTheme';
-import { useAuth } from '../../hooks/useAuth';
 
 const Places = () => {
 
-  const { places } = useData();
-  const { currentUser } = useAuth();
+  const { places, currentUser } = useData();
   const { themeStyles } = useTheme();
   const currentPlaces = places.filter(place => place.ownerId === currentUser._id);
-
-  console.log(currentUser);
-
 
   return (
     <>

@@ -19,11 +19,9 @@ type UserInteractElementsProps = {
 
 const UserInteractElements = ({ place }: UserInteractElementsProps) => {
 
-  const { themeStyles } = useTheme();
+  const { themeStyles, } = useTheme();
 
-  const { postLikesHandler } = useData();
-
-  const { currentUser } = useAuth();
+  const { postLikesHandler, currentUser } = useData();
 
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["50%"], []);

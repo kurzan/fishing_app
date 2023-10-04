@@ -21,8 +21,7 @@ import { useAuth } from '../../hooks/useAuth';
 const AddPlace = () => {
 
   const [isCanCancelContentTouches, setCanCancelContentTouches] = React.useState(true);
-  const { addPlace } = useData();
-  const { currentUser } = useAuth();
+  const { addPlace, currentUser } = useData();
   const [openDate, setOpenDate] = useState(false);
   const [images, setImages] = useState<uploadImage[]>([]);
 

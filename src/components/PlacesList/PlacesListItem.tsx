@@ -12,8 +12,6 @@ import moment from 'moment';
 import 'moment/locale/ru';
 import UserInteractElements from './UserInteractElements';
 import { MoreIcon } from '../Icons';
-import { Icon } from '@ant-design/react-native';
-import { useAuth } from '../../hooks/useAuth';
 
 moment.locale('ru')
 
@@ -26,7 +24,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 
   const navigation = useNavigation<any>();
   const { themeStyles } = useTheme();
-  const { users } = useAuth();
+  const { users } = useData();
   const [images, setImages] = useState<string[]>([]);
 
   const currentUser = users.find(user => user._id === place.ownerId);
@@ -36,10 +34,8 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
   useEffect(() => {
     listAll(imageListRef).then(res => {
       res.items.forEach(item => {
-        console.log(item)
         getDownloadURL(item).then(item => {
           setImages((prevState) => [...prevState, item])
-          console.log(item)
         })
       })
     })

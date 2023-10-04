@@ -4,7 +4,7 @@ import { Place } from '../../services/types/places';
 import { Marker } from 'react-native-yamap';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
 import { storage } from '../../services/firebase';
-import { useAuth } from '../../hooks/useAuth';
+import { useData } from '../../hooks/useData';
 
 type MapMarkerPlace = {
   place: Place,
@@ -15,7 +15,7 @@ type MapMarkerPlace = {
 const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
   const [images, setImages] = useState<string[]>([]);
-  const { users } = useAuth();
+  const { users } = useData();
 
   const currentUser = users.find(user => user._id === place.ownerId);
   const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
