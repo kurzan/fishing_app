@@ -6,7 +6,7 @@ import { useTheme } from "../../hooks/useTheme";
 
 
 interface IButton {
-  onPress: any,
+  onPress?: any,
   title?: string,
   style?: StyleProp<ViewStyle>,
   icon?: OutlineGlyphMapType,

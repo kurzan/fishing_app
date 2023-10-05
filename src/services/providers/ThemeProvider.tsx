@@ -40,6 +40,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
     greyText: {
       color: '#828284'
+    },
+
+    error: {
+      color: '#ff6f45'
     }
 
   });

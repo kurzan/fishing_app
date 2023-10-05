@@ -16,7 +16,6 @@ import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
 import Heading from '../../components/Heading/Heading';
-import { useAuth } from '../../hooks/useAuth';
 
 const AddPlace = () => {
 
@@ -36,7 +35,7 @@ const AddPlace = () => {
 
     const uploadImagesPromises = images.map(async (image) => {
       try {
-        const imageRef = ref(storage, `images/places/${placeId}/users/${currentUser._id}/${image.fileName}`);
+        const imageRef = ref(storage, `images/places/${placeId}/users/${currentUser?._id}/${image.fileName}`);
         const response = await fetch(image.uri as RequestInfo);
         const blob = await response.blob()
         const res = await uploadBytes(imageRef, blob);
@@ -85,13 +84,10 @@ const AddPlace = () => {
     },
     isVisible: true,
     images: [],
-    ownerId: currentUser._id,
+    ownerId: currentUser?._id,
     createdAt: new Date(),
     message: '',
   };
-
-  console.log(currentUser);
-
 
   return (
     <>

@@ -6,12 +6,15 @@ import { useData } from '../../hooks/useData';
 import Heading from '../../components/Heading/Heading';
 import { PlacesIcon } from '../../components/Icons';
 import { useTheme } from '../../hooks/useTheme';
+import { useNavigation } from '@react-navigation/native';
 
 const Places = () => {
 
   const { places, currentUser } = useData();
   const { themeStyles } = useTheme();
-  const currentPlaces = places.filter(place => place.ownerId === currentUser._id);
+  const currentPlaces = places.filter(place => place.ownerId === currentUser?._id);
+
+  const navigation = useNavigation<any>();
 
   return (
     <>
@@ -23,6 +26,7 @@ const Places = () => {
             <Text style={[themeStyles.color, styles.text]}>Рыбалок пока нет</Text>
           </View>
         )}
+
       </LayoutScreen>
     </>
   );

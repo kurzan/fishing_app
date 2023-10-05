@@ -11,7 +11,7 @@ import { generateColor } from "../utils";
 interface IContext {
   user: FirebaseAuthTypes.User | null,
   isLoading: boolean,
-  register: (userId: string, email: string, password: string) => Promise<void>,
+  register: (email: string, password: string) => Promise<void>,
   login: (email: string, password: string) => Promise<void>,
   logout: () => Promise<void>,
 }
@@ -23,32 +23,27 @@ export const AuthProvider = ({ children }: { children: any }) => {
   const [isLoadingInitial, setIsLoadingInitial] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const registerHandler = async (userId: string, email: string, password: string) => {
+  const registerHandler = async (email: string, password: string) => {
     setIsLoading(true)
 
     try {
-
-      // if (auth().currentUser?.isAnonymous) {
-      //   const provider = auth.EmailAuthProvider;
-      //   const authCredential = provider.credential(email, password);
-
-      //   auth().currentUser?.linkWithCredential(authCredential)
-      //     .then((usercred) => {
-      //       setUser(usercred.user);
-      //     })
-      //     .catch((e) => console.log(e))
-      // } 
-
       const { user } = await register(email, password)
 
-      const userRef = doc(db, "users", userId)
-
-      await updateDoc(userRef, {
-        authId: user.uid,
-      });
+      await addDoc(collection(db, 'users'), {
+        _id: user.uid,
+        name: 'Рыбак',
+        email: user.email,
+        avatarColor: generateColor()
+      })
 
     } catch (error: any) {
-      throw new Error(error.code)
+      if (error.code === 'auth/email-already-in-use') {
+        throw new Error('Уже есть аккаунт с таким e-mail!');
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        throw new Error('Неправильный e-mail адресс!');
+      }
     } finally {
       setIsLoading(false)
     }
@@ -72,30 +67,11 @@ export const AuthProvider = ({ children }: { children: any }) => {
     try {
       await logout();
     } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        throw new Error('Уже есть аккаунт с таким e-mail!');
-      }
-
-      if (error.code === 'auth/invalid-email') {
-        throw new Error('Неправильный e-mail адресс!');
-      }
+      throw new Error(error.code)
     } finally {
       setIsLoading(false)
     }
   }
-
-  const anonymousRegisterHandler = async () => {
-    setIsLoading(true);
-
-    try {
-      await anonimousRegister();
-
-    } catch (error) {
-      throw new Error('Что-то пошло не так!');
-    } finally {
-      setIsLoading(false)
-    }
-  };
 
   useEffect(() => {
     auth().onAuthStateChanged(user => {
@@ -103,6 +79,11 @@ export const AuthProvider = ({ children }: { children: any }) => {
       setIsLoadingInitial(false);
     })
   }, [])
+
+  useEffect(() => {
+    console.log(user);
+
+  }, [user])
 
   const value = useMemo(() => ({
     user, isLoading, login: loginHandler, logout: logoutHandler, register: registerHandler

@@ -1,21 +1,19 @@
-import { FC } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, StyleProp, ViewStyle } from "react-native";
 
 type AvatarProps = {
   name?: string | null
   size?: 'small' | 'large',
-  backgroundColor: string | undefined
+  backgroundColor: string | undefined,
+  style?: ViewStyle
 }
 
 
-const Avatar = ({ name, backgroundColor, size = 'small' }: AvatarProps) => {
-
-  const isSmall = size === 'small';
+const Avatar = ({ name, backgroundColor, style }: AvatarProps) => {
 
   const avatarColor = backgroundColor || 'grey';
 
   return (
-    <View style={[styles.avatar, { backgroundColor: avatarColor }]}>
+    <View style={[styles.avatar, { backgroundColor: avatarColor }, style]}>
       <Text style={styles.text} >{name?.slice(0, 1)}</Text>
     </View>
   )
@@ -33,7 +31,6 @@ const styles = StyleSheet.create({
 
   text: {
     color: 'white',
-
   }
 })
 

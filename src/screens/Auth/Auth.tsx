@@ -1,6 +1,4 @@
-import { View, Text, Pressable, ActivityIndicator, StyleSheet } from "react-native";
-import { useState } from "react";
-import { login, register } from "../../services/firebase";
+import { StyleSheet } from "react-native";
 import LayoutScreen from "../../components/LayoutScreen/LayoutScreen";
 import AuthForm from "../../components/AuthForm/AuthForm";
 import Heading from "../../components/Heading/Heading";

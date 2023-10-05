@@ -3,10 +3,11 @@ import { StyleSheet, TextInput, TextInputProps, Text } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 
 type InputProps = TextInputProps & {
-  error?: any
+  error?: any,
+  style?: any
 }
 
-const Input = ({ error, ...textInputProps }: InputProps) => {
+const Input = ({ error, style, ...textInputProps }: InputProps) => {
 
   const { themeStyles } = useTheme();
 
@@ -14,7 +15,7 @@ const Input = ({ error, ...textInputProps }: InputProps) => {
     <>
       <TextInput
         placeholderTextColor='#828284'
-        style={[themeStyles.input, styles.input, textInputProps.style]}
+        style={[themeStyles.input, styles.input, style]}
         {...textInputProps}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}

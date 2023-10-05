@@ -30,9 +30,9 @@ export type Coords = {
 
 
 export type User = {
+  docId: string,
   _id: string,
-  authId: string | null,
   name: string,
-  deviceId: string,
+  email: string,
   avatarColor: string
 }

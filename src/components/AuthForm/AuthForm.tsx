@@ -42,7 +42,7 @@ const AuthForm = () => {
   const authHandler = async (values: Values, actions: any) => {
     const { email, password } = values;
     try {
-      if (isReg) await register(currentUser._id, email, password)
+      if (isReg) await register(email, password)
       else await login(email, password)
 
       actions.resetForm()
@@ -77,9 +77,6 @@ const AuthForm = () => {
         )
         }
       </Formik >
-
-      <Button title="Показать юзера" onPress={() => console.log(user)} />
-      <Button title="Выйти" onPress={logout} />
     </View>
   )
 };
