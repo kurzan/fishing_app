@@ -49,10 +49,10 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
     <View style={styles.container} >
       <Padding>
         <View style={styles.header}>
-          <Avatar name={currentUser?.name} backgroundColor={currentUser?.avatarColor} />
+          <Avatar user={currentUser} />
           <View>
             <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>
-            <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>
+            {place.coords.isVisible && <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>}
           </View>
           <TouchableOpacity style={styles.options}>
             <MoreIcon fill={themeStyles.color.color} />
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
 
   userName: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: '500'
   },
 

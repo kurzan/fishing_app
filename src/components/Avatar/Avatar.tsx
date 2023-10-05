@@ -1,20 +1,19 @@
 import { View, Text, StyleSheet, StyleProp, ViewStyle } from "react-native";
+import { User } from "../../services/types/places";
 
 type AvatarProps = {
-  name?: string | null
-  size?: 'small' | 'large',
-  backgroundColor: string | undefined,
+  user?: User
   style?: ViewStyle
 }
 
 
-const Avatar = ({ name, backgroundColor, style }: AvatarProps) => {
+const Avatar = ({ user, style }: AvatarProps) => {
 
-  const avatarColor = backgroundColor || 'grey';
+  const avatarColor = user?.avatarColor || 'grey';
 
   return (
     <View style={[styles.avatar, { backgroundColor: avatarColor }, style]}>
-      <Text style={styles.text} >{name?.slice(0, 1)}</Text>
+      <Text style={styles.text} >{user?.name?.slice(0, 1)}</Text>
     </View>
   )
 };

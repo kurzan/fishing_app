@@ -84,7 +84,7 @@ const Profile = () => {
       <LayoutScreen>
         <View style={styles.container}>
 
-          <Avatar style={styles.ava} backgroundColor={currentUser?.avatarColor} name={currentUser?.name} />
+          <Avatar style={styles.ava} user={currentUser} />
 
           <View style={styles.nameView}>
 

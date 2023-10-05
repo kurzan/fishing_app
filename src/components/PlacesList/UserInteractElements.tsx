@@ -1,16 +1,13 @@
 
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { StyleSheet, View, Image, Text, TouchableHighlight } from 'react-native';
-import { Icon } from '@ant-design/react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { Place, User } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
-import Input from '../Input/Input';
-import Padding from '../Padding/Padding';
 import { CommentIcon, FullfiledHeartIcon, HeartIcon } from '../Icons';
-import { useAuth } from '../../hooks/useAuth';
+import Comments from '../Comments/Comments';
 
 
 type UserInteractElementsProps = {
@@ -24,7 +21,7 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   const { postLikesHandler, currentUser } = useData();
 
   const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["50%"], []);
+  const snapPoints = useMemo(() => ["60%"], []);
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
 
@@ -85,16 +82,8 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
           onChange={handleSheetChange}
           enablePanDownToClose
         >
-          <BottomSheetView>
-            {commentsCount <= 0 ? (
-              <Padding>
-                <Text>Комментариев пока нет</Text>
-                <Input placeholder='Оставьте комментарий' />
-              </Padding>
-            ) :
-              (
-                <Text>Тут будут комментарии</Text>
-              )}
+          <BottomSheetView style={styles.bottom}>
+            <Comments placeId={place._id} comments={place.comments} />
           </BottomSheetView>
         </BottomSheet>
       </Portal>
@@ -118,7 +107,13 @@ const styles = StyleSheet.create({
   },
 
   countText: {
-    fontSize: 18
+    fontSize: 14
+  },
+
+  bottom: {
+    flex: 1,
+    gap: 12,
+    paddingBottom: 30
   },
 
 });

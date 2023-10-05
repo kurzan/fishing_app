@@ -7,8 +7,6 @@ import { Coords, Place } from '../../services/types/places';
 import Geolocation, { GeoPosition } from 'react-native-geolocation-service';
 import { requestLocationPermission } from '../../services/geoutils';
 import { useColorScheme } from 'react-native';
-import ZoomButtons from './ZoomButtons';
-import { LocationIcon } from '../Icons';
 import { useTheme } from '../../hooks/useTheme';
 import HUD from './HUD';
 
@@ -42,7 +40,6 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
             setLocation(position);
           },
           error => {
-            // See error code charts below.
             console.log(error.code, error.message);
             setLocation(false);
           },

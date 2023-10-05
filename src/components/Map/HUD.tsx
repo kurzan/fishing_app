@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     gap: 12,
     zIndex: 2,
     justifyContent: 'space-evenly',
-    bottom: 8,
+    bottom: 2,
     left: 8
   },
 

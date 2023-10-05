@@ -13,6 +13,7 @@ type TDataContext = {
   delPlace: (id: string) => Promise<void>,
   getData: () => Promise<[void, void]>,
   updateUser: (formData: any) => Promise<void>,
+  addComment: (message: string, userId: string, placeId: string) => Promise<void>,
   postLikesHandler: (type: 'delete' | 'add', placeId: string, userId: string) => Promise<void>,
   placesIsLoading: boolean
 }
@@ -127,7 +128,7 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
 
 
   const value = useMemo(() => {
-    return { places, users, currentUser, setPlaces, addPlace, delPlace, getData, placesIsLoading, postLikesHandler, updateUser }
+    return { places, users, currentUser, setPlaces, addPlace, addComment, delPlace, getData, placesIsLoading, postLikesHandler, updateUser }
   }, [places, placesIsLoading, currentUser])
 
 

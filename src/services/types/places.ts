@@ -13,14 +13,14 @@ export type Place = {
   updatedAt: { seconds: number, nanoseconds: number },
   message: string,
   likes: string[],
-  comments: [
-    {
-      commentId: number,
-      user: string,
-      massage: string,
-      createdAt: any
-    }
-  ]
+  comments: Comment[]
+}
+
+export type Comment = {
+  commentId: number,
+  byUser: string,
+  message: string,
+  createdAt: any,
 }
 
 export type Coords = {
