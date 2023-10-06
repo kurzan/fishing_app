@@ -8,6 +8,8 @@ import CommentItem from './Comment';
 import { useData } from '../../hooks/useData';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { ScrollView } from 'react-native-gesture-handler';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 type CommentsProps = {
   comments: Comment[]
@@ -39,7 +41,7 @@ const Comments = ({ comments, placeId }: CommentsProps) => {
   const { addComment, currentUser } = useData();
 
 
-  const commentUpdate = async (values: any, { resetForm }) => {
+  const commentUpdate = async (values: any, { resetForm }: { resetForm: any }) => {
 
     try {
       setIsError(false);
@@ -70,9 +72,11 @@ const Comments = ({ comments, placeId }: CommentsProps) => {
         </View>
       ) :
         (
-          <>
-            {comments.map(comment => <CommentItem key={comment.commentId} comment={comment} placeId={placeId} />)}
-          </>
+          <ScrollView >
+            <View style={styles.commentsBox}>
+              {comments.map(comment => <CommentItem key={comment.commentId} comment={comment} placeId={placeId} />)}
+            </View>
+          </ScrollView>
         )}
 
       <View style={styles.bottom}>
@@ -116,7 +120,10 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     marginTop: 'auto',
     gap: 12
-  }
+  },
+  commentsBox: {
+    gap: 12
+  },
 })
 
 export default Comments;

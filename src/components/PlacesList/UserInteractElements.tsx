@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useMemo, useCallback } from 'react';
-import { StyleSheet, View, Image, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableHighlight, Pressable } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { Place, User } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
@@ -38,16 +38,22 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   const likesCount = place.likes?.length || 0;
   const commentsCount = place.comments?.length || 0;
 
-  const alredyLike = place.likes && place.likes.includes(currentUser._id);
+  const alredyLike = currentUser && place.likes && place.likes.includes(currentUser.docId);
 
   const onLikeHandler = () => {
 
+    if (!currentUser) return
+
     if (alredyLike) {
-      postLikesHandler('delete', place._id, currentUser._id);
+      postLikesHandler('delete', place._id, currentUser.docId);
     } else {
-      postLikesHandler('add', place._id, currentUser._id);
+      postLikesHandler('add', place._id, currentUser.docId);
     }
   };
+
+  console.log('user ' + currentUser?._id)
+  console.log('place ' + place._id);
+
 
 
   const onCommentsHandler = () => {
@@ -57,21 +63,15 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   return (
     <>
       <View style={styles.usersInteract}>
-
-        <View style={styles.icon}>
-          <TouchableHighlight onPress={onLikeHandler}>
-            {alredyLike ? <FullfiledHeartIcon fill='red' /> : <HeartIcon fill={themeStyles.color.color} />}
-          </TouchableHighlight>
+        <Pressable onPress={onLikeHandler} style={styles.icon}>
+          {alredyLike ? <FullfiledHeartIcon fill='red' /> : <HeartIcon fill={themeStyles.color.color} />}
           {likesCount > 0 && <Text style={[themeStyles.color, styles.countText]}>{likesCount}</Text>}
-        </View>
+        </Pressable>
 
-        <View style={styles.icon}>
-          <TouchableHighlight onPress={onCommentsHandler}>
-            <CommentIcon fill={themeStyles.color.color} />
-          </TouchableHighlight>
+        <Pressable onPress={onCommentsHandler} style={styles.icon}>
+          <CommentIcon fill={themeStyles.color.color} />
           {commentsCount > 0 && <Text style={[themeStyles.color, styles.countText]}>{commentsCount}</Text>}
-        </View>
-
+        </Pressable>
       </View>
 
       <Portal>
@@ -113,7 +113,8 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     gap: 12,
-    paddingBottom: 30
+    paddingBottom: 30,
+
   },
 
 });

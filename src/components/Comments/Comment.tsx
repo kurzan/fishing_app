@@ -24,13 +24,17 @@ const CommentItem = ({ comment, placeId }: CommentProps) => {
   const currentUser = users.find(u => u._id === comment.byUser);
 
   return (
-    <View>
-      <Avatar user={currentUser} />
-      <View>
-        <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>
+    <View style={styles.container}>
+      <Avatar style={styles.ava} user={currentUser} />
+      <View style={styles.messageBox}>
+        <View style={styles.nameBox}>
+          <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>
+          <Text style={[themeStyles.greyText, styles.date]}>{moment(new Date(comment.createdAt.seconds * 1000)).calendar()}</Text>
+        </View>
+
         <Text style={[themeStyles.color]}>{comment.message}</Text>
-        <Text style={[themeStyles.color]}>{moment(new Date(comment.createdAt.seconds * 1000)).calendar()}</Text>
       </View>
+
     </View>
   );
 }
@@ -42,14 +46,34 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
 
+  date: {
+    fontSize: 10
+  },
+
   header: {
     flexDirection: 'row',
     alignItems: 'center'
   },
 
-  message: {
-    fontSize: 16
+  messageBox: {
+    flex: 1
   },
+
+  ava: {
+    height: 32,
+    width: 32
+  },
+
+  container: {
+    flexDirection: 'row'
+  },
+
+  nameBox: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 8
+  }
 
 })
 
