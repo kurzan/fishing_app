@@ -9,12 +9,15 @@ import AddPlace from '../screens/AddPlace/AddPlace';
 import Place from '../screens/Place/Place';
 import GlobalMap from '../screens/GlobalMap/GlobalMap';
 import Profile from '../screens/Profile/Profile';
+import { useTheme } from '../hooks/useTheme';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const ref = useNavigationContainerRef();
   const [name, setName] = useState<string | undefined>(undefined);
+
+  const { themeStyles } = useTheme();
 
   useEffect(() => {
     const timeout = setTimeout(() => setName(ref.getCurrentRoute()?.name), 100);
@@ -35,7 +38,7 @@ const Navigation = () => {
   return (
     <>
       <NavigationContainer ref={ref}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: themeStyles.backgroundColor }}>
           <Stack.Group>
             <Stack.Screen name='Home' component={Home} />
             <Stack.Screen name='Auth' component={Auth} />

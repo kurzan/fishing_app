@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
   },
   commentsBox: {
     gap: 12
+
   },
 })
 

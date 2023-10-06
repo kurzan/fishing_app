@@ -21,7 +21,7 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   const { postLikesHandler, currentUser } = useData();
 
   const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["60%"], []);
+  const snapPoints = useMemo(() => ["80%"], []);
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
 
@@ -51,11 +51,6 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
     }
   };
 
-  console.log('user ' + currentUser?._id)
-  console.log('place ' + place._id);
-
-
-
   const onCommentsHandler = () => {
     setBottimSheetIndex(0)
   };
@@ -74,15 +69,17 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
         </Pressable>
       </View>
 
-      <Portal>
+      <Portal >
         <BottomSheet
           index={bottomSheetIndex}
           ref={sheetRef}
           snapPoints={snapPoints}
           onChange={handleSheetChange}
           enablePanDownToClose
+          backgroundStyle={themeStyles.bottomSheetHandle}
+          handleStyle={themeStyles.bottomSheetHandle}
         >
-          <BottomSheetView style={styles.bottom}>
+          <BottomSheetView style={[styles.bottom, themeStyles.bottomSheet]}>
             <Comments placeId={place._id} comments={place.comments} />
           </BottomSheetView>
         </BottomSheet>
@@ -114,7 +111,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 12,
     paddingBottom: 30,
-
   },
 
 });

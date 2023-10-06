@@ -44,6 +44,17 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
     error: {
       color: '#ff6f45'
+    },
+
+    bottomSheet: {
+      backgroundColor: !isDarkMode ? 'white' : '#333333',
+    },
+
+    bottomSheetHandle: {
+      backgroundColor: !isDarkMode ? 'white' : '#333333',
+      borderTopRightRadius: 8,
+      borderTopLeftRadius: 8
+
     }
 
   });

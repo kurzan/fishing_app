@@ -19,22 +19,23 @@ import { Host } from 'react-native-portalize';
 
 import SplashScreen from 'react-native-splash-screen'
 import { AuthProvider } from './src/services/providers/AuthProvider';
+import { useTheme } from './src/hooks/useTheme';
 
 YaMap.init('06c72fe6-477e-42ef-86b1-4fa7f012eb6f');
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'light';
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundColor = isDarkMode ? 'black' : 'white';
+
+  const { themeStyles } = useTheme();
 
   useEffect(() => {
     SplashScreen.hide();
   }, [])
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={[{ flex: 1, backgroundColor }]}>
       <AuthProvider>
         <DataProvider>
           <ThemeProvider>

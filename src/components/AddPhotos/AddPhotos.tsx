@@ -124,11 +124,13 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
           snapPoints={snapPoints}
           onChange={handleSheetChange}
           enablePanDownToClose
+          backgroundStyle={themeStyles.bottomSheetHandle}
+          handleStyle={themeStyles.bottomSheetHandle}
         >
           <BottomSheetView>
-            <Button title='Сделать фото' onPress={takePhoto} />
-            <Button title='Выбрать фото' onPress={choosePhoto} />
-            <Button title='Отмена' onPress={handleClosePress} />
+            <Button icon='camera' title='Сделать фото' onPress={takePhoto} />
+            <Button icon='picture' title='Выбрать фото' onPress={choosePhoto} />
+            <Button style={{ backgroundColor: 'grey' }} title='Отмена' onPress={handleClosePress} />
           </BottomSheetView>
         </BottomSheet>
       </Portal>
