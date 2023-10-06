@@ -22,6 +22,8 @@ export const DataContext = createContext<TDataContext>({} as TDataContext);
 
 export const DataProvider: FC<{ children: any }> = ({ children }: { children: React.ReactNode }) => {
 
+  const [isError, setIsError] = useState(false);
+
   const [places, setPlaces] = useState<Place[]>([]);
   const [placesIsLoading, setPlacesIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);

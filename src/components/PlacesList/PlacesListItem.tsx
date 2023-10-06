@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
+import React, { FC, useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { StyleSheet, View, Image, Text, TouchableOpacity, Pressable, Alert, Modal } from 'react-native';
 import { Place } from '../../services/types/places';
 import { useNavigation } from '@react-navigation/native';
 import Avatar from '../Avatar/Avatar';
@@ -12,22 +12,42 @@ import moment from 'moment';
 import 'moment/locale/ru';
 import UserInteractElements from './UserInteractElements';
 import { MoreIcon } from '../Icons';
+import { Portal } from 'react-native-portalize';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
 moment.locale('ru')
 
 
 type PlacesListItemProps = {
   place: Place,
+  isOwner?: boolean
 }
 
-const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
+const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
+
+  const sheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["80%"], []);
+
+  const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
+
+  const handleSheetChange = useCallback((index: number) => {
+    console.log("handleSheetChange", index);
+    setBottimSheetIndex(index)
+  }, []);
+
+  const onMoreHandler = () => {
+    setBottimSheetIndex(0)
+  };
+
 
   const navigation = useNavigation<any>();
   const { themeStyles } = useTheme();
-  const { users } = useData();
+  const { users, currentUser: loginUser } = useData();
   const [images, setImages] = useState<string[]>([]);
 
   const currentUser = users.find(user => user._id === place.ownerId);
+
+  const showCoords = currentUser?._id === loginUser?._id;
 
   const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
 
@@ -47,31 +67,36 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
     // })}>
 
     <View style={styles.container} >
+
       <Padding>
+
         <View style={styles.header}>
-          <Avatar user={currentUser} />
+          {!isOwner && <Avatar user={currentUser} />}
           <View>
-            <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>
-            {place.coords.isVisible && <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>}
+            {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>}
+            {place.coords.isVisible && < Text style={[themeStyles.color, styles.name]}>{place.name}</Text>}
+            {!place.coords.isVisible && showCoords && <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>}
           </View>
-          <TouchableOpacity style={styles.options}>
+          {isOwner && <TouchableOpacity style={styles.options} onPress={onMoreHandler}>
             <MoreIcon fill={themeStyles.color.color} />
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
 
-      </Padding>
-      {images.length > 0 ? (
-        <View style={styles.imagContainer}>
-          <Image style={styles.placeImg} source={{ uri: images[0] }} resizeMode="cover"
-            resizeMethod="resize" />
-        </View>
-      ) : (
-        <View style={styles.noPhoto} >
-          <Text style={themeStyles.greyText}>Нет фото</Text>
-        </View>
-      )}
+      </Padding >
+      {
+        images.length > 0 ? (
+          <View style={styles.imagContainer}>
+            <Image style={styles.placeImg} source={{ uri: images[0] }} resizeMode="cover"
+              resizeMethod="resize" />
+          </View>
+        ) : (
+          <View style={styles.noPhoto} >
+            <Text style={themeStyles.greyText}>Нет фото</Text>
+          </View>
+        )
+      }
 
-      <Padding>
+      < Padding >
         <View style={styles.bottom}>
 
           <UserInteractElements place={place} />
@@ -95,9 +120,25 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
           <Text style={[themeStyles.greyText]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
         </View>
 
+      </Padding >
 
-      </Padding>
-    </View>
+      <Portal >
+        <BottomSheet
+          index={bottomSheetIndex}
+          ref={sheetRef}
+          snapPoints={snapPoints}
+          onChange={handleSheetChange}
+          enablePanDownToClose
+          backgroundStyle={themeStyles.bottomSheetHandle}
+          handleStyle={themeStyles.bottomSheetHandle}
+        >
+          <BottomSheetView style={[styles.bottom, themeStyles.bottomSheet]}>
+
+          </BottomSheetView>
+        </BottomSheet>
+      </Portal>
+
+    </View >
     // </Box >
 
   );
@@ -106,7 +147,8 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place }) => {
 const styles = StyleSheet.create({
   container: {
     gap: 6,
-    paddingBottom: 18
+    paddingBottom: 18,
+    position: 'relative'
   },
 
   userName: {
@@ -120,11 +162,15 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center'
   },
 
   options: {
+    height: 34,
+    width: 34,
+    alignItems: 'flex-end',
     marginLeft: 'auto'
   },
 
@@ -165,7 +211,10 @@ const styles = StyleSheet.create({
   currentName: {
     fontWeight: '700',
     fontSize: 16
-  }
+  },
+
+
+
 })
 
 export default PlacesListItem;

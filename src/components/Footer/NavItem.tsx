@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import { FooterItemProps } from "./types";
 import { useTheme } from "../../hooks/useTheme";
+import { useData } from "../../hooks/useData";
 
 type NavItemProps = {
   item: FooterItemProps,
@@ -12,12 +13,16 @@ type NavItemProps = {
 
 
 const NavItem: FC<NavItemProps> = ({ item, navigate, currentRoute, Icon }) => {
-  const isActive = currentRoute === item.title
+
+  const isActive = currentRoute === item.title;
+  const { currentUser } = useData();
+
+  const route = currentUser ? item.title : 'Auth';
 
   const { themeStyles } = useTheme();
 
   return (
-    <Pressable style={styles.item} onPress={() => navigate(item.title)}>
+    <Pressable style={styles.item} onPress={() => navigate(item.protected ? route : item.title)}>
       <Icon fill={isActive ? '#0087ff' : themeStyles.color.color} />
       <Text style={[styles.title, isActive ? { color: '#0087ff' } : themeStyles.color.color]}>{item.ru_title}</Text>
     </Pressable>

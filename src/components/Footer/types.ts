@@ -6,4 +6,5 @@ export type FooterItemProps = {
   icon: FC<SvgProps> | OutlineGlyphMapType,
   title: string,
   ru_title: string,
+  protected: boolean
 }

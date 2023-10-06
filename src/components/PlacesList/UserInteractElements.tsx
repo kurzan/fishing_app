@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useMemo, useCallback } from 'react';
-import { StyleSheet, View, Image, Text, TouchableHighlight, Pressable } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableHighlight, Pressable, Modal, Alert } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import { Place, User } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
@@ -8,6 +8,8 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
 import { CommentIcon, FullfiledHeartIcon, HeartIcon } from '../Icons';
 import Comments from '../Comments/Comments';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 
 type UserInteractElementsProps = {
@@ -19,6 +21,8 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   const { themeStyles, } = useTheme();
 
   const { postLikesHandler, currentUser } = useData();
+
+  const navivagtion = useNavigation<any>();
 
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["80%"], []);
@@ -40,14 +44,18 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
 
   const alredyLike = currentUser && place.likes && place.likes.includes(currentUser.docId);
 
+  const routeToAuth = () => navivagtion.navigate('Auth');
+
   const onLikeHandler = () => {
 
-    if (!currentUser) return
-
-    if (alredyLike) {
-      postLikesHandler('delete', place._id, currentUser.docId);
+    if (!currentUser) {
+      routeToAuth();
     } else {
-      postLikesHandler('add', place._id, currentUser.docId);
+      if (alredyLike) {
+        postLikesHandler('delete', place._id, currentUser.docId);
+      } else {
+        postLikesHandler('add', place._id, currentUser.docId);
+      }
     }
   };
 
@@ -58,15 +66,15 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   return (
     <>
       <View style={styles.usersInteract}>
-        <Pressable onPress={onLikeHandler} style={styles.icon}>
+        <TouchableOpacity onPress={onLikeHandler} style={styles.icon}>
           {alredyLike ? <FullfiledHeartIcon fill='red' /> : <HeartIcon fill={themeStyles.color.color} />}
           {likesCount > 0 && <Text style={[themeStyles.color, styles.countText]}>{likesCount}</Text>}
-        </Pressable>
+        </TouchableOpacity>
 
-        <Pressable onPress={onCommentsHandler} style={styles.icon}>
+        <TouchableOpacity onPress={onCommentsHandler} style={styles.icon}>
           <CommentIcon fill={themeStyles.color.color} />
           {commentsCount > 0 && <Text style={[themeStyles.color, styles.countText]}>{commentsCount}</Text>}
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <Portal >
@@ -80,10 +88,11 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
           handleStyle={themeStyles.bottomSheetHandle}
         >
           <BottomSheetView style={[styles.bottom, themeStyles.bottomSheet]}>
-            <Comments placeId={place._id} comments={place.comments} />
+            <Comments routeToAuth={routeToAuth} handleClosePress={handleClosePress} placeId={place._id} comments={place.comments} />
           </BottomSheetView>
         </BottomSheet>
       </Portal>
+
     </>
 
   );

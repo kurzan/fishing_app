@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, RefreshControl, ScrollView, FlatList } from 'react-native';
 import PlacesListItem from './PlacesListItem';
 import { Place } from '../../services/types/places';
@@ -7,11 +7,12 @@ import { useData } from '../../hooks/useData';
 type PlacesListProps = {
   title?: string,
   places: Place[],
+  isOwner?: boolean
 };
 
-const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
+const PlacesList = ({ title = 'Водоемы', places, isOwner }: PlacesListProps) => {
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { getData } = useData();
 
@@ -29,7 +30,7 @@ const PlacesList = ({ title = 'Водоемы', places }: PlacesListProps) => {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       style={styles.container}
       data={filteredPlaces}
-      renderItem={({ item }) => <PlacesListItem place={item} />}
+      renderItem={({ item }) => <PlacesListItem place={item} isOwner={isOwner} />}
       keyExtractor={filteredPlaces => filteredPlaces._id}
     />
 

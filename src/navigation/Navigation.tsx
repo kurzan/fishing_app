@@ -10,6 +10,7 @@ import Place from '../screens/Place/Place';
 import GlobalMap from '../screens/GlobalMap/GlobalMap';
 import Profile from '../screens/Profile/Profile';
 import { useTheme } from '../hooks/useTheme';
+import { useData } from '../hooks/useData';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const Navigation = () => {
   const [name, setName] = useState<string | undefined>(undefined);
 
   const { themeStyles } = useTheme();
+  const { currentUser } = useData();
 
   useEffect(() => {
     const timeout = setTimeout(() => setName(ref.getCurrentRoute()?.name), 100);
@@ -40,13 +42,26 @@ const Navigation = () => {
       <NavigationContainer ref={ref}>
         <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: themeStyles.backgroundColor }}>
           <Stack.Group>
-            <Stack.Screen name='Home' component={Home} />
-            <Stack.Screen name='Auth' component={Auth} />
-            <Stack.Screen name='Profile' component={Profile} />
-            <Stack.Screen name='Places' component={Places} />
-            <Stack.Screen name='AddPlace' component={AddPlace} />
-            <Stack.Screen name='Place' component={Place} />
-            <Stack.Screen name='GlobalMap' component={GlobalMap} />
+            {!currentUser ? (
+              <>
+                <Stack.Screen name='Home' component={Home} />
+                <Stack.Screen name='Auth' component={Auth} />
+                <Stack.Screen name='GlobalMap' component={GlobalMap} />
+                <Stack.Screen name='Place' component={Place} />
+              </>
+            ) :
+              (
+                <>
+                  <Stack.Screen name='Home' component={Home} />
+                  <Stack.Screen name='Auth' component={Auth} />
+                  <Stack.Screen name='GlobalMap' component={GlobalMap} />
+                  <Stack.Screen name='Place' component={Place} />
+                  <Stack.Screen name='Profile' component={Profile} />
+                  <Stack.Screen name='Places' component={Places} />
+                  <Stack.Screen name='AddPlace' component={AddPlace} />
+                </>
+              )
+            }
           </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>

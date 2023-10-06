@@ -9,11 +9,12 @@ import { useData } from '../../hooks/useData';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { ScrollView } from 'react-native-gesture-handler';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 type CommentsProps = {
   comments: Comment[]
   placeId: string,
+  routeToAuth: any,
+  handleClosePress: any
 }
 
 type Values = {
@@ -32,14 +33,13 @@ const initialState: Values = {
 };
 
 
-const Comments = ({ comments, placeId }: CommentsProps) => {
+const Comments = ({ comments, placeId, routeToAuth, handleClosePress }: CommentsProps) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const { themeStyles } = useTheme();
   const { addComment, currentUser } = useData();
-
 
   const commentUpdate = async (values: any, { resetForm }: { resetForm: any }) => {
 
@@ -57,6 +57,11 @@ const Comments = ({ comments, placeId }: CommentsProps) => {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  const onEnterHandler = () => {
+    handleClosePress();
+    routeToAuth();
   }
 
   return (
@@ -87,9 +92,15 @@ const Comments = ({ comments, placeId }: CommentsProps) => {
         >
           {({ handleChange, handleBlur, handleSubmit, touched, errors, values }) => (
             <>
-              <Input placeholder='Введите коментарий' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} error={touched.message && errors.message} />
-              {isError && <Text style={themeStyles.error}>Произошла ошибка. Попробуйте еще раз</Text>}
-              <Button title="Отправить" isLoading={isLoading} disabled={isLoading} onPress={handleSubmit} />
+              {currentUser ? (
+                <>
+                  <Input placeholder='Введите коментарий' onChangeText={handleChange('message')} onBlur={handleBlur('message')} value={values.message} error={touched.message && errors.message} />
+                  {isError && <Text style={themeStyles.error}>Произошла ошибка. Попробуйте еще раз</Text>}
+                  <Button title="Отправить" isLoading={isLoading} disabled={isLoading} onPress={handleSubmit} />
+                </>
+              ) : (
+                <Button title="Войти" onPress={onEnterHandler} />
+              )}
             </>
           )}
         </Formik >
