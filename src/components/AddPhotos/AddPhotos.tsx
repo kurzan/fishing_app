@@ -1,11 +1,13 @@
 import React, { Dispatch, SetStateAction, useState, useRef, useMemo, useCallback } from 'react';
-import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image, View } from "react-native";
+import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image, View, Pressable } from "react-native";
 import Box from '../Box/Box';
 import { launchCamera, CameraOptions, ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
 import { useTheme } from '../../hooks/useTheme';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
 import Button from '../Button/Button';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Icon } from '@ant-design/react-native';
 
 
 type AddPhotosProps = {
@@ -54,6 +56,10 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
 
   const addPhotos = () => {
     setBottimSheetIndex(0)
+  }
+
+  const handleDelete = (filename: string) => {
+    setImages(prev => prev.filter(image => image.fileName !== filename))
   }
 
 
@@ -106,15 +112,26 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
           <Text style={styles.text}>Добавить фото</Text>
         </TouchableOpacity>
 
-        {images && images.map((image: uploadImage) => (
-          <Image
-            key={image.uri}
-            resizeMode="contain"
-            resizeMethod="scale"
-            style={styles.image}
-            source={{ uri: image.uri }}
-          />
-        ))}
+
+        <View style={styles.imagesContainer}>
+
+          {images && images.map((image: uploadImage) => (
+            <View key={image.uri} style={styles.imageBox}>
+              <TouchableOpacity style={styles.delIcon} onPress={() => handleDelete(image.fileName)}>
+                <Icon name='delete' />
+              </TouchableOpacity>
+
+              <Image
+                style={styles.image}
+                resizeMode="contain"
+                resizeMethod="scale"
+                source={{ uri: image.uri }}
+              />
+            </View>
+          ))}
+
+        </View>
+
       </Box>
 
       <Portal>
@@ -167,16 +184,33 @@ const styles = StyleSheet.create({
 
   plus: {},
 
-  imageContainer: {
-    marginVertical: 18,
+  imagesContainer: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 8
+  },
+
+  imageBox: {
+    flex: 1,
+    maxWidth: '40%',
+    minWidth: '30%',
+    borderRadius: 16,
+    position: 'relative'
   },
 
   image: {
+    width: '100%',
     height: '90%',
-    width: '30%',
     borderRadius: 16
   },
+
+  delIcon: {
+    position: 'absolute',
+    zIndex: 2,
+    right: 4,
+    top: 4
+  }
 });
 
 
