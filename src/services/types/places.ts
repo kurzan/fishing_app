@@ -17,9 +17,17 @@ export type Place = {
 }
 
 export type Comment = {
-  commentId: number,
+  _id: string,
   byUser: string,
+  toPlace: string,
   message: string,
+  createdAt: any,
+}
+
+export type Like = {
+  _id: string,
+  byUser: string,
+  toPlace: string,
   createdAt: any,
 }
 

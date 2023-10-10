@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { Text, StyleSheet, Pressable, View } from 'react-native';
 import Input from '../Input/Input';
 import { Comment } from '../../services/types/places';
@@ -9,6 +9,7 @@ import { useData } from '../../hooks/useData';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { ScrollView } from 'react-native-gesture-handler';
+
 
 type CommentsProps = {
   comments: Comment[]
@@ -79,7 +80,7 @@ const Comments = ({ comments, placeId, routeToAuth, handleClosePress }: Comments
         (
           <ScrollView >
             <View style={styles.commentsBox}>
-              {comments.map(comment => <CommentItem key={comment.commentId} comment={comment} placeId={placeId} />)}
+              {comments.map(comment => <CommentItem key={comment._id} comment={comment} placeId={placeId} />)}
             </View>
           </ScrollView>
         )}

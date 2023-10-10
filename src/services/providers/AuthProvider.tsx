@@ -55,7 +55,9 @@ export const AuthProvider = ({ children }: { children: any }) => {
     try {
       await login(email, password);
     } catch (error: any) {
-      throw new Error(error.message)
+      if (error.code === 'auth/invalid-login') {
+        throw new Error('Неверный логин или пароль!');
+      }
     } finally {
       setIsLoading(false)
     }
@@ -79,11 +81,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
       setIsLoadingInitial(false);
     })
   }, [])
-
-  useEffect(() => {
-    console.log(user);
-
-  }, [user])
 
   const value = useMemo(() => ({
     user, isLoading, login: loginHandler, logout: logoutHandler, register: registerHandler

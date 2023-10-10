@@ -22,7 +22,7 @@ const Places = () => {
       <LayoutScreen isScrollView={false}>
         {currentPlaces.length ? <PlacesList isOwner={true} title='Мои места' places={currentPlaces} /> : (
           <View style={styles.noPlaces}>
-            <PlacesIcon fill={themeStyles.color.color} height={150} width={150} />
+            <PlacesIcon fill={themeStyles.color.color} />
             <Text style={[themeStyles.color, styles.text]}>Рыбалок пока нет</Text>
           </View>
         )}

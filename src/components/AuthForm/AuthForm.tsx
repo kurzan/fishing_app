@@ -48,7 +48,7 @@ const AuthForm = () => {
       actions.resetForm()
       navigation.navigate('Home')
     } catch (error) {
-      Alert.alert('error')
+      Alert.alert(error.message)
     }
   };
 

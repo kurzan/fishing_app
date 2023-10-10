@@ -10,7 +10,8 @@ import {
 import { StyleSheet } from "react-native";
 
 type TThemeContext = {
-  themeStyles: any
+  themeStyles: any,
+  isDarkMode: boolean
 }
 
 export const ThemeContext = createContext({} as TThemeContext);
@@ -60,7 +61,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const value = {
-    themeStyles
+    themeStyles,
+    isDarkMode
   };
 
   return <ThemeContext.Provider value={value}>

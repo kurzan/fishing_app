@@ -7,7 +7,6 @@ import { Coords, Place } from '../../services/types/places';
 import Geolocation, { GeoPosition } from 'react-native-geolocation-service';
 import { requestLocationPermission } from '../../services/geoutils';
 import { useColorScheme } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
 import HUD from './HUD';
 
 type MapProps = {
@@ -24,7 +23,6 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
   const map = useRef<YaMap>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
-  const { themeStyles } = useTheme();
 
   const [location, setLocation] = useState<GeoPosition | false>(false);
 

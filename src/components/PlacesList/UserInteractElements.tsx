@@ -1,8 +1,8 @@
 
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Image, Text, TouchableHighlight, Pressable, Modal, Alert } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
-import { Place, User } from '../../services/types/places';
+import { Comment, Like, Place, User } from '../../services/types/places';
 import { useData } from '../../hooks/useData';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
@@ -10,6 +10,8 @@ import { CommentIcon, FullfiledHeartIcon, HeartIcon } from '../Icons';
 import Comments from '../Comments/Comments';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '../../services/firebase';
 
 
 type UserInteractElementsProps = {
@@ -17,6 +19,9 @@ type UserInteractElementsProps = {
 }
 
 const UserInteractElements = ({ place }: UserInteractElementsProps) => {
+
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [likes, setLikes] = useState<Like[]>([]);
 
   const { themeStyles, } = useTheme();
 
@@ -39,10 +44,10 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
   }, []);
 
 
-  const likesCount = place.likes?.length || 0;
-  const commentsCount = place.comments?.length || 0;
+  const likesCount = likes?.length || 0;
+  const commentsCount = comments?.length || 0;
 
-  const alredyLike = currentUser && place.likes && place.likes.includes(currentUser.docId);
+  const alredyLike = likes.find(like => like.byUser === currentUser?._id);
 
   const routeToAuth = () => navivagtion.navigate('Auth');
 
@@ -51,17 +56,58 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
     if (!currentUser) {
       routeToAuth();
     } else {
-      if (alredyLike) {
-        postLikesHandler('delete', place._id, currentUser.docId);
-      } else {
-        postLikesHandler('add', place._id, currentUser.docId);
-      }
+      postLikesHandler(alredyLike ? 'delete' : 'add', place._id, currentUser._id, alredyLike ? alredyLike._id : '');
     }
   };
 
   const onCommentsHandler = () => {
     setBottimSheetIndex(0)
   };
+
+  useEffect(() => {
+    const commentsQuery = query(collection(db, "commentsPlaces"), where("toPlace", "==", place._id));
+    const LikesQuery = query(collection(db, "likesPlaces"), where("toPlace", "==", place._id));
+
+    const unsubscribeComments = onSnapshot(commentsQuery, (querySnapshot) => {
+      const comments: Comment[] = [];
+      querySnapshot.forEach((doc) => {
+        comments.push({
+          _id: doc.id,
+          ...doc.data()
+        } as Comment);
+      });
+
+      setComments(comments);
+    });
+
+    const unsubscribeLikes = onSnapshot(LikesQuery, (querySnapshot) => {
+      const likes: Like[] = [];
+      querySnapshot.forEach((doc) => {
+        likes.push({
+          _id: doc.id,
+          ...doc.data()
+        } as Like);
+      });
+
+      setLikes(likes);
+    });
+
+
+    return () => {
+      unsubscribeComments();
+      unsubscribeLikes();
+    }
+
+  }, [])
+
+
+  useEffect(() => {
+    console.log(likes);
+    console.log(currentUser?._id);
+
+
+  }, [likes, currentUser?._id])
+
 
   return (
     <>
@@ -88,13 +134,11 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
           handleStyle={themeStyles.bottomSheetHandle}
         >
           <BottomSheetView style={[styles.bottom, themeStyles.bottomSheet]}>
-            <Comments routeToAuth={routeToAuth} handleClosePress={handleClosePress} placeId={place._id} comments={place.comments} />
+            <Comments routeToAuth={routeToAuth} handleClosePress={handleClosePress} placeId={place._id} comments={comments} />
           </BottomSheetView>
         </BottomSheet>
       </Portal>
-
     </>
-
   );
 }
 

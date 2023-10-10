@@ -60,6 +60,10 @@ const Profile = () => {
     setBottimSheetIndex(0)
   };
 
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
+
   const initialState: Values = {
     name: currentUser?.name || '',
   };
@@ -70,6 +74,7 @@ const Profile = () => {
       setIsLoading(true);
 
       await updateUser(values);
+      handleClosePress();
 
     } catch (error) {
       setIsError(true);
@@ -102,6 +107,8 @@ const Profile = () => {
             snapPoints={snapPoints}
             onChange={handleSheetChange}
             enablePanDownToClose
+            backgroundStyle={themeStyles.bottomSheetHandle}
+            handleStyle={themeStyles.bottomSheetHandle}
           >
             <BottomSheetView style={styles.bottom}>
               <Formik

@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext, FC, useMemo, useState, useEffect } from "react";
 import { Place, User } from "../types/places";
-import { collection, getDocs, addDoc, doc, deleteDoc, DocumentReference, DocumentData, updateDoc, arrayUnion, arrayRemove, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, deleteDoc, DocumentReference, DocumentData, updateDoc, arrayUnion, arrayRemove, query, where, onSnapshot, documentId } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -14,7 +14,7 @@ type TDataContext = {
   getData: () => Promise<[void, void]>,
   updateUser: (formData: any) => Promise<void>,
   addComment: (message: string, userId: string, placeId: string) => Promise<void>,
-  postLikesHandler: (type: 'delete' | 'add', placeId: string, userId: string) => Promise<void>,
+  postLikesHandler: (type: 'delete' | 'add', placeId: string, userId: string, likeId: string) => Promise<void>
   placesIsLoading: boolean
 }
 
@@ -63,31 +63,25 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
     return Promise.all([getPlaces(), getUsers()])
   };
 
-  useEffect(() => {
-    setPlacesIsLoading(true);
 
-    getData()
-      .then(() => setPlacesIsLoading(false))
-  }, []);
+  const postLikesHandler = async (type: 'delete' | 'add', placeId: string, userId: string, likeId: string) => {
 
-  useEffect(() => {
-    let currentUser = users.find(u => u._id === user?.uid) || null;
-    setCurrentUser(currentUser);
-  }, [user, users]);
+    switch (type) {
+      case 'add':
+        await addDoc(collection(db, "likesPlaces"), {
+          byUser: userId,
+          toPlace: placeId,
+          createdAt: new Date()
+        });
+        break;
 
-  const postLikesHandler = async (type: 'delete' | 'add', placeId: string, userId: string) => {
-    const likesRef = doc(db, "places", placeId);
-    const userRef = doc(db, "users", userId)
+      case 'delete':
+        await deleteDoc(doc(db, "likesPlaces", likeId));
+        break;
 
-    await updateDoc(likesRef, {
-      likes: type === 'add' ? arrayUnion(userId) : arrayRemove(userId)
-    });
-
-    await updateDoc(userRef, {
-      likes: type === 'add' ? arrayUnion(placeId) : arrayRemove(placeId)
-    });
-
-    getData();
+      default:
+        break;
+    }
   };
 
   const updateUser = async (formData: any) => {
@@ -102,17 +96,14 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
   }
 
   const addComment = async (message: string, userId: string, placeId: string) => {
-    const commentsRef = doc(db, "places", placeId);
 
-    await updateDoc(commentsRef, {
-      comments: arrayUnion({
-        byUser: userId,
-        message: message,
-        createdAt: new Date()
-      })
+    await addDoc(collection(db, "commentsPlaces"), {
+      byUser: userId,
+      toPlace: placeId,
+      message: message,
+      createdAt: new Date()
     });
 
-    getData();
   };
 
   const addPlace = async (formData: any) => {
@@ -127,6 +118,19 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
 
     getData();
   };
+
+
+  useEffect(() => {
+    setPlacesIsLoading(true);
+
+    getData()
+      .then(() => setPlacesIsLoading(false))
+  }, []);
+
+  useEffect(() => {
+    let currentUser = users.find(u => u._id === user?.uid) || null;
+    setCurrentUser(currentUser);
+  }, [user, users]);
 
 
   const value = useMemo(() => {

@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, Pressable, Alert, Modal } from 'react-native';
 import { Place } from '../../services/types/places';
-import { useNavigation } from '@react-navigation/native';
 import Avatar from '../Avatar/Avatar';
 import { useData } from '../../hooks/useData';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
@@ -14,6 +13,8 @@ import UserInteractElements from './UserInteractElements';
 import { MoreIcon } from '../Icons';
 import { Portal } from 'react-native-portalize';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { Icon } from '@ant-design/react-native';
+import PlaceLink from './PlaceLink';
 
 moment.locale('ru')
 
@@ -29,6 +30,8 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
   const snapPoints = useMemo(() => ["80%"], []);
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
+  const [images, setImages] = useState<string[]>([]);
+
 
   const handleSheetChange = useCallback((index: number) => {
     console.log("handleSheetChange", index);
@@ -39,16 +42,11 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
     setBottimSheetIndex(0)
   };
 
-
-  const navigation = useNavigation<any>();
   const { themeStyles } = useTheme();
   const { users, currentUser: loginUser } = useData();
-  const [images, setImages] = useState<string[]>([]);
 
   const currentUser = users.find(user => user._id === place.ownerId);
-
   const showCoords = currentUser?._id === loginUser?._id;
-
   const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
 
   useEffect(() => {
@@ -62,20 +60,19 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
   }, [users])
 
   return (
-    // <Box onPress={() => navigation.navigate('Place', {
-    //   placeId: place._id
-    // })}>
-
     <View style={styles.container} >
 
       <Padding>
 
         <View style={styles.header}>
           {!isOwner && <Avatar user={currentUser} />}
+          {isOwner && <Icon style={{ marginRight: 8 }} name='environment' />}
           <View>
-            {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name}</Text>}
-            {place.coords.isVisible && < Text style={[themeStyles.color, styles.name]}>{place.name}</Text>}
-            {!place.coords.isVisible && showCoords && <Text style={[themeStyles.color, styles.name]}>{place.name}</Text>}
+            {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name.trim()}</Text>}
+            {place.coords.isVisible && <PlaceLink style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
+            {!place.coords.isVisible && showCoords && <PlaceLink style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
+            {!place.coords.isVisible && showCoords && <Text style={[themeStyles.color, themeStyles.greyText]}>Координаты видны только вам</Text>}
+            {!place.isVisible && <Text style={[themeStyles.color, themeStyles.greyText]}>Не видно в ленте</Text>}
           </View>
           {isOwner && <TouchableOpacity style={styles.options} onPress={onMoreHandler}>
             <MoreIcon fill={themeStyles.color.color} />
@@ -139,8 +136,6 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
       </Portal>
 
     </View >
-    // </Box >
-
   );
 };
 
