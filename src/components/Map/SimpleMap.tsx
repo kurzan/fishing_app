@@ -10,8 +10,8 @@ type MapProps = YaMapProps & {
 }
 
 type Coords = {
-  _long: number;
-  _lat: number;
+  _long: string;
+  _lat: string;
   isVisible: boolean;
 } | undefined
 

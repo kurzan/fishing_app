@@ -7,7 +7,7 @@ import AddPhotos, { uploadImage } from '../../components/AddPhotos/AddPhotos';
 import { Formik } from 'formik';
 import { useData } from '../../hooks/useData';
 import * as yup from 'yup'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker'
 import { View } from '@ant-design/react-native';
 import Button from '../../components/Button/Button';
@@ -16,6 +16,7 @@ import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
 import Heading from '../../components/Heading/Heading';
+import { Timestamp } from 'firebase/firestore';
 
 const AddPlace = () => {
 
@@ -23,9 +24,16 @@ const AddPlace = () => {
   const { addPlace, currentUser } = useData();
   const [openDate, setOpenDate] = useState(false);
   const [images, setImages] = useState<uploadImage[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const route = useRoute<any>();
+
+  const { places, updatePlace } = useData();
+  const placeId = route.params?.placeId;
+  const currentPlace = places.find(place => place._id === placeId) || null;
+
+
 
   const navigation = useNavigation<any>();
   const { themeStyles } = useTheme();
@@ -54,18 +62,25 @@ const AddPlace = () => {
       setIsError(false);
       setIsLoading(true);
 
-      const place = await addPlace(values);
+      if (!currentPlace) {
+        const place = await addPlace(values);
 
-      if (!place.id) {
-        throw new Error('error');
+        if (!place.id) {
+          throw new Error('error');
+        }
+
+        uploadImages(images, place.id)
+          ?.then(() => setImages([]))
+          .then(() => {
+            navigation.navigate('Places');
+            setIsLoading(false);
+          });
+      } else {
+        updatePlace(values, currentPlace._id)
+          .then(() => {
+            setIsLoading(false);
+          });
       }
-
-      uploadImages(images, place.id)
-        ?.then(() => setImages([]))
-        .then(() => {
-          navigation.navigate('Places');
-          setIsLoading(false);
-        });
 
     } catch (error) {
       console.log(error);
@@ -75,23 +90,37 @@ const AddPlace = () => {
 
   };
 
-  const initialState = {
-    name: '',
+  const initialState = currentPlace ? {
+    name: currentPlace.name,
     coords: {
-      _long: '',
-      _lat: '',
-      isVisible: true
+      _long: currentPlace.coords._long,
+      _lat: currentPlace.coords._lat,
+      isVisible: currentPlace.coords.isVisible
     },
-    isVisible: true,
+    isVisible: currentPlace.isVisible,
     images: [],
     ownerId: currentUser?._id,
-    createdAt: new Date(),
-    message: '',
-  };
+    createdAt: new Date(currentPlace.createdAt.seconds),
+    message: currentPlace.message,
+  } :
+    {
+      name: '',
+      coords: {
+        _long: '',
+        _lat: '',
+        isVisible: true
+      },
+      isVisible: true,
+      images: [],
+      ownerId: currentUser?._id,
+      createdAt: new Date(),
+      message: '',
+    }
+    ;
 
   return (
     <>
-      <Heading title='Добавить рыбалку' />
+      <Heading title={placeId ? 'Редактирование ' : 'Добавить рыбалку'} />
       <LayoutScreen isScrollView={true} canCancelContentTouches={isCanCancelContentTouches} scrollEnabled={isCanCancelContentTouches}>
 
         <Formik
@@ -132,7 +161,7 @@ const AddPlace = () => {
               <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
               <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
 
-              <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />
+              {!currentPlace && <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />}
               <DatePicker
                 modal
                 locale='ru_RU'
@@ -156,7 +185,7 @@ const AddPlace = () => {
               <Toggle title='Делиться координатами с другими' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
 
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title="Поделиться" isLoading={isLoading}></Button>
+                <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title={currentPlace ? "Сохранить" : "Поделиться"} isLoading={isLoading}></Button>
               </View>
 
               {isError && <Text style={styles.errorText}>Произошла ошибка. Попробуйте еще раз</Text>}

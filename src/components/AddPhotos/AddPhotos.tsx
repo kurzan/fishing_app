@@ -1,13 +1,13 @@
 import React, { Dispatch, SetStateAction, useState, useRef, useMemo, useCallback } from 'react';
 import { Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, Image, View, Pressable } from "react-native";
 import Box from '../Box/Box';
-import { launchCamera, CameraOptions, ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera, CameraOptions, launchImageLibrary } from 'react-native-image-picker';
 import { useTheme } from '../../hooks/useTheme';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from 'react-native-portalize';
 import Button from '../Button/Button';
-import { ScrollView } from 'react-native-gesture-handler';
 import { Icon } from '@ant-design/react-native';
+import Padding from '../Padding/Padding';
 
 
 type AddPhotosProps = {
@@ -45,7 +45,7 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
 
-  const handleSheetChange = useCallback((index) => {
+  const handleSheetChange = useCallback((index: number) => {
     console.log("handleSheetChange", index);
     setBottimSheetIndex(index)
   }, []);
@@ -118,7 +118,7 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
           {images && images.map((image: uploadImage) => (
             <View key={image.uri} style={styles.imageBox}>
               <TouchableOpacity style={styles.delIcon} onPress={() => handleDelete(image.fileName)}>
-                <Icon name='delete' />
+                <Icon name='delete' color={themeStyles.error} />
               </TouchableOpacity>
 
               <Image
@@ -129,9 +129,7 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
               />
             </View>
           ))}
-
         </View>
-
       </Box>
 
       <Portal>
@@ -145,9 +143,11 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
           handleStyle={themeStyles.bottomSheetHandle}
         >
           <BottomSheetView>
-            <Button icon='camera' title='Сделать фото' onPress={takePhoto} />
-            <Button icon='picture' title='Выбрать фото' onPress={choosePhoto} />
-            <Button style={{ backgroundColor: 'grey' }} title='Отмена' onPress={handleClosePress} />
+            <Padding>
+              <Button icon='camera' title='Сделать фото' onPress={takePhoto} />
+              <Button icon='picture' title='Выбрать фото' onPress={choosePhoto} />
+              <Button style={{ backgroundColor: 'grey' }} title='Отмена' onPress={handleClosePress} />
+            </Padding>
           </BottomSheetView>
         </BottomSheet>
       </Portal>

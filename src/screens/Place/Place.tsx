@@ -8,11 +8,12 @@ import { useTheme } from '../../hooks/useTheme';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import Padding from '../../components/Padding/Padding';
 import Clipboard from '@react-native-community/clipboard';
+import { deleteHandler } from '../../services/utils';
 
 const Place = () => {
 
   const route = useRoute<any>();
-  const navigate = useNavigation();
+  const navigate = useNavigation<any>();
   const { delPlace, places, currentUser } = useData();
 
   const { themeStyles } = useTheme();
@@ -28,22 +29,12 @@ const Place = () => {
     Clipboard.setString(`${currentPlace.coords._lat}, ${currentPlace.coords._long}`);
   }
 
-  const handleDelete = (id: string) => {
-    Alert.alert('Подтвердите удаление', 'Вы дейсвтильно хотите удалить?', [
-      {
-        text: 'Отмена',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'Удалить', onPress: () => {
-          delPlace(id);
-          navigate.goBack();
-        }
-      },
-    ]);
+  const goEditPlace = () => {
+    navigate.navigate('AddPlace', {
+      placeId: currentPlace?._id
+    });
+  };
 
-  }
 
   return (
     <>
@@ -52,7 +43,7 @@ const Place = () => {
           <Icon name='arrow-left' size={30} color={themeStyles.color.color} />
         </TouchableOpacity>
 
-        {isOwner && <TouchableOpacity onPress={() => navigate.goBack()}>
+        {isOwner && <TouchableOpacity onPress={goEditPlace}>
           <Icon name='edit' size={30} color={themeStyles.color.color} />
         </TouchableOpacity>}
       </View>
@@ -79,7 +70,6 @@ const Place = () => {
         <View style={styles.map}>
           <SimpleMap initialCoords={currentPlace?.coords} />
         </View>
-
 
       </LayoutScreen>
     </>
@@ -115,7 +105,7 @@ const styles = StyleSheet.create({
   },
 
   placeTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '500'
   },
 

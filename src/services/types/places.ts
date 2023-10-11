@@ -2,8 +2,8 @@ export type Place = {
   _id: string,
   name: string,
   coords: {
-    _long: number,
-    _lat: number,
+    _long: string,
+    _lat: string,
     isVisible: boolean
   },
   isVisible: boolean,

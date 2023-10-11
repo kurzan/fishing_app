@@ -3,6 +3,7 @@ import { useTheme } from "../../hooks/useTheme";
 import { AccountIcon, LogoWhiteIcon, LogoBlackIcon, PlacesIcon } from "../Icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../hooks/useAuth";
+import { Icon } from "@ant-design/react-native";
 
 type HeadingProps = {
   title?: string,
@@ -26,9 +27,16 @@ const Heading = ({ title, withLogo = false, account = true }: HeadingProps) => {
         <>
           {isDarkMode ? <LogoWhiteIcon /> : <LogoBlackIcon />}
         </>
-
       }
-      {title && <Text style={[themeStyles.color, styles.text]}>{title}</Text>}
+
+      {title && (
+        <>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name='arrow-left' size={30} color={themeStyles.color.color} />
+          </TouchableOpacity>
+          <Text style={[themeStyles.color, styles.text]}>{title}</Text>
+        </>
+      )}
 
       {account && <TouchableOpacity onPress={() => navigation.navigate(route)} style={styles.account}>
         <AccountIcon fill={themeStyles.color.color} />

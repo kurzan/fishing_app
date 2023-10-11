@@ -14,8 +14,10 @@ import { MoreIcon } from '../Icons';
 import { Portal } from 'react-native-portalize';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Icon } from '@ant-design/react-native';
-import PlaceLink from './PlaceName';
 import PlaceName from './PlaceName';
+import Button from '../Button/Button';
+import { deleteHandler } from '../../services/utils';
+import { useNavigation } from '@react-navigation/native';
 
 moment.locale('ru')
 
@@ -33,6 +35,14 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
   const [images, setImages] = useState<string[]>([]);
 
+  const navigation = useNavigation<any>();
+
+  const seeMoreHandler = () => {
+    handleClosePress();
+    navigation.navigate('Place', {
+      placeId: place._id
+    })
+  }
 
   const handleSheetChange = useCallback((index: number) => {
     console.log("handleSheetChange", index);
@@ -43,12 +53,23 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
     setBottimSheetIndex(0)
   };
 
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  }, []);
+
   const { themeStyles } = useTheme();
-  const { users, currentUser: loginUser } = useData();
+  const { users, currentUser: loginUser, delPlace } = useData();
 
   const currentUser = users.find(user => user._id === place.ownerId);
   const showCoords = currentUser?._id === loginUser?._id;
   const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
+
+  const goEditPlace = () => {
+    handleClosePress();
+    navigation.navigate('AddPlace', {
+      placeId: place._id
+    });
+  };
 
   useEffect(() => {
     listAll(imageListRef).then(res => {
@@ -58,7 +79,11 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
         })
       })
     })
-  }, [users])
+  }, [users]);
+
+  const deletePlaceHandler = () => {
+    deleteHandler(() => delPlace(place._id).then(() => handleClosePress()))
+  };
 
   return (
     <View style={styles.container} >
@@ -75,9 +100,9 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
             {!place.coords.isVisible && showCoords && <Text style={[themeStyles.color, themeStyles.greyText]}>Координаты видны только вам</Text>}
             {!place.isVisible && <Text style={[themeStyles.color, themeStyles.greyText]}>Не видно в ленте</Text>}
           </View>
-          {/* {isOwner && <TouchableOpacity style={styles.options} onPress={onMoreHandler}>
+          <TouchableOpacity style={styles.options} onPress={onMoreHandler}>
             <MoreIcon fill={themeStyles.color.color} />
-          </TouchableOpacity>} */}
+          </TouchableOpacity>
         </View>
 
       </Padding >
@@ -96,12 +121,8 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
       < Padding >
         <View style={styles.bottom}>
-
           <UserInteractElements place={place} />
-
-
           {place.message && <Text style={[themeStyles.color, styles.message]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
-
           <Text style={[themeStyles.greyText]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
         </View>
 
@@ -118,12 +139,23 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
           handleStyle={themeStyles.bottomSheetHandle}
         >
           <BottomSheetView style={[styles.bottom, themeStyles.bottomSheet]}>
-
+            <Padding>
+              {showCoords ? (
+                <>
+                  <Button icon='edit' title='Редактировать' onPress={goEditPlace} />
+                  <Button style={{ backgroundColor: themeStyles.error.color }} icon='delete' onPress={deletePlaceHandler} title='Удалить' />
+                </>
+              )
+                :
+                (
+                  <Button icon='info-circle' title='Подробнее' onPress={seeMoreHandler} />
+                )}
+            </Padding>
           </BottomSheetView>
         </BottomSheet>
       </Portal>
 
-    </View >
+    </View>
   );
 };
 

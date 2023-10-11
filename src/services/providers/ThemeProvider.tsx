@@ -48,11 +48,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     },
 
     bottomSheet: {
-      backgroundColor: !isDarkMode ? 'white' : '#333333',
+      backgroundColor: !isDarkMode ? '#FFFFFF' : '#333333',
     },
 
     bottomSheetHandle: {
-      backgroundColor: !isDarkMode ? 'white' : '#333333',
+      backgroundColor: !isDarkMode ? '#FFFFFF' : '#333333',
       borderTopRightRadius: 8,
       borderTopLeftRadius: 8
 

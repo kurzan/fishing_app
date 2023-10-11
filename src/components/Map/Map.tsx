@@ -208,7 +208,7 @@ export const MapStyles = StyleSheet.create({
     gap: 12,
     zIndex: 2,
     justifyContent: 'space-evenly',
-    bottom: 8,
+    bottom: 24,
     left: 8
   },
 
