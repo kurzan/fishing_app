@@ -100,15 +100,6 @@ const UserInteractElements = ({ place }: UserInteractElementsProps) => {
 
   }, [])
 
-
-  useEffect(() => {
-    console.log(likes);
-    console.log(currentUser?._id);
-
-
-  }, [likes, currentUser?._id])
-
-
   return (
     <>
       <View style={styles.usersInteract}>

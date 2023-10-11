@@ -1,15 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { TouchableOpacity, TouchableOpacityProps, Text } from 'react-native';
+import { TouchableOpacity, TouchableOpacityProps, Text, View } from 'react-native';
+import { useTheme } from '../../hooks/useTheme';
 
 type PlaceLinkProps = TouchableOpacityProps & {
   placeName: string,
-  placeId?: string
+  placeId?: string,
+  isLink?: boolean
 }
 
-const PlaceLink = ({ placeName, placeId, style }: PlaceLinkProps) => {
+const PlaceName = ({ placeName, placeId, style }: PlaceLinkProps) => {
 
   const navigation = useNavigation<any>();
+
+  const { themeStyles } = useTheme();
 
   const onLinkHandler = () => {
     navigation.navigate('Place', {
@@ -19,9 +23,9 @@ const PlaceLink = ({ placeName, placeId, style }: PlaceLinkProps) => {
 
   return (
     <TouchableOpacity onPress={onLinkHandler}>
-      <Text style={style}>{placeName}</Text>
+      <Text style={[themeStyles.color, style]}>{placeName}</Text>
     </TouchableOpacity>
   );
 }
 
-export default PlaceLink;
+export default PlaceName;

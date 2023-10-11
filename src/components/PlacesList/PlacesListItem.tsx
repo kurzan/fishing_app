@@ -14,7 +14,8 @@ import { MoreIcon } from '../Icons';
 import { Portal } from 'react-native-portalize';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { Icon } from '@ant-design/react-native';
-import PlaceLink from './PlaceLink';
+import PlaceLink from './PlaceName';
+import PlaceName from './PlaceName';
 
 moment.locale('ru')
 
@@ -69,14 +70,14 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
           {isOwner && <Icon style={{ marginRight: 8 }} name='environment' />}
           <View>
             {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name.trim()}</Text>}
-            {place.coords.isVisible && <PlaceLink style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
-            {!place.coords.isVisible && showCoords && <PlaceLink style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
+            {place.coords.isVisible && <PlaceName style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
+            {!place.coords.isVisible && showCoords && <PlaceName style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
             {!place.coords.isVisible && showCoords && <Text style={[themeStyles.color, themeStyles.greyText]}>Координаты видны только вам</Text>}
             {!place.isVisible && <Text style={[themeStyles.color, themeStyles.greyText]}>Не видно в ленте</Text>}
           </View>
-          {isOwner && <TouchableOpacity style={styles.options} onPress={onMoreHandler}>
+          {/* {isOwner && <TouchableOpacity style={styles.options} onPress={onMoreHandler}>
             <MoreIcon fill={themeStyles.color.color} />
-          </TouchableOpacity>}
+          </TouchableOpacity>} */}
         </View>
 
       </Padding >
@@ -98,20 +99,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
           <UserInteractElements place={place} />
 
-          {/* <View style={styles.coords}>
-              {place.coords.isVisible &&
-                <>
-                  <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._lat).toFixed(6)}</Text>
-                  <Text style={[themeStyles.color, styles.text]}>{Number(place.coords._long).toFixed(6)}</Text>
-                </>}
 
-              {!place.coords.isVisible && currentUser &&
-                <>
-                  <Text style={[themeStyles.color, styles.text, styles.type]}>Видите только вы</Text>
-                  <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._lat.toFixed(2)}</Text>
-                  <Text style={[themeStyles.color, styles.text, styles.type]}>{place.coords._long}</Text>
-                </>}
-            </View> */}
           {place.message && <Text style={[themeStyles.color, styles.message]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
 
           <Text style={[themeStyles.greyText]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
@@ -187,11 +175,6 @@ const styles = StyleSheet.create({
 
   type: {
     color: '#828284',
-  },
-
-  coords: {
-    gap: 14,
-    flexDirection: 'row'
   },
 
   bottom: {

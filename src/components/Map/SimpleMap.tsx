@@ -1,21 +1,30 @@
 import { useRef } from 'react';
 import { Marker, YaMap, YaMapProps } from 'react-native-yamap';
-import { StyleSheet, View, Image, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
-import { Place } from '../../services/types/places';
+import { StyleSheet, View, Image, StyleProp, ViewStyle } from 'react-native';
 import { useColorScheme } from 'react-native';
 
 type MapProps = YaMapProps & {
   style?: StyleProp<ViewStyle>,
   zoom?: number,
-  initialCoords: any
+  initialCoords: Coords
 }
 
-const SimpleMap = ({ initialCoords, style, zoom = 12 }: MapProps) => {
+type Coords = {
+  _long: number;
+  _lat: number;
+  isVisible: boolean;
+} | undefined
+
+
+const SimpleMap = ({ initialCoords, style, zoom = 15 }: MapProps) => {
 
   const map = useRef<YaMap>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
 
+  if (!initialCoords) {
+    return
+  }
 
   return (
     <YaMap
@@ -24,8 +33,8 @@ const SimpleMap = ({ initialCoords, style, zoom = 12 }: MapProps) => {
       showUserPosition={false}
       mapType='vector'
       initialRegion={{
-        lat: 53,
-        lon: 42,
+        lat: Number(initialCoords._lat),
+        lon: Number(initialCoords._long),
         zoom: zoom,
         azimuth: 0,
       }}
@@ -36,8 +45,8 @@ const SimpleMap = ({ initialCoords, style, zoom = 12 }: MapProps) => {
           style={MapStyles.marker}
           source={require('../../images/hud/float.png')} />}
         point={{
-          lat: 53,
-          lon: 42,
+          lat: Number(initialCoords._lat),
+          lon: Number(initialCoords._long),
         }}
         zIndex={6}
       />
@@ -49,7 +58,8 @@ export const MapStyles = StyleSheet.create({
 
   map: {
     zIndex: 1,
-    height: 150,
+    flex: 1,
+    height: '100%',
     width: '100%'
   },
 
