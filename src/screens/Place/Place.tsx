@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
 
   coords: {
-    gap: 14,
+    gap: 8,
     flexDirection: 'row',
     alignItems: 'center'
   },

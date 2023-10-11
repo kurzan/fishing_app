@@ -23,7 +23,10 @@ const Heading = ({ title, withLogo = false, account = true }: HeadingProps) => {
     <View style={[themeStyles.backgroundColor, styles.container]}>
 
       {withLogo &&
-        <PlacesIcon fill={themeStyles.color.color} />
+        <>
+          {isDarkMode ? <LogoWhiteIcon /> : <LogoBlackIcon />}
+        </>
+
       }
       {title && <Text style={[themeStyles.color, styles.text]}>{title}</Text>}
 
@@ -32,7 +35,6 @@ const Heading = ({ title, withLogo = false, account = true }: HeadingProps) => {
       </TouchableOpacity>}
 
     </View>
-
   )
 };
 
