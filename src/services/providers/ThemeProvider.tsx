@@ -60,10 +60,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   });
 
-  const value = {
-    themeStyles,
-    isDarkMode
-  };
+  const value = useMemo(() => {
+    return {
+      themeStyles,
+      isDarkMode
+    }
+  }, []);
 
   return <ThemeContext.Provider value={value}>
     {children}

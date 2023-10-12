@@ -8,11 +8,12 @@ import { Icon } from "@ant-design/react-native";
 type HeadingProps = {
   title?: string,
   withLogo?: boolean,
-  account?: boolean
+  account?: boolean,
+  back?: boolean
 }
 
 
-const Heading = ({ title, withLogo = false, account = true }: HeadingProps) => {
+const Heading = ({ title, withLogo = false, account = true, back = false }: HeadingProps) => {
 
   const { themeStyles, isDarkMode } = useTheme();
   const { user } = useAuth();
@@ -31,9 +32,12 @@ const Heading = ({ title, withLogo = false, account = true }: HeadingProps) => {
 
       {title && (
         <>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name='arrow-left' size={30} color={themeStyles.color.color} />
-          </TouchableOpacity>
+          {back &&
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon name='arrow-left' size={30} color={themeStyles.color.color} />
+            </TouchableOpacity>}
+
+
           <Text style={[themeStyles.color, styles.text]}>{title}</Text>
         </>
       )}

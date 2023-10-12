@@ -15,6 +15,7 @@ const Footer: FC<IFooter> = ({ navigate, currentRoute }) => {
 
   const { themeStyles } = useTheme();
 
+
   return (
     <Padding style={[styles.footer, themeStyles.backgroundColor]}>
       {menu.map(item => (
@@ -31,8 +32,8 @@ const styles = StyleSheet.create({
   footer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingBottom: 8,
+    justifyContent: 'space-around',
+    paddingTop: 3,
     borderTopColor: '#7e7e7c',
     borderTopWidth: 0.3,
     alignItems: 'center'

@@ -13,10 +13,11 @@ type MapProps = {
   zoom?: number,
   places?: Place[],
   getCoords?: any,
-  hud?: boolean
+  hud?: boolean,
+  coordinates?: any
 }
 
-const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
+const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: MapProps) => {
 
   const map = useRef<YaMap>(null);
 
@@ -108,8 +109,6 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
     })
   };
 
-  console.log('map');
-
 
   return (
     <View style={[style]}>
@@ -145,6 +144,18 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
           point={{
             lat: coords.lat,
             lon: coords.lon,
+          }}
+          zIndex={6}
+        />}
+
+
+        {!coords && coordinates && <Marker
+          children={<Image
+            style={MapStyles.marker}
+            source={require('../../images/hud/float.png')} />}
+          point={{
+            lat: location.coords.latitude,
+            lon: location.coords.longitude,
           }}
           zIndex={6}
         />}

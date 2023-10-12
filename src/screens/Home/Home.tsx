@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(Home);
+export default Home;

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { memo } from 'react';
 import Map from '../../components/Map/Map';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button/Button';
 import { StyleSheet, Text } from 'react-native';
 import { useData } from '../../hooks/useData';
-import MapPlacePrewiev from '../../components/Map/MapPlacePreview';
 
 const GlobalMap = () => {
   const navigation = useNavigation<any>();
   const { places } = useData();
+
+  console.log('render')
 
   return (
     <>
@@ -36,4 +37,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default GlobalMap;
+GlobalMap.whyDidYouRender = true
+
+export default memo(GlobalMap);

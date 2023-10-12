@@ -2,9 +2,6 @@ import React, { SetStateAction, Dispatch, useState, memo, useEffect } from 'reac
 import { StyleSheet, Image } from 'react-native';
 import { Place } from '../../services/types/places';
 import { Marker } from 'react-native-yamap';
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import { storage } from '../../services/firebase';
-import { useData } from '../../hooks/useData';
 
 type MapMarkerPlace = {
   place: Place,
@@ -14,21 +11,7 @@ type MapMarkerPlace = {
 
 const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
-  const [images, setImages] = useState<string[]>([]);
-  const { users } = useData();
-
-  const currentUser = users.find(user => user._id === place.ownerId);
-  const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
-
-  useEffect(() => {
-    listAll(imageListRef).then(res => {
-      res.items.forEach(item => {
-        getDownloadURL(item).then(item => {
-          setImages((prevState) => [...prevState, item])
-        })
-      })
-    })
-  }, [])
+  const imgSource = place.images.length > 0 ? { uri: place.images[0] } : require('../../images/hud/place.png');
 
   console.log('markerplace');
 
@@ -39,7 +22,7 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
       children={
         <Image
           style={MapStyles.markerImg}
-          source={require('../../images/hud/place.png')} />
+          source={imgSource} />
       }
       point={{
         lat: Number(place.coords._lat),
@@ -75,6 +58,5 @@ export const MapStyles = StyleSheet.create({
     borderWidth: 0.1,
   }
 })
-
 
 export default memo(MapMarkerPlace);

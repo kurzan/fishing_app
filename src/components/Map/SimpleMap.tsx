@@ -6,7 +6,7 @@ import { useColorScheme } from 'react-native';
 type MapProps = YaMapProps & {
   style?: StyleProp<ViewStyle>,
   zoom?: number,
-  initialCoords: Coords
+  initialCoords?: Coords
 }
 
 type Coords = {
@@ -15,8 +15,14 @@ type Coords = {
   isVisible: boolean;
 } | undefined
 
+const initiCoords = {
+  _long: '48',
+  _lat: '48',
+  isVisible: true,
+}
 
-const SimpleMap = ({ initialCoords, style, zoom = 15 }: MapProps) => {
+
+const SimpleMap = ({ initialCoords = initiCoords, style, zoom = 15 }: MapProps) => {
 
   const map = useRef<YaMap>(null);
 

@@ -11,6 +11,7 @@ import GlobalMap from '../screens/GlobalMap/GlobalMap';
 import Profile from '../screens/Profile/Profile';
 import { useTheme } from '../hooks/useTheme';
 import { useData } from '../hooks/useData';
+import EditPlace from '../screens/EditPlace/EditPlace';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,7 @@ const Navigation = () => {
                   <Stack.Screen name='Profile' component={Profile} />
                   <Stack.Screen name='Places' component={Places} />
                   <Stack.Screen name='AddPlace' component={AddPlace} />
+                  <Stack.Screen name='EditPlace' component={EditPlace} />
                 </>
               )
             }
@@ -70,5 +72,7 @@ const Navigation = () => {
 
   )
 };
+
+Navigation.whyDidYourender = true
 
 export default Navigation;

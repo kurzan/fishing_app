@@ -13,11 +13,11 @@ import { View } from '@ant-design/react-native';
 import Button from '../../components/Button/Button';
 import Toggle from '../../components/Toggle/Toggle';
 import { storage } from '../../services/firebase';
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, StorageReference, getDownloadURL } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
 import Heading from '../../components/Heading/Heading';
 
-const AddPlace = () => {
+const AddPlace = ({ isEdit }: { isEdit?: boolean }) => {
 
   const [isCanCancelContentTouches, setCanCancelContentTouches] = React.useState(true);
   const { addPlace, currentUser } = useData();
@@ -33,7 +33,6 @@ const AddPlace = () => {
   const currentPlace = places.find(place => place._id === placeId) || null;
 
   const navigation = useNavigation<any>();
-  const { themeStyles } = useTheme();
 
   const uploadImages = (images: uploadImage[], placeId: string) => {
     if (!images) return;
@@ -45,7 +44,7 @@ const AddPlace = () => {
         const blob = await response.blob()
         const res = await uploadBytes(imageRef, blob);
 
-        return res
+        return getDownloadURL(res.ref)
       } catch (error) {
         console.log(error)
       }
@@ -59,21 +58,30 @@ const AddPlace = () => {
       setIsError(false);
       setIsLoading(true);
 
-      if (!currentPlace) {
+      if (!isEdit && !currentPlace) {
         const place = await addPlace(values);
 
         if (!place.id) {
           throw new Error('error');
         }
 
-        uploadImages(images, place.id)
-          ?.then(() => setImages([]))
+        await uploadImages(images, place.id)
+          ?.then((images) => {
+            setImages([]);
+
+            const imagesUrls: string[] = []
+            images.forEach((image) => {
+              imagesUrls.push(image)
+            });
+            updatePlace({ images: imagesUrls }, place.id)
+
+          })
           .then(() => {
             navigation.navigate('Places');
             setIsLoading(false);
           });
       } else {
-        updatePlace(values, currentPlace._id)
+        await updatePlace(values, currentPlace._id)
           .then(() => {
             setIsLoading(false);
           });
@@ -87,10 +95,7 @@ const AddPlace = () => {
 
   };
 
-  console.log('render Add');
-
-
-  const initialState = currentPlace ? {
+  const initialState = isEdit && currentPlace ? {
     name: currentPlace.name,
     coords: {
       _long: currentPlace.coords._long,
@@ -100,7 +105,7 @@ const AddPlace = () => {
     isVisible: currentPlace.isVisible,
     images: [],
     ownerId: currentUser?._id,
-    createdAt: new Date(currentPlace.createdAt.seconds),
+    createdAt: new Date(currentPlace.createdAt.seconds * 1000),
     message: currentPlace.message,
   } :
     {
@@ -120,7 +125,7 @@ const AddPlace = () => {
 
   return (
     <>
-      <Heading title={placeId ? 'Редактирование ' : 'Добавить рыбалку'} />
+      <Heading title={isEdit ? 'Редактирование ' : 'Добавить рыбалку'} back={isEdit} />
       <LayoutScreen isScrollView={true} canCancelContentTouches={isCanCancelContentTouches} scrollEnabled={isCanCancelContentTouches}>
 
         <Formik
@@ -145,7 +150,7 @@ const AddPlace = () => {
             <View style={styles.container}>
 
               <View onTouchStart={() => setCanCancelContentTouches(false)} onTouchEnd={() => setCanCancelContentTouches(true)}>
-                <Map style={styles.map} zoom={12} getCoords={(coords: any) => {
+                <Map style={styles.map} zoom={12} coordinates={isEdit && initialState.coords} getCoords={(coords: any) => {
                   setValues((prevValues) => ({
                     ...prevValues,
                     coords: {
@@ -161,7 +166,7 @@ const AddPlace = () => {
               <Input keyboardType="numeric" placeholder='Широта' onChangeText={handleChange('coords._lat')} onBlur={handleBlur('coords._lat')} value={values.coords._lat} error={touched.coords && errors.coords?._lat} />
               <Input keyboardType="numeric" placeholder='Долгота' onChangeText={handleChange('coords._long')} onBlur={handleBlur('coords._long')} value={values.coords._long} error={touched.coords && errors.coords?._long} />
 
-              {!currentPlace && <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />}
+              {!isEdit && <AddPhotos style={styles.addPhoto} images={images} setImages={setImages} />}
               <DatePicker
                 modal
                 locale='ru_RU'
@@ -185,7 +190,7 @@ const AddPlace = () => {
               <Toggle title='Делиться координатами с другими' value={values.coords.isVisible} setValue={() => setValues((prevValues) => ({ ...prevValues, coords: { ...prevValues.coords, isVisible: !values.coords.isVisible } }))} />
 
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title={currentPlace ? "Сохранить" : "Поделиться"} isLoading={isLoading}></Button>
+                <Button style={{ width: '50%' }} onPress={handleSubmit} disabled={isLoading} title={isEdit ? "Сохранить" : "Поделиться"} isLoading={isLoading}></Button>
               </View>
 
               {isError && <Text style={styles.errorText}>Произошла ошибка. Попробуйте еще раз</Text>}

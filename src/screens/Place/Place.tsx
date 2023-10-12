@@ -8,7 +8,6 @@ import { useTheme } from '../../hooks/useTheme';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import Padding from '../../components/Padding/Padding';
 import Clipboard from '@react-native-community/clipboard';
-import { deleteHandler } from '../../services/utils';
 
 const Place = () => {
 
@@ -30,7 +29,7 @@ const Place = () => {
   }
 
   const goEditPlace = () => {
-    navigate.navigate('AddPlace', {
+    navigate.navigate('EditPlace', {
       placeId: currentPlace?._id
     });
   };

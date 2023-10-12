@@ -30,7 +30,7 @@ type PlacesListItemProps = {
 const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
   const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["80%"], []);
+  const snapPoints = useMemo(() => ["25%"], []);
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
   const [images, setImages] = useState<string[]>([]);
@@ -58,35 +58,22 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
   }, []);
 
   const { themeStyles } = useTheme();
+
   const { users, currentUser: loginUser, delPlace } = useData();
 
   const currentUser = users.find(user => user._id === place.ownerId);
   const showCoords = currentUser?._id === loginUser?._id;
-  const imageListRef = ref(storage, `images/places/${place._id}/users/${currentUser?._id}`);
 
   const goEditPlace = () => {
     handleClosePress();
-    navigation.navigate('AddPlace', {
+    navigation.navigate('EditPlace', {
       placeId: place._id
     });
   };
 
-  useEffect(() => {
-    listAll(imageListRef).then(res => {
-      res.items.forEach(item => {
-        getDownloadURL(item).then(item => {
-          setImages((prevState) => [...prevState, item])
-        })
-      })
-    })
-  }, []);
-
   const deletePlaceHandler = () => {
     deleteHandler(() => delPlace(place._id).then(() => handleClosePress()))
   };
-
-  console.log('render place item');
-
 
   return (
     <View style={styles.container} >
@@ -95,7 +82,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
         <View style={styles.header}>
           {!isOwner && <Avatar user={currentUser} />}
-          {isOwner && <Icon style={{ marginRight: 8 }} name='environment' />}
+          {isOwner && <Icon style={styles.placeIcon} name='environment' />}
           <View>
             {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name.trim()}</Text>}
             {place.coords.isVisible && <PlaceName style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
@@ -110,9 +97,9 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
       </Padding >
       {
-        images.length > 0 ? (
+        place.images.length > 0 ? (
           <View style={styles.imagContainer}>
-            <Image style={styles.placeImg} source={{ uri: images[0] }} resizeMode="cover"
+            <Image style={styles.placeImg} source={{ uri: place.images[0] }} resizeMode="cover"
               resizeMethod="resize" />
           </View>
         ) : (
@@ -165,7 +152,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 const styles = StyleSheet.create({
   container: {
     gap: 6,
-    paddingBottom: 18,
+    paddingBottom: 22,
     position: 'relative'
   },
 
@@ -178,6 +165,8 @@ const styles = StyleSheet.create({
     paddingTop: 6,
     flexDirection: 'row'
   },
+
+  placeIcon: { marginRight: 8 },
 
   header: {
     position: 'relative',
@@ -226,6 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
 
-})
+});
+
 
 export default memo(PlacesListItem);
