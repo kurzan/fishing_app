@@ -16,7 +16,6 @@ import { storage } from '../../services/firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import { useTheme } from '../../hooks/useTheme';
 import Heading from '../../components/Heading/Heading';
-import { Timestamp } from 'firebase/firestore';
 
 const AddPlace = () => {
 
@@ -32,8 +31,6 @@ const AddPlace = () => {
   const { places, updatePlace } = useData();
   const placeId = route.params?.placeId;
   const currentPlace = places.find(place => place._id === placeId) || null;
-
-
 
   const navigation = useNavigation<any>();
   const { themeStyles } = useTheme();
@@ -89,6 +86,9 @@ const AddPlace = () => {
     }
 
   };
+
+  console.log('render Add');
+
 
   const initialState = currentPlace ? {
     name: currentPlace.name,

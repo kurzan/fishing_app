@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import PlacesList from '../../components/PlacesList/PlacesList';
 import Button from '../../components/Button/Button';
@@ -20,6 +20,8 @@ const Home = () => {
       <ActivityIndicator size="large" />
     </LayoutScreen>
   )
+
+  console.log('render Home')
 
   return (
     <>
@@ -46,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default memo(Home);

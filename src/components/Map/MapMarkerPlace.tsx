@@ -1,4 +1,4 @@
-import React, { SetStateAction, Dispatch, useState, useLayoutEffect, useEffect } from 'react';
+import React, { SetStateAction, Dispatch, useState, memo, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Place } from '../../services/types/places';
 import { Marker } from 'react-native-yamap';
@@ -28,8 +28,9 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
         })
       })
     })
-  }, [users])
+  }, [])
 
+  console.log('markerplace');
 
   return (
     <Marker
@@ -76,4 +77,4 @@ export const MapStyles = StyleSheet.create({
 })
 
 
-export default MapMarkerPlace;
+export default memo(MapMarkerPlace);

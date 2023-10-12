@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { Marker, Point, YaMap, Animation, CameraPosition } from 'react-native-yamap';
 import { StyleSheet, View, Image, TouchableOpacity, StyleProp, ViewStyle, DimensionValue, NativeSyntheticEvent } from 'react-native';
 import MapMarkerPlace from './MapMarkerPlace';
 import MapPlacePrewiev from './MapPlacePreview';
 import { Coords, Place } from '../../services/types/places';
-import Geolocation, { GeoPosition } from 'react-native-geolocation-service';
-import { requestLocationPermission } from '../../services/geoutils';
 import { useColorScheme } from 'react-native';
 import HUD from './HUD';
+import { useGeo } from '../../hooks/useGeo';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
@@ -19,37 +18,14 @@ type MapProps = {
 
 const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
 
-
   const map = useRef<YaMap>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
 
-  const [location, setLocation] = useState<GeoPosition | false>(false);
-
   const [coords, setCoords] = useState<undefined | Coords>(undefined);
   const [currentPlaceId, setCurrenPlaceId] = useState<null | string>(null);
 
-  const getLocation = () => {
-    const result = requestLocationPermission();
-    result.then(res => {
-      if (res) {
-        Geolocation.getCurrentPosition(
-          position => {
-            setLocation(position);
-          },
-          error => {
-            console.log(error.code, error.message);
-            setLocation(false);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
-      }
-    });
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, [])
+  const { location } = useGeo();
 
   const getCamera = () => {
     return new Promise<CameraPosition>((resolve, reject) => {
@@ -131,6 +107,9 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true }: MapProps) => {
       lon: location.coords.longitude,
     })
   };
+
+  console.log('map');
+
 
   return (
     <View style={[style]}>
@@ -226,6 +205,6 @@ export const MapStyles = StyleSheet.create({
   },
 })
 
-export default Map;
+export default memo(Map);
 
 

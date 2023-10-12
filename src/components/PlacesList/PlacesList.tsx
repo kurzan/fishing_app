@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, RefreshControl, ScrollView, FlatList } from 'react-native';
 import PlacesListItem from './PlacesListItem';
 import { Place } from '../../services/types/places';
@@ -16,7 +16,7 @@ const PlacesList = ({ title = 'Водоемы', places, isOwner }: PlacesListPro
 
   const { getData } = useData();
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     getData().then(() => setRefreshing(false))
   }, []);

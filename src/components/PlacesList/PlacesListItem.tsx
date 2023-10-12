@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import React, { FC, useEffect, useState, useRef, useMemo, useCallback, memo } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, Pressable, Alert, Modal } from 'react-native';
 import { Place } from '../../services/types/places';
 import Avatar from '../Avatar/Avatar';
@@ -79,11 +79,14 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
         })
       })
     })
-  }, [users]);
+  }, []);
 
   const deletePlaceHandler = () => {
     deleteHandler(() => delPlace(place._id).then(() => handleClosePress()))
   };
+
+  console.log('render place item');
+
 
   return (
     <View style={styles.container} >
@@ -223,8 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
 
-
-
 })
 
-export default PlacesListItem;
+export default memo(PlacesListItem);

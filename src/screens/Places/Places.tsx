@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { Text, View, StyleSheet } from "react-native";
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import PlacesList from '../../components/PlacesList/PlacesList';
@@ -6,15 +6,15 @@ import { useData } from '../../hooks/useData';
 import Heading from '../../components/Heading/Heading';
 import { PlacesIcon } from '../../components/Icons';
 import { useTheme } from '../../hooks/useTheme';
-import { useNavigation } from '@react-navigation/native';
 
 const Places = () => {
 
   const { places, currentUser } = useData();
   const { themeStyles } = useTheme();
-  const currentPlaces = places.filter(place => place.ownerId === currentUser?._id);
 
-  const navigation = useNavigation<any>();
+  const currentPlaces = places.filter(place => place.ownerId === currentUser?._id)
+
+  console.log('render Places')
 
   return (
     <>
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Places;
+export default memo(Places);
