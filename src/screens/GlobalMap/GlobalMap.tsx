@@ -2,8 +2,9 @@ import React, { memo } from 'react';
 import Map from '../../components/Map/Map';
 import { useNavigation } from '@react-navigation/native';
 import Button from '../../components/Button/Button';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useData } from '../../hooks/useData';
+import { ToListIcon } from '../../components/Icons';
 
 const GlobalMap = () => {
   const navigation = useNavigation<any>();
@@ -14,7 +15,12 @@ const GlobalMap = () => {
   return (
     <>
       <Map places={places} style={styles.map} />
-      <Button icon='bars' style={styles.button} onPress={() => navigation.goBack()} title="Список"></Button>
+
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.button}>
+        <ToListIcon />
+      </TouchableOpacity>
     </ >
   );
 };
@@ -30,10 +36,16 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#24A2DF',
+    borderRadius: 100,
+    height: 60,
+    width: 60,
     position: 'absolute',
     zIndex: 999,
-    bottom: 32,
-    right: 18
+    bottom: 24,
+    right: 24
   }
 })
 

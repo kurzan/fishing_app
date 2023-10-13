@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
 import PlacesList from '../../components/PlacesList/PlacesList';
-import Button from '../../components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useData } from '../../hooks/useData';
 import Heading from '../../components/Heading/Heading';
 import Map from '../../components/Map/Map';
+import { ToMapIcon } from '../../components/Icons';
 
 const Home = () => {
 
@@ -30,7 +30,12 @@ const Home = () => {
         <PlacesList title='Лента рыбалок' places={onlyVisibleInList} />
         {places && <Map places={places} hud={false} />}
       </LayoutScreen>
-      <Button icon='environment' style={styles.button} onPress={() => navigation.navigate('GlobalMap')} title='На карте' />
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate('GlobalMap')}
+        style={styles.button}>
+        <ToMapIcon />
+      </TouchableOpacity>
     </>
   );
 };
@@ -41,10 +46,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#24A2DF',
+    borderRadius: 100,
+    height: 60,
+    width: 60,
     position: 'absolute',
     zIndex: 999,
-    bottom: 32,
-    right: 18
+    bottom: 24,
+    right: 24
   },
 });
 

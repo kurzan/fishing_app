@@ -13,6 +13,8 @@ import LogoBlack from '../../images/logo-black.svg';
 import Account from '../../images/icons/acount.svg';
 import Plus from '../../images/icons/plus.svg';
 import Minus from '../../images/icons/minus.svg';
+import toMap from '../../images/icons/toMap.svg';
+import toList from '../../images/icons/toList.svg';
 
 const createIcon = (Icon: FC<SvgProps>): FC<SvgProps> => (props: SvgProps) => (
   <Icon {...props} />
@@ -32,3 +34,5 @@ export const LogoWhiteIcon = createIcon(LogoWhite);
 export const LogoBlackIcon = createIcon(LogoBlack);
 export const PlusIcon = createIcon(Plus);
 export const MinusIcon = createIcon(Minus);
+export const ToMapIcon = createIcon(toMap);
+export const ToListIcon = createIcon(toList);

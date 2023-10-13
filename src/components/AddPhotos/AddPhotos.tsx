@@ -28,6 +28,7 @@ const takePhotoOptions: CameraOptions = {
   mediaType: 'photo',
   includeBase64: false,
   includeExtra,
+  quality: 0.2
 }
 
 const selectPhotoOptions = {
@@ -35,6 +36,7 @@ const selectPhotoOptions = {
   mediaType: 'photo',
   includeBase64: false,
   includeExtra,
+  quality: 0.2
 }
 
 const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {

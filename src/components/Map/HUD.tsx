@@ -31,11 +31,11 @@ export const styles = StyleSheet.create({
 
   hud: {
     position: 'absolute',
-    gap: 12,
+    alignItems: 'center',
+    gap: 32,
     zIndex: 2,
-    justifyContent: 'space-evenly',
-    bottom: 2,
-    left: 8
+    bottom: 24,
+    left: 24
   },
 
   hudButton: {
@@ -44,6 +44,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
+
   },
 })
 

@@ -3,8 +3,6 @@ import { StyleSheet, View, Image, Text, TouchableOpacity, Pressable, Alert, Moda
 import { Place } from '../../services/types/places';
 import Avatar from '../Avatar/Avatar';
 import { useData } from '../../hooks/useData';
-import { getDownloadURL, listAll, ref } from 'firebase/storage';
-import { storage } from '../../services/firebase';
 import { useTheme } from '../../hooks/useTheme';
 import Padding from '../Padding/Padding';
 import moment from 'moment';
@@ -33,7 +31,6 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
   const snapPoints = useMemo(() => ["25%"], []);
 
   const [bottomSheetIndex, setBottimSheetIndex] = useState(-1);
-  const [images, setImages] = useState<string[]>([]);
 
   const navigation = useNavigation<any>();
 
@@ -82,7 +79,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
         <View style={styles.header}>
           {!isOwner && <Avatar user={currentUser} />}
-          {isOwner && <Icon style={styles.placeIcon} name='environment' />}
+          {isOwner && <Icon style={styles.placeIcon} size={32} name='environment' />}
           <View>
             {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name.trim()}</Text>}
             {place.coords.isVisible && <PlaceName style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
@@ -152,7 +149,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 const styles = StyleSheet.create({
   container: {
     gap: 6,
-    paddingBottom: 22,
+    paddingBottom: 32,
     position: 'relative'
   },
 
@@ -171,13 +168,15 @@ const styles = StyleSheet.create({
   header: {
     position: 'relative',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingBottom: 8
   },
 
   options: {
     height: 34,
     width: 34,
     alignItems: 'flex-end',
+    justifyContent: 'center',
     marginLeft: 'auto'
   },
 

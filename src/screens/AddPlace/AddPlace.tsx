@@ -13,8 +13,7 @@ import { View } from '@ant-design/react-native';
 import Button from '../../components/Button/Button';
 import Toggle from '../../components/Toggle/Toggle';
 import { storage } from '../../services/firebase';
-import { ref, uploadBytes, StorageReference, getDownloadURL } from "firebase/storage";
-import { useTheme } from '../../hooks/useTheme';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Heading from '../../components/Heading/Heading';
 
 const AddPlace = ({ isEdit }: { isEdit?: boolean }) => {
@@ -103,7 +102,7 @@ const AddPlace = ({ isEdit }: { isEdit?: boolean }) => {
       isVisible: currentPlace.coords.isVisible
     },
     isVisible: currentPlace.isVisible,
-    images: [],
+    images: currentPlace.images,
     ownerId: currentUser?._id,
     createdAt: new Date(currentPlace.createdAt.seconds * 1000),
     message: currentPlace.message,

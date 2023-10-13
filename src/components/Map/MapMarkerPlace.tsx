@@ -40,6 +40,9 @@ export const MapStyles = StyleSheet.create({
   },
 
   markerImg: {
+    borderRadius: 8,
+    borderColor: 'white',
+    borderWidth: 2,
     width: 60,
     height: 60,
 

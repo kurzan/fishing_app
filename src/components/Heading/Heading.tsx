@@ -55,7 +55,9 @@ const styles = StyleSheet.create({
     height: '8%',
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 14
+    paddingHorizontal: 14,
+    borderBottomColor: '#7e7e7c',
+    borderBottomWidth: 0.3,
 
   },
   text: {
