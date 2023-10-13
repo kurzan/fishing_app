@@ -52,7 +52,7 @@ const AddPlace = ({ isEdit }: { isEdit?: boolean }) => {
     return Promise.all(uploadImagesPromises)
   }
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: any, { resetForm }: { resetForm: any }) => {
     try {
       setIsError(false);
       setIsLoading(true);
@@ -77,11 +77,14 @@ const AddPlace = ({ isEdit }: { isEdit?: boolean }) => {
           })
           .then(() => {
             navigation.navigate('Places');
+            resetForm();
             setIsLoading(false);
           });
       } else {
         await updatePlace(values, currentPlace._id)
           .then(() => {
+            navigation.navigate('Places');
+            resetForm();
             setIsLoading(false);
           });
       }
@@ -143,7 +146,7 @@ const AddPlace = ({ isEdit }: { isEdit?: boolean }) => {
                   .required('Укажите координаты или выберите точку на карту'),
               })
           })}
-          onSubmit={values => handleSubmit(values)}
+          onSubmit={handleSubmit}
         >
           {({ handleChange, handleBlur, handleSubmit, touched, errors, values, setValues }) => (
             <View style={styles.container}>

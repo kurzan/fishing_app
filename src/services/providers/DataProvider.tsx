@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext, FC, useMemo, useState, useEffect } from "react";
 import { Place, User } from "../types/places";
-import { collection, getDocs, addDoc, doc, deleteDoc, DocumentReference, DocumentData, updateDoc, arrayUnion, arrayRemove, query, where, onSnapshot, documentId } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, deleteDoc, DocumentReference, DocumentData, updateDoc, arrayUnion, arrayRemove, query, where, onSnapshot, documentId, Query } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -30,6 +30,36 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { user } = useAuth();
+
+
+  const placesQuery = query(collection(db, "places"));
+  const usersQuery = query(collection(db, "users"));
+
+  const unsubPlaces = (query: Query<DocumentData, DocumentData>) => {
+    return onSnapshot(query, (querySnapshot) => {
+      const places: Place[] = [];
+      querySnapshot.forEach((doc) => {
+        places.push({
+          _id: doc.id,
+          ...doc.data()
+        } as Place);
+      });
+      setPlaces(places);
+    });
+  };
+
+  const unsubUsers = (query: Query<DocumentData, DocumentData>) => {
+    return onSnapshot(query, (querySnapshot) => {
+      const users: User[] = [];
+      querySnapshot.forEach((doc) => {
+        users.push({
+          docId: doc.id,
+          ...doc.data()
+        } as User);
+      });
+      setUsers(users);
+    });
+  };
 
   const getData = () => {
 
@@ -115,15 +145,11 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
 
   const addPlace = async (formData: any) => {
     const placeRef = await addDoc(collection(db, "places"), formData);
-
-    getData();
     return placeRef;
   };
 
   const delPlace = async (id: string) => {
     await deleteDoc(doc(db, "places", id));
-
-    getData();
   };
 
 
@@ -131,7 +157,10 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
     setPlacesIsLoading(true);
 
     getData()
-      .then(() => setPlacesIsLoading(false))
+      .then(() => setPlacesIsLoading(false));
+
+    unsubPlaces(placesQuery);
+    unsubUsers(usersQuery);
   }, []);
 
   useEffect(() => {

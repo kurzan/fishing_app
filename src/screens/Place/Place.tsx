@@ -51,7 +51,7 @@ const Place = () => {
 
         <Padding style={styles.info}>
           <View style={styles.placeTitleView}>
-            <Icon style={{ marginRight: 8 }} name='environment' />
+            <Icon style={styles.placeIcon} name='environment' />
             <Text style={[themeStyles.color, styles.placeTitle]}>{currentPlace?.name}</Text>
           </View>
 
@@ -60,7 +60,7 @@ const Place = () => {
             <Text style={[themeStyles.greyText]}>{Number(currentPlace?.coords._long).toFixed(6)}</Text>
 
             <TouchableOpacity onPress={copyCoordHandler}>
-              <Icon name='copy' />
+              <Icon name='copy' color={'grey'} size={18} />
             </TouchableOpacity>
 
           </View>
@@ -97,6 +97,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 500,
   },
+
+  placeIcon: { marginRight: 8 },
 
   placeTitleView: {
     flexDirection: 'row',

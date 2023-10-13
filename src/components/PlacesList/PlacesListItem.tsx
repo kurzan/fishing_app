@@ -16,6 +16,7 @@ import PlaceName from './PlaceName';
 import Button from '../Button/Button';
 import { deleteHandler } from '../../services/utils';
 import { useNavigation } from '@react-navigation/native';
+import ImagesCarousele from '../ImagesCarousel/ImageCarousele';
 
 moment.locale('ru')
 
@@ -95,16 +96,19 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
       </Padding >
       {
         place.images.length > 0 ? (
-          <View style={styles.imagContainer}>
-            <Image style={styles.placeImg} source={{ uri: place.images[0] }} resizeMode="cover"
-              resizeMethod="resize" />
-          </View>
+          // <View style={styles.imagContainer}>
+          //   <Image style={styles.placeImg} source={{ uri: place.images[0] }} resizeMode="cover"
+          //     resizeMethod="resize" />
+          // </View>
+          <ImagesCarousele images={place.images} />
+
         ) : (
           <View style={styles.noPhoto} >
             <Text style={themeStyles.greyText}>Нет фото</Text>
           </View>
         )
       }
+
 
       < Padding >
         <View style={styles.bottom}>
