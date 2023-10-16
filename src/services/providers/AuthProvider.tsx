@@ -75,12 +75,16 @@ export const AuthProvider = ({ children }: { children: any }) => {
     }
   }
 
-  useEffect(() => {
-    auth().onAuthStateChanged(user => {
-      setUser(user || null);
-      setIsLoadingInitial(false);
-    })
-  }, [])
+  auth().onAuthStateChanged(user => {
+    setUser(user || null);
+    setIsLoadingInitial(false);
+
+    console.log('user' + user);
+
+    console.log('user');
+  });
+
+
 
   const value = useMemo(() => ({
     user, isLoading, login: loginHandler, logout: logoutHandler, register: registerHandler

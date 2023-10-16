@@ -28,15 +28,15 @@ const takePhotoOptions: CameraOptions = {
   mediaType: 'photo',
   includeBase64: false,
   includeExtra,
-  quality: 0.2
+  quality: 0.6
 }
 
 const selectPhotoOptions = {
-  selectionLimit: 5,
+  selectionLimit: 1,
   mediaType: 'photo',
   includeBase64: false,
   includeExtra,
-  quality: 0.2
+  quality: 0.6
 }
 
 const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
@@ -146,9 +146,16 @@ const AddPhotos = ({ style, images, setImages }: AddPhotosProps) => {
         >
           <BottomSheetView>
             <Padding>
-              <Button icon='camera' title='Сделать фото' onPress={takePhoto} />
-              <Button icon='picture' title='Выбрать фото' onPress={choosePhoto} />
-              <Button style={{ backgroundColor: 'grey' }} title='Отмена' onPress={handleClosePress} />
+
+              {images.length < 1 ? (<>
+                <Button icon='camera' title='Сделать фото' onPress={takePhoto} />
+                <Button icon='picture' title='Выбрать фото' onPress={choosePhoto} />
+              </>) : (
+
+                <Text style={styles.textInfo}>В текущей версии можно загрузить только одно фото</Text>
+              )}
+
+              <Button style={styles.cuncelButton} title={images.length < 1 ? 'Отмена' : 'Понятно'} onPress={handleClosePress} />
             </Padding>
           </BottomSheetView>
         </BottomSheet>
@@ -177,6 +184,17 @@ const styles = StyleSheet.create({
     height: '90%',
     width: '30%',
     justifyContent: 'center'
+  },
+
+  cuncelButton: {
+    backgroundColor: 'grey',
+    marginBottom: 'auto'
+  },
+
+  textInfo: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginBottom: 24
   },
 
   text: {

@@ -38,33 +38,36 @@ const Navigation = () => {
     }
   }, []);
 
+  console.log(currentUser);
+
+
   return (
     <>
       <NavigationContainer ref={ref}>
-        <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: themeStyles.backgroundColor }}>
-          <Stack.Group>
-            {!currentUser ? (
-              <>
+        <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: themeStyles.backgroundColor, animation: 'none' }}>
+
+          {!currentUser ? (
+            <Stack.Group>
+              <Stack.Screen name='Home' component={Home} />
+              <Stack.Screen name='Auth' component={Auth} />
+              <Stack.Screen name='GlobalMap' component={GlobalMap} />
+              <Stack.Screen name='Place' component={Place} />
+            </Stack.Group>
+          ) :
+            (
+              <Stack.Group>
                 <Stack.Screen name='Home' component={Home} />
                 <Stack.Screen name='Auth' component={Auth} />
                 <Stack.Screen name='GlobalMap' component={GlobalMap} />
                 <Stack.Screen name='Place' component={Place} />
-              </>
-            ) :
-              (
-                <>
-                  <Stack.Screen name='Home' component={Home} />
-                  <Stack.Screen name='Auth' component={Auth} />
-                  <Stack.Screen name='GlobalMap' component={GlobalMap} />
-                  <Stack.Screen name='Place' component={Place} />
-                  <Stack.Screen name='Profile' component={Profile} />
-                  <Stack.Screen name='Places' component={Places} />
-                  <Stack.Screen name='AddPlace' component={AddPlace} />
-                  <Stack.Screen name='EditPlace' component={EditPlace} />
-                </>
-              )
-            }
-          </Stack.Group>
+                <Stack.Screen name='Profile' component={Profile} />
+                <Stack.Screen name='Places' component={Places} />
+                <Stack.Screen name='AddPlace' component={AddPlace} />
+                <Stack.Screen name='EditPlace' component={EditPlace} />
+              </Stack.Group>
+            )
+          }
+
         </Stack.Navigator>
       </NavigationContainer>
       <Footer navigate={ref.navigate} currentRoute={name} />
@@ -72,7 +75,5 @@ const Navigation = () => {
 
   )
 };
-
-Navigation.whyDidYourender = true
 
 export default Navigation;

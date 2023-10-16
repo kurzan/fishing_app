@@ -19,13 +19,11 @@ const ImagesCarousele = ({ images }: { images: string[] }) => {
         onSnapToItem={(index) => console.log('current index:', index)}
         renderItem={({ item }) => {
 
-
           return (
             <View style={styles.imagContainer}>
               <Image style={styles.placeImg} source={{ uri: item }} resizeMode="cover" resizeMethod="resize" />
             </View>
           )
-
         }}
       />
     </View>

@@ -73,6 +73,7 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
     deleteHandler(() => delPlace(place._id).then(() => handleClosePress()))
   };
 
+
   return (
     <View style={styles.container} >
 
@@ -80,11 +81,11 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
         <View style={styles.header}>
           {!isOwner && <Avatar user={currentUser} />}
-          {isOwner && <Icon style={styles.placeIcon} size={32} name='environment' />}
-          <View>
+          {isOwner && <Icon style={styles.placeIcon} color={themeStyles.color.color} size={24} name='environment' />}
+          <View style={styles.placeInfo}>
             {!isOwner && <Text style={[themeStyles.color, styles.userName]}>{currentUser?.name.trim()}</Text>}
-            {place.coords.isVisible && <PlaceName style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
-            {!place.coords.isVisible && showCoords && <PlaceName style={[themeStyles.color, styles.name]} placeName={place.name.trim()} placeId={place._id} />}
+            {place.coords.isVisible && <PlaceName style={[themeStyles.color, styles.nameInPlace]} placeName={place.name.trim()} placeId={place._id} />}
+            {!place.coords.isVisible && showCoords && <PlaceName style={[themeStyles.color, styles.nameInPlace]} placeName={place.name.trim()} placeId={place._id} />}
             {!place.coords.isVisible && showCoords && <Text style={[themeStyles.color, themeStyles.greyText]}>Координаты видны только вам</Text>}
             {!place.isVisible && <Text style={[themeStyles.color, themeStyles.greyText]}>Не видно в ленте</Text>}
           </View>
@@ -96,11 +97,10 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
       </Padding >
       {
         place.images.length > 0 ? (
-          // <View style={styles.imagContainer}>
-          //   <Image style={styles.placeImg} source={{ uri: place.images[0] }} resizeMode="cover"
-          //     resizeMethod="resize" />
-          // </View>
-          <ImagesCarousele images={place.images} />
+          <View style={styles.imagContainer}>
+            <Image style={styles.placeImg} source={{ uri: place.images[0] }} resizeMode="cover"
+              resizeMethod="resize" />
+          </View>
 
         ) : (
           <View style={styles.noPhoto} >
@@ -116,7 +116,6 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
           {place.message && <Text style={[themeStyles.color, styles.message]}><Text style={styles.currentName}>{currentUser?.name}</Text> {place.message}</Text>}
           <Text style={[themeStyles.greyText]}>{moment(new Date(place.createdAt.seconds * 1000)).calendar()}</Text>
         </View>
-
       </Padding >
 
       <Portal >
@@ -152,36 +151,30 @@ const PlacesListItem: FC<PlacesListItemProps> = ({ place, isOwner }) => {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 6,
-    paddingBottom: 32,
-    position: 'relative'
+    paddingBottom: 24,
+    position: 'relative',
+    gap: 4
   },
 
   userName: {
-    fontSize: 16,
-    fontWeight: '500'
+    fontSize: 14,
+  },
+
+  placeIcon: { marginRight: 6 },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 
   placeInfo: {
-    paddingTop: 6,
-    flexDirection: 'row'
-  },
 
-  placeIcon: { marginRight: 8 },
-
-  header: {
-    position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 8
   },
 
   options: {
-    height: 34,
-    width: 34,
     alignItems: 'flex-end',
-    justifyContent: 'center',
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    width: 40
   },
 
   noPhoto: {
@@ -189,6 +182,7 @@ const styles = StyleSheet.create({
   },
 
   imagContainer: {
+    paddingVertical: 4,
     height: 400
   },
 
@@ -196,8 +190,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  name: {
-    fontSize: 16,
+  nameInPlace: {
+    fontSize: 14,
+    lineHeight: 16,
+    fontWeight: '500'
   },
 
   type: {
@@ -205,17 +201,16 @@ const styles = StyleSheet.create({
   },
 
   bottom: {
-    paddingTop: 8,
-    gap: 6,
+
   },
 
   message: {
-    fontSize: 16
+    fontSize: 14
   },
 
   currentName: {
-    fontWeight: '700',
-    fontSize: 16
+    fontWeight: '500',
+    fontSize: 14
   },
 
 });

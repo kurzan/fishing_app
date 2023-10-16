@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
   usersInteract: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 22
+    gap: 12,
+    paddingBottom: 4
   },
 
   icon: {

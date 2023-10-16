@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     marginRight: 6
   },
 

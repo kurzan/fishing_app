@@ -1,6 +1,6 @@
-import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
-import { AccountIcon, LogoWhiteIcon, LogoBlackIcon, PlacesIcon } from "../Icons";
+import { AccountIcon, LogoWhiteIcon, LogoBlackIcon, PlacesIcon, ViewWhiteLogo } from "../Icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../hooks/useAuth";
 import { Icon } from "@ant-design/react-native";
@@ -26,27 +26,32 @@ const Heading = ({ title, withLogo = false, account = true, back = false }: Head
 
       {withLogo &&
         <>
-          {isDarkMode ? <LogoWhiteIcon /> : <LogoBlackIcon />}
+          {isDarkMode ? <View style={{ width: 101, height: 31 }}><Image resizeMode="cover"
+            resizeMethod="resize" width={101} height={31} source={require('../../images/white-logo.png')} /></View> : <LogoBlackIcon />}
         </>
       }
 
-      {title && (
-        <>
-          {back &&
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Icon name='arrow-left' size={30} color={themeStyles.color.color} />
-            </TouchableOpacity>}
+      {
+        title && (
+          <>
+            {back &&
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon name='arrow-left' size={30} color={themeStyles.color.color} />
+              </TouchableOpacity>}
 
 
-          <Text style={[themeStyles.color, styles.text]}>{title}</Text>
-        </>
-      )}
+            <Text style={[themeStyles.color, styles.text]}>{title}</Text>
+          </>
+        )
+      }
 
-      {account && <TouchableOpacity onPress={() => navigation.navigate(route)} style={styles.account}>
-        <AccountIcon fill={themeStyles.color.color} />
-      </TouchableOpacity>}
+      {
+        account && <TouchableOpacity onPress={() => navigation.navigate(route)} style={styles.account}>
+          <AccountIcon fill={themeStyles.color.color} />
+        </TouchableOpacity>
+      }
 
-    </View>
+    </View >
   )
 };
 

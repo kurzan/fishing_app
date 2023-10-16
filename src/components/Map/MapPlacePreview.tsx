@@ -21,9 +21,7 @@ const MapPlacePrewiev = ({ currentPlaceId, setCurrenPlaceId }: MapPlacePreviewPr
     <ScrollView style={styles.container}>
       <Image style={styles.image} source={{ uri: currentPlace?.images[0] }} />
       <Text style={styles.text}>{currentPlace?.name}</Text>
-      <Button title='Подробнее' onPress={() => navigation.navigate('Place', {
-        placeId: currentPlace?._id
-      })} />
+
       <Button title='Отмена' onPress={() => setCurrenPlaceId(null)} />
     </ScrollView>
   );

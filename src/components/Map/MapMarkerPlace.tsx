@@ -13,14 +13,15 @@ const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
 
   const imgSource = place.images.length > 0 ? { uri: place.images[0] } : require('../../images/hud/place.png');
 
-  console.log('markerplace');
+  console.log(place.images[0]);
 
   return (
     <Marker
       onPress={() => setCurrenPlaceId(place._id)}
       key={place._id}
       children={
-        <Image
+        <Image resizeMode="cover"
+          resizeMethod="resize"
           style={MapStyles.markerImg}
           source={imgSource} />
       }

@@ -14,6 +14,8 @@ import SplashScreen from 'react-native-splash-screen'
 import { AuthProvider } from './src/services/providers/AuthProvider';
 import { GeoProvider } from './src/services/providers/GeoProvider';
 
+
+
 YaMap.init('06c72fe6-477e-42ef-86b1-4fa7f012eb6f');
 
 function App(): JSX.Element {
