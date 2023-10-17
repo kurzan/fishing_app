@@ -20,7 +20,7 @@ const Navigation = () => {
   const [name, setName] = useState<string | undefined>(undefined);
 
   const { themeStyles } = useTheme();
-  const { currentUser } = useData();
+  const { currentUser, users } = useData();
 
   useEffect(() => {
     const timeout = setTimeout(() => setName(ref.getCurrentRoute()?.name), 100);
@@ -37,9 +37,6 @@ const Navigation = () => {
       ref.removeListener('state', listener);
     }
   }, []);
-
-  console.log(currentUser);
-
 
   return (
     <>

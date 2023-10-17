@@ -3,9 +3,11 @@ import { Place, User } from "../types/places";
 import { collection, getDocs, addDoc, doc, deleteDoc, DocumentReference, DocumentData, updateDoc, arrayUnion, arrayRemove, query, where, onSnapshot, documentId, Query } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../../hooks/useAuth";
+import SplashScreen from 'react-native-splash-screen';
 
 type TDataContext = {
   places: Place[],
+  onlyVisibleInList: Place[],
   users: User[],
   currentUser: User | null,
   setPlaces: Dispatch<SetStateAction<Place[]>>,
@@ -16,7 +18,9 @@ type TDataContext = {
   addComment: (message: string, userId: string, placeId: string) => Promise<void>,
   postLikesHandler: (type: 'delete' | 'add', placeId: string, userId: string, likeId: string) => Promise<void>,
   updatePlace: (formData: any, placeId: string) => Promise<void>,
-  placesIsLoading: boolean
+  placesIsLoading: boolean,
+  isError: boolean,
+  getAllData: any
 }
 
 export const DataContext = createContext<TDataContext>({} as TDataContext);
@@ -28,7 +32,6 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
   const [places, setPlaces] = useState<Place[]>([]);
   const [placesIsLoading, setPlacesIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { user } = useAuth();
 
 
@@ -81,16 +84,21 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
     };
 
     const getPlaces = async () => {
-      const querySnapshot = await getDocs(collection(db, "places"));
-      const items: Place[] = []
-      querySnapshot.forEach((doc) => {
-        items.push({
-          _id: doc.id,
-          ...doc.data()
-        } as Place);
-      });
-      setPlaces(items);
+      try {
+        const querySnapshot = await getDocs(collection(db, "places"));
+        const items: Place[] = []
+        querySnapshot.forEach((doc) => {
+          items.push({
+            _id: doc.id,
+            ...doc.data()
+          } as Place);
+        });
+        setPlaces(items);
+      } catch (error) {
+        throw new Error('Что-то пошло не так!');
+      }
     }
+
     return Promise.all([getPlaces(), getUsers()])
   };
 
@@ -128,8 +136,6 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
         name: formData.name
       });
     }
-
-    getData();
   }
 
   const addComment = async (message: string, userId: string, placeId: string) => {
@@ -152,26 +158,42 @@ export const DataProvider: FC<{ children: any }> = ({ children }: { children: Re
     await deleteDoc(doc(db, "places", id));
   };
 
-
-  useEffect(() => {
+  const getAllData = () => {
     setPlacesIsLoading(true);
 
     getData()
-      .then(() => setPlacesIsLoading(false));
+      .then(() => {
+        setPlacesIsLoading(false)
+      })
+      .catch(() => {
+        setIsError(true)
+      })
+      .finally(() => {
+        SplashScreen.hide();
+        setPlacesIsLoading(false)
+      })
+  }
+
+
+  useEffect(() => {
+    getAllData();
 
     unsubPlaces(placesQuery);
     unsubUsers(usersQuery);
   }, []);
 
-  useEffect(() => {
-    let currentUser = users.find(u => u._id === user?.uid) || null;
-    setCurrentUser(currentUser);
+  const currentUser = useMemo(() => {
+    return users.find(u => u._id === user?.uid) || null;
   }, [user, users]);
+
+  const onlyVisibleInList = useMemo(() => {
+    return places.filter(place => place.isVisible && place.coords.isVisible);
+  }, [places])
 
 
   const value = useMemo(() => {
-    return { places, users, currentUser, setPlaces, addPlace, addComment, delPlace, getData, placesIsLoading, postLikesHandler, updateUser, updatePlace }
-  }, [places, placesIsLoading, currentUser])
+    return { places, onlyVisibleInList, users, currentUser, getAllData, setPlaces, addPlace, addComment, delPlace, getData, placesIsLoading, isError, postLikesHandler, updateUser, updatePlace }
+  }, [places, placesIsLoading, isError, currentUser, onlyVisibleInList])
 
 
   return <DataContext.Provider value={value}>

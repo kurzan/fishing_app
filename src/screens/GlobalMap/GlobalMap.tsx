@@ -1,27 +1,24 @@
 import React, { memo } from 'react';
 import Map from '../../components/Map/Map';
 import { useNavigation } from '@react-navigation/native';
-import Button from '../../components/Button/Button';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useData } from '../../hooks/useData';
 import { ToListIcon } from '../../components/Icons';
 
 const GlobalMap = () => {
   const navigation = useNavigation<any>();
-  const { places } = useData();
-
-  console.log('render')
+  const { onlyVisibleInList } = useData();
 
   return (
     <>
-      <Map places={places} style={styles.map} />
+      <Map places={onlyVisibleInList} style={styles.map} />
 
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.button}>
         <ToListIcon />
       </TouchableOpacity>
-    </ >
+    </>
   );
 };
 

@@ -22,12 +22,11 @@ const Heading = ({ title, withLogo = false, account = true, back = false }: Head
   const route = !user?.uid ? 'Auth' : 'Profile';
 
   return (
-    <View style={[themeStyles.backgroundColor, styles.container]}>
+    <View style={styles.container}>
 
       {withLogo &&
         <>
-          {isDarkMode ? <View style={{ width: 101, height: 31 }}><Image resizeMode="cover"
-            resizeMethod="resize" width={101} height={31} source={require('../../images/white-logo.png')} /></View> : <LogoBlackIcon />}
+          {isDarkMode ? <LogoWhiteIcon /> : <LogoBlackIcon />}
         </>
       }
 

@@ -2,10 +2,7 @@ import { addDoc, collection, doc, updateDoc, getDocs } from "@firebase/firestore
 import { createContext, FC, useEffect, useMemo, useState } from "react";
 import { Alert } from "react-native";
 import { register, db, login, logout, anonimousRegister } from '../firebase';
-
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { User } from "../types/places";
-import DeviceInfo from "react-native-device-info";
 import { generateColor } from "../utils";
 
 interface IContext {
@@ -78,13 +75,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
   auth().onAuthStateChanged(user => {
     setUser(user || null);
     setIsLoadingInitial(false);
-
-    console.log('user' + user);
-
-    console.log('user');
-  });
-
-
+  })
 
   const value = useMemo(() => ({
     user, isLoading, login: loginHandler, logout: logoutHandler, register: registerHandler

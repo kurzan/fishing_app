@@ -1,8 +1,10 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { ScrollView, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import Button from '../Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { useData } from '../../hooks/useData';
+import PlaceInfo from '../PlaceInfo/PlaceInfo';
+import { useTheme } from '../../hooks/useTheme';
 
 type MapPlacePreviewProps = {
   currentPlaceId: string,
@@ -12,33 +14,33 @@ type MapPlacePreviewProps = {
 const MapPlacePrewiev = ({ currentPlaceId, setCurrenPlaceId }: MapPlacePreviewProps) => {
 
   const { places } = useData();
+  const { themeStyles } = useTheme();
 
-  const currentPlace = places.find(place => place._id === currentPlaceId);
-
-  const navigation = useNavigation<any>();
+  const currentPlace = places.find(place => place._id === currentPlaceId) || null;
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={[themeStyles.backgroundColor, styles.container]}>
+      <PlaceInfo currentPlace={currentPlace} />
       <Image style={styles.image} source={{ uri: currentPlace?.images[0] }} />
-      <Text style={styles.text}>{currentPlace?.name}</Text>
+
 
       <Button title='Отмена' onPress={() => setCurrenPlaceId(null)} />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    justifyContent: 'space-evenly',
     zIndex: 1000
   },
   text: {
     color: 'white'
   },
   image: {
-    height: 80,
-    width: 80
+    height: '60%',
+    width: '100%'
   }
 })
 

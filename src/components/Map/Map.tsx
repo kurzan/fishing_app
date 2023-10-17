@@ -7,6 +7,7 @@ import { Coords, Place } from '../../services/types/places';
 import { useColorScheme } from 'react-native';
 import HUD from './HUD';
 import { useGeo } from '../../hooks/useGeo';
+import MapMarker from './MapMarker';
 
 type MapProps = {
   style?: StyleProp<ViewStyle>,
@@ -18,6 +19,8 @@ type MapProps = {
 }
 
 const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: MapProps) => {
+
+  console.log('render map');
 
   const map = useRef<YaMap>(null);
 
@@ -109,6 +112,8 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: M
     })
   };
 
+  console.log('render map');
+
 
   return (
     <View style={[style]}>
@@ -124,12 +129,10 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: M
           zoom: zoom,
           azimuth: 0,
         }}
-        style={[MapStyles.map,]}
+        style={MapStyles.map}
       >
         <Marker
-          children={<Image
-            style={MapStyles.marker}
-            source={require('../../images/hud/float.png')} />}
+          children={<MapMarker />}
           point={{
             lat: location.coords.latitude,
             lon: location.coords.longitude,
@@ -138,9 +141,7 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: M
         />
 
         {coords && <Marker
-          children={<Image
-            style={MapStyles.marker}
-            source={require('../../images/hud/float.png')} />}
+          children={<MapMarker />}
           point={{
             lat: coords.lat,
             lon: coords.lon,
@@ -150,9 +151,7 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: M
 
 
         {!coords && coordinates && <Marker
-          children={<Image
-            style={MapStyles.marker}
-            source={require('../../images/hud/float.png')} />}
+          children={<MapMarker />}
           point={{
             lat: location.coords.latitude,
             lon: location.coords.longitude,
@@ -162,7 +161,16 @@ const Map = ({ places, style, zoom = 12, getCoords, hud = true, coordinates }: M
 
 
         {places && places.map(place => (
-          <MapMarkerPlace key={place._id} place={place} setCurrenPlaceId={setCurrenPlaceId} />
+          <Marker
+            onPress={() => setCurrenPlaceId(place._id)}
+            key={place._id}
+            children={<MapMarkerPlace place={place} />}
+            point={{
+              lat: Number(place.coords._lat),
+              lon: Number(place.coords._long)
+            }}
+            zIndex={6}
+          />
         ))}
       </YaMap>}
 
@@ -178,19 +186,6 @@ export const MapStyles = StyleSheet.create({
   map: {
     flex: 1,
     zIndex: 1,
-  },
-
-  marker: {
-    width: 60,
-    height: 60,
-  },
-
-  markerPlace: {
-    width: 60,
-    height: 60,
-    borderRadius: 6,
-    borderWidth: 4,
-    borderColor: 'black',
   },
 
   hud: {
@@ -216,6 +211,6 @@ export const MapStyles = StyleSheet.create({
   },
 })
 
-export default memo(Map);
+export default Map;
 
 

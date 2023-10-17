@@ -23,10 +23,6 @@ function App(): JSX.Element {
 
   const backgroundColor = isDarkMode ? 'black' : 'white';
 
-  useEffect(() => {
-    SplashScreen.hide();
-  }, [])
-
   return (
     <GestureHandlerRootView style={[{ flex: 1, backgroundColor }]}>
       <AuthProvider>

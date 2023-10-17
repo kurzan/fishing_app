@@ -1,36 +1,31 @@
-import React, { SetStateAction, Dispatch, useState, memo, useEffect } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import React, { useState, memo } from 'react';
+import { StyleSheet, Image, View } from 'react-native';
 import { Place } from '../../services/types/places';
-import { Marker } from 'react-native-yamap';
 
 type MapMarkerPlace = {
   place: Place,
-  setCurrenPlaceId: Dispatch<SetStateAction<null | string>>,
-  imageURI?: string,
 }
 
-const MapMarkerPlace = ({ place, setCurrenPlaceId }: MapMarkerPlace) => {
+const MapMarkerPlace = ({ place }: MapMarkerPlace) => {
 
-  const imgSource = place.images.length > 0 ? { uri: place.images[0] } : require('../../images/hud/place.png');
+  const [initialrender, setInitialRender] = useState(true);
 
-  console.log(place.images[0]);
+  const initialRenderHandler = () => {
+    setInitialRender(false)
+  }
+
+  const imgSource = place.images.length > 0 ? { uri: place.images[0] } : require('../../images/full_logo.png');
+
+  console.log('marker place');
+
 
   return (
-    <Marker
-      onPress={() => setCurrenPlaceId(place._id)}
-      key={place._id}
-      children={
-        <Image resizeMode="cover"
-          resizeMethod="resize"
-          style={MapStyles.markerImg}
-          source={imgSource} />
-      }
-      point={{
-        lat: Number(place.coords._lat),
-        lon: Number(place.coords._long)
-      }}
-      zIndex={6}
-    />
+    <Image resizeMode="cover"
+      onLoad={initialRenderHandler}
+      key={`${initialrender}`}
+      resizeMethod="resize"
+      style={MapStyles.markerImg}
+      source={imgSource} />
   );
 }
 

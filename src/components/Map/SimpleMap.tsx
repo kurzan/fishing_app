@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Marker, YaMap, YaMapProps } from 'react-native-yamap';
 import { StyleSheet, View, Image, StyleProp, ViewStyle } from 'react-native';
 import { useColorScheme } from 'react-native';
+import MapMarker from './MapMarker';
 
 type MapProps = YaMapProps & {
   style?: StyleProp<ViewStyle>,
@@ -44,12 +45,10 @@ const SimpleMap = ({ initialCoords = initiCoords, style, zoom = 15 }: MapProps) 
         zoom: zoom,
         azimuth: 0,
       }}
-      style={[MapStyles.map,]}
+      style={MapStyles.map}
     >
       <Marker
-        children={<Image
-          style={MapStyles.marker}
-          source={require('../../images/hud/float.png')} />}
+        children={<MapMarker />}
         point={{
           lat: Number(initialCoords._lat),
           lon: Number(initialCoords._long),

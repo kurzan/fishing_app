@@ -6,8 +6,8 @@ import SimpleMap from '../../components/Map/SimpleMap';
 import { Icon } from '@ant-design/react-native';
 import { useTheme } from '../../hooks/useTheme';
 import LayoutScreen from '../../components/LayoutScreen/LayoutScreen';
-import Padding from '../../components/Padding/Padding';
-import Clipboard from '@react-native-community/clipboard';
+import PlaceInfo from '../../components/PlaceInfo/PlaceInfo';
+
 
 const Place = () => {
 
@@ -19,14 +19,8 @@ const Place = () => {
 
   const { placeId } = route.params;
 
-  const currentPlace = places.find(place => place._id === placeId);
+  const currentPlace = places.find(place => place._id === placeId) || null;
   const isOwner = currentPlace?.ownerId === currentUser?._id;
-
-  const copyCoordHandler = () => {
-    if (!currentPlace) return
-
-    Clipboard.setString(`${currentPlace.coords._lat}, ${currentPlace.coords._long}`);
-  }
 
   const goEditPlace = () => {
     navigate.navigate('EditPlace', {
@@ -49,22 +43,7 @@ const Place = () => {
 
       <LayoutScreen isScrollView={false} style={styles.main}>
 
-        <Padding style={styles.info}>
-          <View style={styles.placeTitleView}>
-            <Icon style={styles.placeIcon} name='environment' />
-            <Text style={[themeStyles.color, styles.placeTitle]}>{currentPlace?.name}</Text>
-          </View>
-
-          <View style={styles.coords}>
-            <Text style={[themeStyles.greyText]}>{Number(currentPlace?.coords._lat).toFixed(6)}</Text>
-            <Text style={[themeStyles.greyText]}>{Number(currentPlace?.coords._long).toFixed(6)}</Text>
-
-            <TouchableOpacity onPress={copyCoordHandler}>
-              <Icon name='copy' color={'grey'} size={18} />
-            </TouchableOpacity>
-
-          </View>
-        </Padding>
+        <PlaceInfo currentPlace={currentPlace} />
 
         <View style={styles.map}>
           <SimpleMap initialCoords={currentPlace?.coords} />
@@ -89,31 +68,9 @@ const styles = StyleSheet.create({
     gap: 12
   },
 
-  info: {
-    gap: 6
-  },
-
   map: {
     flex: 1,
     height: 500,
-  },
-
-  placeIcon: { marginRight: 8 },
-
-  placeTitleView: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-
-  placeTitle: {
-    fontSize: 20,
-    fontWeight: '500'
-  },
-
-  coords: {
-    gap: 8,
-    flexDirection: 'row',
-    alignItems: 'center'
   },
 })
 
